@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd"
+	default-lazy-init="true">
+
+
+	<!-- <bean id="EncryptionMode" class="java.lang.String">
+		MD5
+		</bean>
+		<bean id="Salt" class="java.lang.String">
+		BBBLLL
+		</bean>
+
+	-->
+	<bean id="webPasswordService" class="shiro.WebPasswordService">
+		<property name="AlgorithmName" value="MD5" />
+		<property name="Salt" value="#^8balintimes8!" />
+	</bean>
+	<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+		<property name="cacheManagerConfigFile" value="classpath:ehcache.xml" />
+	</bean>
+	<!--
+		<bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">
+		<property name="activeSessionsCacheName" value="shiro-activeSessionCache" />
+		</bean>
+
+		<bean id="sessionManager" class="org.apache.shiro.session.mgt.DefaultSessionManager">
+		<property name="sessionDAO" ref="sessionDAO"></property>
+		</bean>
+	-->
+	<bean id="webRealm" class="shiro.WebRealm">
+
+		<property name="cachingEnabled" value="true" />
+		<property name="authenticationCachingEnabled" value="true" />
+		<property name="authenticationCacheName" value="authenticationCache" />
+		<property name="authorizationCachingEnabled" value="true" />
+		<property name="authorizationCacheName" value="authorizationCache" />
+		<property name="cacheManager" ref="cacheManager" />
+
+		<property name="passwordService" ref="webPasswordService" />
+		<property name="CredentialsMatcher">
+			<bean class="org.apache.shiro.authc.credential.PasswordMatcher">
+				<property name="passwordService" ref="webPasswordService" />
+			</bean>
+		</property>
+	</bean>
+
+
+	<bean id="firstSuccess" class="org.apache.shiro.authc.pam.FirstSuccessfulStrategy" />
+	<!-- <bean id="atLeastSuccess" class="org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy" />
+		<bean id="allSuccess" class="org.apache.shiro.authc.pam.AllSuccessfulStrategy" /> -->
+
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="authenticator" ref="modelAuthricator" />
+		<!-- <property name="sessionManager" ref="sessionManager" /> -->
+		<property name="cacheManager" ref="cacheManager" />
+	</bean>
+	<bean id="modelAuthricator" class="org.apache.shiro.authc.pam.ModularRealmAuthenticator">
+		<property name="authenticationStrategy" ref="firstSuccess" />
+		<property name="realms">
+			<list>
+				<ref local="webRealm" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- <bean id="adminfilter" class="shiro.AdminFilter">
+		<property name="isNotAdminUrl" value="/admin/isnotadmin" />
+		</bean> -->
+
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<property name="securityManager" ref="securityManager" />
+		<property name="loginUrl" value="/login" />
+		<property name="successUrl" value="/login/index" />
+		<property name="unauthorizedUrl" value="/lonin/error" />
+		<!-- <property name="filters">
+			<map>
+			<entry key="admin" value-ref="adminfilter">
+			</entry>
+			</map>
+			</property> -->
+		<property name="filterChainDefinitions">
+			<value>
+				/login/**=anon
+				/home/**=authc
+				/**=authc 
+				<!-- /login/index=authc
+					/login/user=authc
+					/login/userb=user
+					/admin/isnotadmin=user
+					/admin/**=admin
+					/login/**=anon
+					/angular/**=anon
+					/restangular/**=anon
+					/js/**=anon
+					/resources/**=anon -->
+			</value>
+		</property>
+	</bean>
+
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor" />
+	<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="securityManager" />
+	</bean>
+
+</beans>

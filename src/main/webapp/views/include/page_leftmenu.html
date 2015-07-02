@@ -1,0 +1,8 @@
+
+<ul class="nav nav-sidebar">
+	<!--       <li class="active"><a href="#">Overview</a></li>
+      <li><a href="#">Reports</a></li>
+      <li><a href="#">Analytics</a></li>
+      <li><a href="#">Export</a></li> -->
+	<li ng-repeat="menu in Menus"><a ui-sref="{{menu.state}}">{{menu.menuName}}</a></li>
+</ul>
