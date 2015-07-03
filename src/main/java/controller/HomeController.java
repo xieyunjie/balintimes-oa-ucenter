@@ -6,18 +6,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import base.BaseController;
 import shiro.WebUser;
 import util.JsonUtil;
 import util.WebUserUtil;
 
 @Controller
 @RequestMapping("home")
-public class HomeController
+public class HomeController extends BaseController
 {
 
 	@Resource
 	private WebUserUtil WebUserUtil;
-	
+
 	@RequestMapping("")
 	public String toHome()
 	{
@@ -40,7 +41,7 @@ public class HomeController
 
 		return JsonUtil.ToJson(WebUserUtil.CurrentUser().getModules());
 	}
-	
+
 	@RequestMapping("inituser2")
 	@ResponseBody
 	public WebUser InitUser2()

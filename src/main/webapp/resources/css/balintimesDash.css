@@ -124,3 +124,12 @@ body {
 .errormsg {
 	color: red
 }
+
+.informMessage {
+	z-index: 100000;
+	width: auto
+}
+
+.inforMessageIco {
+	margin: -5px 10px 0px 0px;
+}

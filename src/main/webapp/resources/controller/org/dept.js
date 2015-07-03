@@ -38,7 +38,7 @@ define([ 'angularAMD', 'balintimesConstant', 'ui-bootstrap', 'angular-messages' 
 		$stateProvider.state(mainState).state(editState);
 	} ]);
 
-	app.controller("DeptListController", function($scope, $state, userlist, AjaxRequest, balintimesConfirm) {
+	app.controller("DeptListController", function($scope, $state, userlist, AjaxRequest, $dialog) {
 
 	}).controller("DeptEditController", function($scope, $state, userData, AjaxRequest) {
 

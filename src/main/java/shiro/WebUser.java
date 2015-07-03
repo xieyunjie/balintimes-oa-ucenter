@@ -11,6 +11,7 @@ public class WebUser implements Serializable
 
 	private String uid;
 	private String username;
+	private boolean isadmin;
 	private List<String> rolelist;
 	private List<String> authList;
 
@@ -39,6 +40,16 @@ public class WebUser implements Serializable
 	public void setUsername(String username)
 	{
 		this.username = username;
+	}
+
+	public boolean isIsadmin()
+	{
+		return isadmin;
+	}
+
+	public void setIsadmin(boolean isadmin)
+	{
+		this.isadmin = isadmin;
 	}
 
 	public List<String> getRolelist()

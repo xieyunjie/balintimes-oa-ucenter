@@ -6,52 +6,108 @@
 		<id property="uid" column="uid" />
 		<result property="username" column="username" />
 		<result property="password" column="password" />
+		<result property="isadmin" column="isadmin" />
+		<result property="employeename" column="employeename" />
+		<result property="isenable" column="isenable" />
+		<result property="delflag" column="delflag" />
+		<result property="usertype" column="usertype" />
+		<result property="usertypename" column="usertypename" />
+		<result property="email" column="email" />
+		<result property="comment" column="comment" />
+		<result property="createby" column="createby" />
 		<result property="createtime" column="createtime" />
+		<result property="editby" column="editby" />
+		<result property="edittime" column="edittime" />
+		<result property="lastlogin" column="lastlogin" />
 	</resultMap>
-
-	<select id="getUser" parameterType="string" resultType="User">
-		select * from user where uid = #{uid}
-	</select>
-
-	<select id="GetUserList" statementType="PREPARED" parameterType="string" resultMap="userResultMap">
-		select * from user
-	</select>
-
-	<select id="getUserPassword" statementType="PREPARED" resultType="String">
-		select password from user where username =
-		#{username}
-	</select>
-
-	<select id="getUserByName" statementType="PREPARED" resultType="User">
-		select * from user where username = #{username}
-	</select>
-
 
 	<insert id="createUser" parameterType="User" statementType="PREPARED" keyProperty="uid" keyColumn="uid"
 		useGeneratedKeys="false">
-		INSERT INTO user(uid,username,password, createtime)
-		VALUES(#{uid},#{username},#{password},#{createtime})
+		insert into user (uid, username, password, isadmin, employeename, isenable, delflag,
+		usertype, email,
+		comment, createby, createtime )
+		values( #{uid}, #{username}, #{password}, #{isadmin}, #{employeename}, #{isenable},
+		#{delflag},
+		#{usertype}, #{email}, #{comment}, #{createby}, #{createtime})
 	</insert>
 
-
-	<select id="GetUserTotalCount" parameterType="Map" resultType="int">
-		select count(*) from user
-	</select>
-	<select id="GetUserByPage" parameterType="Map" resultType="User">
-		select * from user ORDER BY #{orderby} limit
-		#{start},#{pageSize}
-	</select>
+	<update id="UpdatePassword" parameterType="Map">
+		update user set password=#{password} where uid = #{uid}
+	</update>
 
 	<update id="updateUser" parameterType="User" statementType="PREPARED" keyProperty="uid" keyColumn="uid">
 		update user
 		set username = #{username},
-		password=#{password}
-		where uid = #{uid}
+		isadmin = #{isadmin},
+		employeename = #{employeename},
+		isenable = #{isenable},
+		usertype =
+		#{usertype},
+		email = #{email},
+		comment = #{comment},
+		editby = #{editby},
+		edittime = #{edittime}
+		where
+		uid = #{uid}
 	</update>
 
-	<delete id="deleteUser" parameterType="string" statementType="PREPARED">
-		delete from user where uid = #{uid}
-	</delete>
+	<update id="deleteUser" parameterType="Map" statementType="PREPARED">
+		update user set delflag =
+		1,editby=#{employeename},edittime=now() where uid=#{uid}
+	</update>
+
+	<sql id="userColumns">
+		a.uid,a.username,a.password,a.isadmin,
+		a.employeename,a.isenable,a.delflag,a.usertype,
+		a.email,a.comment,a.createby,a.createtime,
+		a.editby,a.edittime,a.lastlogin, b.name as usertypename
+	</sql>
+
+	<select id="getUser" parameterType="string" resultType="User">
+		select
+		<include refid="userColumns" />
+		from user a
+		inner join usertype b on a.usertype = b.uid
+		where a.uid = #{uid} and delflag = 0
+	</select>
+
+	<select id="CheckUserName" parameterType="String" resultType="String">
+		select uid from user where username =
+		#{username}
+		and delflag = 0
+	</select>
+
+	<select id="GetUserList" statementType="PREPARED" parameterType="string" resultMap="userResultMap">
+		select
+		<include refid="userColumns" />
+		from user a
+		inner join usertype b on a.usertype = b.uid
+		where a.delflag = 0
+	</select>
+
+	<select id="getUserPassword" statementType="PREPARED" resultType="String">
+		select password from user where username =
+		#{username} and delflag = 0
+	</select>
+
+	<select id="getUserByName" statementType="PREPARED" resultType="User">
+		select
+		<include refid="userColumns" />
+		from user a
+		inner join usertype b on a.usertype = b.uid
+		where a.username = #{username}
+	</select>
+
+	<select id="GetUserTotalCount" parameterType="Map" resultType="int">
+		select count(*) from user where delflag = 0
+	</select>
+
+	<select id="GetUserByPage" parameterType="Map" resultType="User">
+		select
+		<include refid="userColumns" />
+		from user where delflag = 0 ORDER BY #{orderby} limit
+		#{start},#{pageSize}
+	</select>
 
 
 </mapper>

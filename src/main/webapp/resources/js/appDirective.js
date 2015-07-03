@@ -24,8 +24,8 @@ define([ 'angular', 'balintimesConstant' ], function(angular, balintimesConstant
 				elem.find('input').attr('required', attrs.required);
 				scope.$watch(attrs.ngModel, function(e) {
 					console.info("link link link link");
-					
-					 ngModel.$setValidity("minlength",false);
+
+					ngModel.$setValidity("minlength", false);
 				});
 				scope.$parent.$watch(attrs.ngModel, function(e) {
 					console.info("$parent link link link");
@@ -33,6 +33,19 @@ define([ 'angular', 'balintimesConstant' ], function(angular, balintimesConstant
 				});
 			}
 		};
+	});
+
+	appDirective.directive("matchValidator", function() {
+		return {
+			require : "ngModel",
+			link : function(scope, element, attrs, ngModel) {
+				ngModel.$parsers.push(function(value) {
+					ngModel.$setValidity("match", value == scope.$eval(attrs.matchValidator));
+					return value;
+				})
+
+			}
+		}
 	});
 
 	return appDirective;

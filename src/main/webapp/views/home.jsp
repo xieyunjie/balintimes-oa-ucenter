@@ -8,7 +8,7 @@
 <title>百灵时代OA系统 -- 2015</title>
 </head>
 <body>
-	<div inform class="inform-fixed"></div>
+	<div inform class="inform-fixed informMessage"></div>
 	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 	<div class="navbar-header">
 		<button type="button" class="navbar-toggle" data-toggle="collapse"
@@ -39,7 +39,7 @@
 					<li><a href="{{root}}/logout"><span class="glyphicon glyphicon-off" aria-hidden="true" />
 							登出</a></li>
 				</ul></li>
-
+<li></li>
 
 		</ul>
 	</div>

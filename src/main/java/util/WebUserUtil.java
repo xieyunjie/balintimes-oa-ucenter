@@ -28,7 +28,7 @@ public class WebUserUtil
 	public WebUser CurrentUser()
 	{
 		Subject subject = SecurityUtils.getSubject();
-		if (subject.isAuthenticated() == false)
+		if (subject.isRemembered() == false && subject.isAuthenticated() == false)
 		{
 			return null;
 		}
@@ -48,8 +48,9 @@ public class WebUserUtil
 
 		WebUser webUser = new WebUser();
 		webUser.setUsername(u.getUsername());
-		webUser.setEmail("123@163.com");
+		webUser.setEmail(u.getEmail());
 		webUser.setEmployeeName(u.getUsername());
+		webUser.setIsadmin(u.isIsadmin());
 
 		webUser.setModules(InitModule());
 		return webUser;

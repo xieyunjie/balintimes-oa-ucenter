@@ -44,14 +44,26 @@ public class UserServiceImpl implements UserService
 		return userDao.GetUserList();
 	}
 
+	public boolean ExistsUserName(String username)
+	{
+		return userDao.ExistsUserName(username);
+	}
+
+	public boolean ExistsUserName(String username, String uid)
+	{
+		return userDao.ExistsUserName(username, uid);
+	}
+
+	@CustomerTransactional
 	public void updateUser(User user)
 	{
 		this.userDao.updateUser(user);
 	}
 
-	public void deleteUser(String uid)
+	@CustomerTransactional
+	public void deleteUser(String uid,String employeename)
 	{
-		this.userDao.deleteUser(uid);
+		this.userDao.deleteUser(uid,employeename);
 	}
 
 	public String getUserPassword(String username)
@@ -59,15 +71,20 @@ public class UserServiceImpl implements UserService
 		return this.userDao.getUserPassword(username);
 	}
 
-	@Override
 	public User getUserByName(String username)
 	{
 		return this.userDao.getUserByName(username);
 	}
 
-	@Override
 	public TuplePage<List<User>, Integer> GetUserList(String username, String deptname, int page, int pageSize)
 	{
 		return this.userDao.GetUserList(username, deptname, page, pageSize);
 	}
+
+	public void UpdatePassword(String uID, String password)
+	{
+		this.userDao.UpdatePassword(uID, passwordService.encryptPassword(password));
+
+	}
+
 }

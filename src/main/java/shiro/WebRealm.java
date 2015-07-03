@@ -66,23 +66,40 @@ public class WebRealm extends AuthorizingRealm
 		authenticationInfo = new SimpleAuthenticationInfo(username, password, getName());
 
 		authenticationInfo.setCredentialsSalt(ByteSource.Util.bytes(svc.getSalt()));
-		// ---
-
-		// String input = new String(usernamePasswordToken.getPassword());
-
-		// if (passwordService.passwordsMatch(input, password))
-		// {
-		// String salt2 = new SecureRandomNumberGenerator().nextBytes().toHex();
-		// authenticationInfo = new SimpleAuthenticationInfo(username, password,
-		// this.getName());
-		//
-		// authenticationInfo.setCredentialsSalt(ByteSource.Util.bytes(salt2));
-		//
-		// }
-		// else
-		// {
-		// throw new IncorrectCredentialsException("Web登录失败，请检查用户或者密码");
-		// }
 		return authenticationInfo;
+	}
+
+	@Override
+	public void clearCachedAuthorizationInfo(PrincipalCollection principals)
+	{
+		super.clearCachedAuthorizationInfo(principals);
+	}
+
+	@Override
+	public void clearCachedAuthenticationInfo(PrincipalCollection principals)
+	{
+		super.clearCachedAuthenticationInfo(principals);
+	}
+
+	@Override
+	public void clearCache(PrincipalCollection principals)
+	{
+		super.clearCache(principals);
+	}
+
+	public void clearAllCachedAuthorizationInfo()
+	{
+		getAuthorizationCache().clear();
+	}
+
+	public void clearAllCachedAuthenticationInfo()
+	{
+		getAuthenticationCache().clear();
+	}
+
+	public void clearAllCache()
+	{
+		clearAllCachedAuthenticationInfo();
+		clearAllCachedAuthorizationInfo();
 	}
 }

@@ -95,4 +95,13 @@ public class JsonUtil
 		jsonResponseMsg.setSuccess("false");
 		return JsonUtil.ToJson(jsonResponseMsg);
 	}
+
+	/*返回一个失败的信息*/
+	public static String ResponseFailureMessage(String message)
+	{
+		JsonResponseMsg jsonResponseMsg = new JsonResponseMsg();
+		jsonResponseMsg.setSuccess("false");
+		jsonResponseMsg.setResponseMsg(message);
+		return JsonUtil.ToJson(jsonResponseMsg);
+	}
 }

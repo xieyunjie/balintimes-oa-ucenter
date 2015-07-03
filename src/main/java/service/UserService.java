@@ -11,12 +11,11 @@ public interface UserService
 
 	User getUser(String uid);
 
-	void throwEx(); 
-	
+	void throwEx();
 
 	void updateUser(User user);
 
-	void deleteUser(String uid);
+	void deleteUser(String uid,String employeename);
 
 	String getUserPassword(String username);
 
@@ -25,4 +24,9 @@ public interface UserService
 	TuplePage<List<User>, Integer> GetUserList(String username, String deptname, int page, int pageSize);
 
 	List<User> GetUserList();
+
+	boolean ExistsUserName(String username);
+	boolean ExistsUserName(String username,String uid);
+
+	void UpdatePassword(String uID, String password);
 }

@@ -12,7 +12,6 @@ public class Menu implements Serializable
 	private String name;
 	private String state;
 	private String url;
-	 
 
 	public Menu(String uid, String name, String state, String url)
 	{

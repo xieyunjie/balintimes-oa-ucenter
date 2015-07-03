@@ -3,16 +3,26 @@
 	<li><a href="#">系统设置</a></li>
 	<li class="active">用户编辑</li>
 </ol>
-<form name="editForm" class="form-horizontal" role="form" novalidate>
+<form name="editForm" class="form-horizontal " role="form" novalidate>
 	<div class="form-group">
-		<label for="username" class="col-sm-2 control-label">用户名:</label>
-		<div class="col-sm-6">
+		<label for="username" class="col-sm-1 control-label">用户名:</label>
+		<div class="col-sm-4">
 			<input type="text" class="form-control" name='username' ng-model="user.username"
-				required="required" maxlength="10" minlength='5' />
-		</div>
-		<div class="col-sm-3 form-control-static errormsg">
+				required="required" maxlength="10" minlength='2' />
 			<div ng-if="editForm.username.$dirty">
-				<div ng-messages="editForm.username.$error" role="alert">
+				<div ng-messages="editForm.username.$error" class="errormsg" role="alert">
+					<div ng-messages-include='{{rootpath}}/views/tpls/messageerror/require.html' />
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="employeename" class="col-sm-1 control-label">员工:</label>
+		<div class="col-sm-4">
+			<input type="text" class="form-control" name='employeename' ng-model="user.employeename"
+				required="required" maxlength="10" minlength='2' />
+			<div ng-if="editForm.employeename.$dirty">
+				<div ng-messages="editForm.employeename.$error" class="errormsg" role="alert">
 					<div ng-messages-include='{{rootpath}}/views/tpls/messageerror/require.html' />
 				</div>
 			</div>
@@ -20,35 +30,107 @@
 	</div>
 
 	<div class="form-group">
-
-		<label for=password class="col-sm-2 control-label">密码:</label>
-		<div class="col-sm-6">
-			<input type="text" class="form-control" name="password" ng-model="user.password" required
-				maxlength="10" minlength='5'>
-		</div>
-		<div class="col-sm-3 form-control-static errormsg">
-			<div ng-if="editForm.password.$dirty">
-				<div ng-messages="editForm.password.$error" role="alert">
+		<label for="usertype" class="col-sm-1 control-label">用户类型:</label>
+		<div class="col-sm-4">
+			<select class="form-control" name="usertype" ng-model="user.usertype"
+				ng-options="usertype.uid as usertype.name for usertype in userTypes">
+			</select>
+			<!-- 			<input type="text" class="form-control" name='usertype' ng-model="user.usertype"
+				required="required" /> -->
+			<div ng-if="editForm.usertype.$dirty">
+				<div ng-messages="editForm.usertype.$error" class="errormsg" role="alert">
 					<div ng-messages-include='{{rootpath}}/views/tpls/messageerror/require.html' />
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="email" class="col-sm-1 control-label">电子邮箱:</label>
+		<div class="col-sm-4">
+			<input type="email" class="form-control" name='email' ng-model="user.email" required="required" />
+			<div ng-if="editForm.email.$dirty">
+				<div ng-messages="editForm.email.$error" class="errormsg" role="alert">
+					<div ng-messages-include='{{rootpath}}/views/tpls/messageerror/require.html' />
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div ng-if="user.uid=='0'" class="form-group">
+		<label for="password" class="col-sm-1 control-label">密码:</label>
+		<div class="col-sm-4">
+			<input type="password" class="form-control" name='password' ng-model="user.password"
+				required="required" maxlength="15" minlength='7' />
+			<div ng-if="editForm.password.$dirty">
+				<div ng-messages="editForm.password.$error" class="errormsg" role="alert">
+					<div ng-messages-include='{{rootpath}}/views/tpls/messageerror/require.html' />
+				</div>
+			</div>
+		</div>
+	</div>
+	<div ng-if="user.uid=='0'" class="form-group">
+		<label for="password2" class="col-sm-1 control-label">确认密码:</label>
+		<div class="col-sm-4">
+			<input type="password" class="form-control" name='password2' ng-model="password2"
+				required="required" maxlength="15" minlength='7' match-validator="user.password" required />
+			<div ng-if="editForm.password2.$dirty">
+				<div ng-messages="editForm.password2.$error" class="errormsg" role="alert">
+					<div ng-messages-include='{{rootpath}}/views/tpls/messageerror/require.html' />
+					<div ng-message="match">你输入的确认密码与之前的不匹配</div>
 				</div>
 			</div>
 		</div>
 
 	</div>
+
+	<div class="form-group">
+		<div class="col-sm-offset-1 col-sm-4">
+			<div class="checkbox">
+				<label> <input type="checkbox" name='isadmin' ng-model="user.isadmin"> 管理员
+				</label>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<div class="col-sm-offset-1 col-sm-4">
+			<div class="checkbox">
+				<label> <input type="checkbox" name='isenable' ng-model="user.isenable"> 启用
+				</label>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="comment" class="col-sm-1 control-label">备注:</label>
+		<div class="col-sm-4">
+			<textarea name="comment" class="form-control" ng-model="user.comment"></textarea>
+		</div>
+
+	</div>
+
 	<!-- 	<bltextinput label="密码:" name="password" value="user.password" required="required" maxlength="10"
 		minlength='5'></bltextinput> -->
 
+
 	<div class="form-group">
-		<div class="col-sm-offset-2 col-sm-6">
+		<div class="col-sm-offset-1 col-sm-6">
 			<button class="btn btn-primary" ng-click="saveUser()" ng-disabled="editForm.$invalid">
 				<span class="glyphicon glyphicon-ok-sign" aria-hidden="true" /> 保存
 			</button>
 			<a ui-sref="auth/user" class="btn btn-warning"><span class="glyphicon glyphicon-remove-sign"
 				aria-hidden="true" /> 取消</a>
 
-			<button class="btn btn-primary" ng-click="resetPassword()">
+			<!-- 			<button class="btn btn-primary" ng-click="resetPassword()">
 				<span class="glyphicon glyphicon-ok-sign" aria-hidden="true" /> 重置密码(test)
 			</button>
+
+			<button class="btn btn-primary" ng-click="GetNullUser()">
+				<span class="glyphicon glyphicon-ok-sign" aria-hidden="true" /> GetNullUser
+			</button>
+
+			<button class="btn btn-primary" ng-click="GetAdminUser()">
+				<span class="glyphicon glyphicon-ok-sign" aria-hidden="true" /> GetAdminUser
+			</button> -->
 		</div>
 	</div>
 </form>

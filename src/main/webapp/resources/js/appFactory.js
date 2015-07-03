@@ -6,9 +6,13 @@ define([ 'angular', 'balintimesConstant', 'ui-bootstrap' ], function(angular, ba
 
 	var appFactory = angular.module('appFactory', [ 'ui.bootstrap' ]);
 
-	appFactory.factory('securityInterceptor', [ '$q', '$rootScope', function($q, $rootScope) {
+	appFactory.factory('securityInterceptor', [ '$q', '$rootScope', 'AlertMsg', function($q, $rootScope, AlertMsg) {
 		var responseInterceptor = {
 			response : function(response) {
+				if (response.data.httpStatus == 401) {
+					AlertMsg.exception(response.data.responseMsg);
+					return $q.reject(response);
+				}
 				return response;
 			},
 			'responseError' : function(response) {
@@ -16,22 +20,52 @@ define([ 'angular', 'balintimesConstant', 'ui-bootstrap' ], function(angular, ba
 					window.location = balintimesConstant.rootpath + "/login";
 
 				} else if (response.status == 401) {
-
-				};
+					window.location = balintimesConstant.rootpath + "/login";
+				}
+				;
 				return $q.reject(response);
 			}
 		};
 		return responseInterceptor;
 	} ]);
 
-	appFactory.factory('balintimesConfirm', [ '$modal', function($modal) {
+	appFactory.factory('$dialog', [ '$modal', function($modal) {
 
 		return {
-			show : function(title, content) {
-
+			confirm : function(title, content, size) {
+				var s = '';
+				if (size)
+					s = size;
 				return $modal.open({
 					animation : true,
-					size : 'sm',
+					size : s,
+					templateUrl : balintimesConstant.rootpath + '/views/tpls/modal/comfirm.tpl.html',
+					controller : function($scope, $modalInstance, viewContent) {
+						$scope.viewContent = viewContent;
+						$scope.btnClick = function(btn) {
+							$modalInstance.close(btn)
+						};
+						$scope.cancel = function() {
+							$modalInstance.dismiss('cancel');
+						}
+					},
+					resolve : {
+						viewContent : function() {
+							return {
+								title : title,
+								content : content
+							};
+						}
+					}
+				});
+			},
+			alert : function(title, content, size) {
+				var s = '';
+				if (size)
+					s = size;
+				return $modal.open({
+					animation : true,
+					size : s,
 					templateUrl : balintimesConstant.rootpath + '/views/tpls/modal/comfirm.tpl.html',
 					controller : function($scope, $modalInstance, viewContent) {
 						$scope.viewContent = viewContent;
@@ -52,34 +86,37 @@ define([ 'angular', 'balintimesConstant', 'ui-bootstrap' ], function(angular, ba
 					}
 				});
 			}
-
 		}
 	} ]);
 
 	appFactory.factory('AlertMsg', function(inform) {
 
 		var alertInfo = function(msg) {
-			inform.add(msg == null ? '信息提示.....' : msg, {
+			inform.add(msg == null ? '信息提示.....' : "<img src='" + balintimesConstant.rootpath + "/resources/image/inform.png' class='inforMessageIco'/>" + msg, {
 				type : 'info',
-				ttl : 3000
+				ttl : 3000,
+				html : true
 			});
 		};
 		var alertSuccess = function(msg) {
-			inform.add(msg == null ? '成功提示.....' : msg, {
+			inform.add(msg == null ? '成功提示.....' : "<img src='" + balintimesConstant.rootpath + "/resources/image/success.png' class='inforMessageIco'/>" + msg, {
 				type : 'success',
-				ttl : 3000
+				ttl : 3000,
+				html : true
 			});
 		};
 		var alertWarning = function(msg) {
-			inform.add(msg == null ? '警告提示.....' : msg, {
+			inform.add(msg == null ? '警告提示.....' : "<img src='" + balintimesConstant.rootpath + "/resources/image/warning.png' class='inforMessageIco'/>" + msg, {
 				type : 'warning',
-				ttl : 3000
+				ttl : 300000,
+				html : true
 			});
 		};
 		var alertException = function(msg) {
-			inform.add(msg == null ? '异常提示.....' : msg, {
+			inform.add(msg == null ? '异常提示.....' : "<img src='" + balintimesConstant.rootpath + "/resources/image/exception.png' class='inforMessageIco'/>" + msg, {
 				type : 'danger',
-				ttl : 5000
+				ttl : 5000,
+				html : true
 			});
 		};
 		var alertClear = function() {
@@ -99,20 +136,28 @@ define([ 'angular', 'balintimesConstant', 'ui-bootstrap' ], function(angular, ba
 	appFactory.factory("AjaxRequest", function($http, AlertMsg) {
 
 		return {
-			Post : function(url, params, successFn, failureFn) {
+			Post : function(url, params) {
 				url = balintimesConstant.rootpath + url;
 				return $http.post(url, params).then(function(response) {
 					if (response.data.responseMsg != "") {
-						AlertMsg.success(response.data.responseMsg);
+						if (response.data.success == "true") {
+							AlertMsg.success(response.data.responseMsg);
+						} else {
+							AlertMsg.warning(response.data.responseMsg);
+						}
 					}
 					return response.data;
 				});
 			},
-			Put : function(url, params, successFn, failureFn) {
+			Put : function(url, params) {
 				url = balintimesConstant.rootpath + url;
 				return $http.put(url, params).then(function(response) {
 					if (response.data.responseMsg != "") {
-						AlertMsg.success(response.data.responseMsg);
+						if (response.data.success == "true") {
+							AlertMsg.success(response.data.responseMsg);
+						} else {
+							AlertMsg.warning(response.data.responseMsg);
+						}
 					}
 					return response.data;
 				});

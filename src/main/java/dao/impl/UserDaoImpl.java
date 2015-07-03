@@ -32,6 +32,17 @@ public class UserDaoImpl implements UserDao
 		return userMapper.GetUserList();
 	}
 
+	public boolean ExistsUserName(String username)
+	{
+		List<String> uids = userMapper.CheckUserName(username);
+
+		if (uids.size() > 0)
+		{
+			return true;
+		}
+		return false;
+	}
+
 	public User getUser(String uid)
 	{
 		return userMapper.getUser(uid);
@@ -42,9 +53,12 @@ public class UserDaoImpl implements UserDao
 		this.userMapper.updateUser(user);
 	}
 
-	public void deleteUser(String uid)
+	public void deleteUser(String uid, String employeename)
 	{
-		this.userMapper.deleteUser(uid);
+		Map<String, Object> params = new HashMap<String, Object>(2);
+		params.put("uid", uid);
+		params.put("employeename", employeename);
+		this.userMapper.deleteUser(params);
 	}
 
 	public String getUserPassword(String username)
@@ -74,6 +88,43 @@ public class UserDaoImpl implements UserDao
 		List<User> list = userMapper.GetUserByPage(params);
 
 		return new TuplePage<List<User>, Integer>(list, total);
+
+	}
+
+	public void UpdatePassword(String uID, String encryptPassword)
+	{
+		Map<String, Object> params = new HashMap<String, Object>(2);
+		params.put("uid", uID);
+		params.put("password", encryptPassword);
+		this.userMapper.UpdatePassword(params);
+	}
+
+	public boolean ExistsUserName(String username, String useruid)
+	{
+		boolean b = true;
+		List<String> uids = userMapper.CheckUserName(username);
+
+		if (uids.size() == 0)
+		{
+			b = false;
+		}
+		if (uids.size() == 1)
+		{
+			if (uids.get(0).equalsIgnoreCase(useruid))
+			{
+				b = false;
+			}
+		}
+
+		return b;
+
+		// for (String uid : uids)
+		// {
+		// if (uid.equalsIgnoreCase(useruid))
+		// {
+		// return true;
+		// }
+		// }
 
 	}
 }

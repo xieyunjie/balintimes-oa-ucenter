@@ -10,3 +10,4 @@
 <link rel="stylesheet" href="${ctx}/resources/css/angular-inform.css">
 <link href="${ctx}/resources/css/ui-bootstrap-csp.css" rel="stylesheet">
 <link href="${ctx}/resources/css/balintimesDash.css" rel="stylesheet">
+<link rel="shortcut icon" href="${ctx}/favicon.ico" type="image/x-icon" />

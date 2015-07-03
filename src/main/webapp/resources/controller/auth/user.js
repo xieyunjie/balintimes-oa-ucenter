@@ -25,6 +25,9 @@ define([ 'angularAMD', 'balintimesConstant', 'ui-bootstrap', 'angular-messages' 
 		resolve : {
 			userData : function(AjaxRequest, $stateParams) {
 				return AjaxRequest.Get("/user/getuser/" + $stateParams.uid);
+			},
+			userTypesData : function(AjaxRequest) {
+				return AjaxRequest.Get("/usertype/list");
 			}
 		}
 	};
@@ -34,10 +37,11 @@ define([ 'angularAMD', 'balintimesConstant', 'ui-bootstrap', 'angular-messages' 
 		$stateProvider.state(mainState).state(editState);
 	} ]);
 
-	app.controller("UserListController", function($scope, $state, userlist, AjaxRequest, balintimesConfirm, NgUtil) {
+	app.controller("UserListController", function($scope, $state, userlist, AjaxRequest, $dialog, NgUtil) {
 		$scope.users = userlist.data;
 		$scope.pageParams = NgUtil.initPageParams();
 		$scope.totalItems = 1;
+		$scope.rootpath = balintimesConstant.rootpath;
 
 		$scope.loadPage = function() {
 			AjaxRequest.Post("/user/listbypage", $scope.pageParams).then(function(rsBody) {
@@ -61,9 +65,23 @@ define([ 'angularAMD', 'balintimesConstant', 'ui-bootstrap', 'angular-messages' 
 			})
 		};
 
+		$scope.resetPassword = function(uid) {
+			$dialog.confirm("密码重置", "是否确认重置密码？重置当前用户密码后为[1]。", '').result.then(function(btn) {
+				AjaxRequest.Post("/user/resetpassword", {
+					UID : uid
+				}).then(function(rsBody) {
+					if (rsBody.success == 'true') {
+						$scope.reflashUser();
+					}
+				})
+			});
+		};
+
 		$scope.deleteUser = function(UID) {
-			balintimesConfirm.show('系统提示', '是否删除当前项目？').result.then(function(btn) {
-				AjaxRequest.Get("/user/delete").then(function(rsBody) {
+			$dialog.confirm('系统提示', '是否删除当前项目？').result.then(function(btn) {
+				AjaxRequest.Post("/user/delete", {
+					UID : UID
+				}).then(function(rsBody) {
 					if (rsBody.success == 'true') {
 						$scope.reflashUser();
 					}
@@ -71,15 +89,17 @@ define([ 'angularAMD', 'balintimesConstant', 'ui-bootstrap', 'angular-messages' 
 			});
 		}
 
-	}).controller("UserEditController", function($scope, $state, userData, AjaxRequest) {
+	}).controller("UserEditController", function($scope, $state, userData, userTypesData, AjaxRequest, AlertMsg) {
 		$scope.user = userData.data;
+		$scope.userTypes = userTypesData.data;
+		$scope.password2 = "";
 		$scope.rootpath = balintimesConstant.rootpath;
 		$scope.resetPassword = function() {
-			$scope.user.password = "123";
+			AlertMsg.exception("这是一个提示")
 		};
 		$scope.saveUser = function() {
 			var url = "/user/update"
-			if (angular.isUndefined($scope.user.uid) == true) {
+			if (angular.isUndefined($scope.user.uid) == true || $scope.user.uid == "0") {
 				url = "/user/create"
 			}
 
@@ -88,7 +108,17 @@ define([ 'angularAMD', 'balintimesConstant', 'ui-bootstrap', 'angular-messages' 
 					$state.go('auth/user');
 				}
 			})
-		}
+		};
+		$scope.GetNullUser = function() {
+			AjaxRequest.Get("/user/getnulluser").then(function(rsBody) {
+				console.info(rsBody);
+			});
+		};
+		$scope.GetAdminUser = function() {
+			AjaxRequest.Get("/admin/getadminuser").then(function(rsBody) {
+				console.info(rsBody);
+			});
+		};
 	})
 
 	return {

@@ -1,0 +1,9 @@
+@CHARSET "UTF-8";
+
+@media ( min-width : 1200px) .container {
+	width:1200px;
+}
+
+body {
+	background-color: #eee;
+}

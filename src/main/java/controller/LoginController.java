@@ -11,8 +11,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import base.BaseController;
+
 @Controller
-public class LoginController
+public class LoginController extends BaseController
 {
 	@RequestMapping("login")
 	public String loginView(Model model)
@@ -27,14 +29,17 @@ public class LoginController
 	}
 
 	@RequestMapping("login/submit")
-	public String loginSubmit(String username, String password, Model model, RedirectAttributes redirectAttributes)
+	public String loginSubmit(String username, String password, String rememberme, Model model, RedirectAttributes redirectAttributes)
 	{
 		try
 		{
 			Subject subject = SecurityUtils.getSubject();
 			UsernamePasswordToken token = new UsernamePasswordToken(username,
 					password);
-			// token.setRememberMe(true);
+			if ("true".equals(rememberme))
+			{
+				token.setRememberMe(true);
+			}
 			subject.login(token);
 			if (subject.isAuthenticated())
 			{
@@ -46,21 +51,21 @@ public class LoginController
 			// TODO: handle exception
 			System.out.println(exception.getMessage());
 
-			redirectAttributes.addFlashAttribute("errormessage", exception.getMessage());
+			redirectAttributes.addFlashAttribute("errormessage", this.LocalMsg("AuthenticationException"));
 			return "redirect:/login";
 			// return "redirect:/login/error";
 		}
 		catch (IncorrectCredentialsException exception)
 		{
 			System.out.println(exception.getMessage());
-			redirectAttributes.addFlashAttribute("errormessage", exception.getMessage());
+			redirectAttributes.addFlashAttribute("errormessage", this.LocalMsg("IncorrectCredentials"));
 			return "redirect:/login";
 			// return "redirect:/login/error";
 		}
 		catch (AuthenticationException exception)
 		{
 			System.out.println(exception.getMessage());
-			redirectAttributes.addFlashAttribute("errormessage", exception.getMessage());
+			redirectAttributes.addFlashAttribute("errormessage", this.LocalMsg("AuthenticationException"));
 			return "redirect:/login";
 			// return "redirect:/login/error";
 		}
@@ -71,8 +76,9 @@ public class LoginController
 	@RequestMapping("/logout")
 	public String LogOutAction()
 	{
-		Subject subject = SecurityUtils.getSubject();
-		subject.logout();
+		shiro.Utils.logout();
+		// Subject subject = SecurityUtils.getSubject();
+		// subject.logout();
 		return "redirect:/login";
 	}
 }

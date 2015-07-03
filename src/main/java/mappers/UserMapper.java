@@ -13,9 +13,11 @@ public interface UserMapper
 
 	public List<User> GetUserList();
 
+	public List<String> CheckUserName(String username);
+
 	public void updateUser(User user);
 
-	public void deleteUser(String uid);
+	public void deleteUser(Map<String, Object> params);
 
 	public String getUserPassword(String username);
 
@@ -24,4 +26,6 @@ public interface UserMapper
 	public List<User> GetUserByPage(Map<String, Object> params);
 
 	public int GetUserTotalCount(Map<String, Object> params);
+
+	public void UpdatePassword(Map<String, Object> params);
 }
