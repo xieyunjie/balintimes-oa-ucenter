@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mappers.UserRolesMapper">
+
+	<resultMap type="UserRoles" id="userRolesMap">
+		<id property="uid" column="uid" />
+		<result property="roleUid" column="roleuid" />
+		<result property="userUid" column="useruid" />
+	</resultMap>
+
+	<select id="GetUserRolesListByUser" statementType="PREPARED" resultType="UserRoles" parameterType="String">
+		select * from userroles where useruid=#{userUid}
+	</select>
+
+	<insert id="CreateUserRoles" statementType="PREPARED" parameterType="UserRoles">
+		insert into userroles(uid,useruid,roleuid) values(uuid(),#{userUid},#{roleUid})
+	</insert>
+	
+	<delete id="DeleteUserRoleByUserAndRole" statementType="PREPARED" parameterType="map">
+		delete from userroles where useruid=#{userUid} and roleuid=#{roleUid}
+	</delete>
+	
+	<delete id="DeleteUserRoleByUser" statementType="PREPARED" parameterType="String">
+		delete from userroles where useruid=#{userUid}
+	</delete>
+	
+	<delete id="DeleteUserRoleByRole" statementType="PREPARED" parameterType="String">
+		delete from userroles where roleuid=#{roleUid}
+	</delete>
+
+</mapper>

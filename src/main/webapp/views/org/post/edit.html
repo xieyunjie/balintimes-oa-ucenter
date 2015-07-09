@@ -1,0 +1,83 @@
+<ol class="breadcrumb">
+    <li><a href="#">首页</a></li>
+    <li><a href="#">职位设置</a></li>
+    <li class="active">职位编辑</li>
+</ol>
+
+<form class="form-horizontal" name="editForm" role="form" novalidate>
+    <div class="form-group">
+        <label for="parentname2" class="col-sm-1 control-label">上级职位</label>
+
+        <div class="col-sm-4 dropdown combo-select">
+            <div class="input-group">                                
+                <input type="text" class="form-control" name='parentname2' ng-model="post.parentname" readonly>
+                  <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" ng-click="postDropDown=!postDropDown"><i
+                            class="fa fa-angle-double-right"></i> 选择
+                    </button>
+                  </span>
+            </div>
+            <div class="dropdown-menu combo-dropdown-menu collapse" ng-class="{in: postDropDown}"
+                 ng-blur="postDropDown = false">
+                <treecontrol class="tree-light treecontrolfont" tree-model="treeData" expanded-nodes="expandedNodes"
+                             on-selection="SelectTreepost(node)">
+                    {{node.name}}
+                </treecontrol>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="name" class="col-sm-1 control-label">职位名称:</label>
+
+        <div class="col-sm-4">
+            <input type="text" class="form-control" name='name' ng-model="post.name"
+                   required="required" ng-maxlength="10" ng-minlength="2"/>
+
+            <div ng-if="editForm.name.$dirty">
+                <div ng-messages="editForm.name.$error" class="errormsg" role="alert">
+                    <div ng-messages-include='{{rootpath}}/views/tpls/messageerror/require.html'/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="organizationuid" class="col-sm-1 control-label">所属机构:</label>
+
+        <div class="col-sm-4">
+            <select class="form-control" name="organizationuid" ng-model="post.organizationuid" required="required"
+                    ng-options="org.uid as org.name for org in orgData"></select>
+
+            <div ng-if="editForm.organizationuid.$dirty">
+                <div ng-messages="editForm.organizationuid.$error" class="errormsg" role="alert">
+                    <div ng-messages-include='{{rootpath}}/views/tpls/messageerror/require.html'/>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  
+    <div class="form-group">
+        <label for="comment" class="col-sm-1 control-label">备注:</label>
+
+        <div class="col-sm-4">
+            <textarea name="comment" class="form-control" ng-model="post.comment"></textarea>
+        </div>
+
+    </div>
+
+
+    <div class="form-group">
+        <div class="col-sm-offset-1 col-sm-6">
+            <button class="btn btn-primary" ng-click="Savepost()" ng-disabled="editForm.$invalid">
+                <i class="fa fa-check"></i>保存
+            </button>
+            <button class="btn btn-info" ng-click="Revert()">
+                <i class="fa fa-undo"></i> 重置
+            </button>
+            <a ui-sref="org/post" class="btn btn-warning">
+                <i class="fa fa-times"></i>取消并返回</a>
+
+        </div>
+    </div>
+</form>

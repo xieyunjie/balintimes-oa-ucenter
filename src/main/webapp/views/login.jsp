@@ -27,7 +27,7 @@
 
 		<div class="container-fluid">
 			<div class="collapse navbar-collapse" id="example-navbar-collapse">
-				<nav class="navbar navbar-inverse" role="navigation"> <a href="#" class="navbar-brand">Balintimes
+				<nav class="navbar " role="navigation"> <a href="#" class="navbar-brand">Balintimes
 					OA 2015</a>
 				<ul class="nav navbar-nav navbar-right">
 					<li><a href="#"><fmt:formatDate value="${now}" type="both" dateStyle="long"
@@ -73,7 +73,7 @@
 			</div>
 			<div class="form-group">
 				<div class="col-sm-offset-4 col-sm-4">
-					<input id="btnSubmit" class="btn btn-lg btn-primary" style="width: 90%" type="submit"
+					<input id="btnSubmit" class="btn btn-lg btn-primary" style="width: 100%" type="submit"
 						value="登录">
 				</div>
 			</div>

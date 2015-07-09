@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mappers.PostMapper">
+
+	<resultMap type="post" id="PostResultMap">
+		<id property="uid" column="uid" />
+		<result property="parentuid" column="parentuid" />
+		<result property="name" column="name" />
+		<result property="organizationuid" column="organizationuid" />
+		<result property="comment" column="comment" />
+		<result property="createby" column="createby" />
+		<result property="createtime" column="createtime" />
+		<result property="editby" column="editby" />
+		<result property="edittime" column="edittime" />
+	</resultMap>
+
+	<sql id="postColumns">
+		a.*,b.name as organizationname
+	</sql>
+
+	<select id="GetPostList" statementType="PREPARED" resultType="Post">
+		SELECT
+		<include refid="postColumns" />
+		FROM post a
+		inner join organization b on a.organizationuid=b.uid
+		where b.delflag = 0
+	</select>
+
+	<select id="GetPostSet" parameterType="String" statementType="PREPARED" resultType="Post">		
+		SELECT
+		<include refid="postColumns" />
+		FROM post a
+		inner join organization b on a.organizationuid=b.uid
+		where b.delflag = 0 and FIND_IN_SET(a.uid, fun_GetPostTreeSet(#{postname}))>0
+	</select>
+
+	<select id="GetOnePost" parameterType="String" statementType="PREPARED"
+		resultType="Post">
+		SELECT
+		<include refid="postColumns" />
+		FROM post a
+		inner join organization b on a.organizationuid=b.uid
+		where b.delflag = 0 and a.uid=#{uid}
+	</select>
+
+	<insert id="CreatePost" parameterType="Post" statementType="PREPARED"
+		keyProperty="uid" keyColumn="uid" useGeneratedKeys="false">
+		INSERT INTO post (
+		uid, parentuid, name, organizationuid,
+		comment,createby, createtime
+		)
+		VALUES
+		(
+		#{uid}, #{parentuid}, #{name}, #{organizationuid},
+		#{comment},#{createby},now()
+		);
+	</insert>
+
+	<update id="UpdatePost" parameterType="Map">
+		UPDATE post
+		SET parentuid = #{parentuid},
+		name = #{name},
+		organizationuid = #{organizationuid},
+		comment = #{comment},
+		editby = #{editby},
+		edittime = now()
+		WHERE uid = #{uid}
+
+	</update>
+
+
+</mapper>

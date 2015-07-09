@@ -1,0 +1,88 @@
+<ol class="breadcrumb">
+	<li><a href="#">首页</a></li>
+	<li><a href="#">权限设置</a></li>
+	<li class="active">角色设置编辑</li>
+</ol>
+
+<form name="editForm" class="form-horizontal " role="form" novalidate>
+
+	<!-- 名称 -->
+	<div class="form-group">
+		<label class="col-sm-1 control-label">名称:</label>
+
+		<div class="col-sm-4">
+			<input type="hidden" name="uid" ng-model="role.uid"> <input
+				type="text" class="form-control" name='name' ng-model="role.name"
+				required="required" />
+
+			<div ng-if="editForm.name.$dirty">
+				<div ng-messages="editForm.name.$error" class="errormsg"
+					role="alert">
+					<div
+						ng-messages-include='{{rootpath}}/views/tpls/messageerror/require.html' />
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- 上级角色 -->
+	<div class="form-group">
+		<label class="col-sm-1 control-label">上级角色</label>
+
+		<div class="col-sm-4 dropdown combo-select">
+			<div class="input-group">
+				<input type="hidden" ng-model="role.parentUid"> <input
+					type="text" class="form-control" name='parnetname'
+					ng-model="parentname" readonly> <span
+					class="input-group-btn">
+					<button class="btn btn-default" type="button"
+						ng-click="orgDropDown=!orgDropDown">
+						<i class="fa fa-angle-double-right"></i> 选择
+					</button>
+				</span>
+			</div>
+			<div class="dropdown-menu combo-dropdown-menu collapse"
+				ng-class="{in: orgDropDown}" ng-blur="orgDropDown = false">
+				<treecontrol class="tree-light treecontrolfont"
+					tree-model="treeData" expanded-nodes="expandedNodes"
+					on-selection="SelectTreeRole(node)"> {{node.name}} </treecontrol>
+			</div>
+		</div>
+	</div>
+
+	<!-- 是否禁用 -->
+	<div class="form-group">
+		<label class="col-sm-1 control-label">是否禁用:</label>
+
+		<div class="col-sm-4">
+			<input type="checkbox" name='forbidden' ng-model="role.forbidden">
+		</div>
+	</div>
+
+	<!-- 备注 -->
+	<div class="form-group">
+		<label for="comment" class="col-sm-1 control-label">备注:</label>
+
+		<div class="col-sm-4">
+			<textarea type="text" class="form-control" name='comment'
+				ng-model="role.comment" />
+		</div>
+	</div>
+
+	<div class="form-group">
+		<div class="col-sm-offset-1 col-sm-6">
+			<button class="btn btn-primary" ng-click="saveRole()"
+				ng-disabled="editForm.$invalid">
+				<i class="fa fa-check"></i>保存
+			</button>
+			<button class="btn btn-info" ng-click="revert()">
+				<i class="fa fa-undo"></i> 重置
+			</button>
+			<a ui-sref="auth/role" class="btn btn-warning"> <i
+				class="fa fa-times"></i>取消并返回
+			</a>
+		</div>
+	</div>
+
+</form>

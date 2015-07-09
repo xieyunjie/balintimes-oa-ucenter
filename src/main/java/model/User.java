@@ -191,4 +191,9 @@ public class User implements Serializable
 		this.lastlogin = lastlogin;
 	}
 
+
+	@Override
+	public String toString() {
+		return uid + " ## " + username;
+	}
 }

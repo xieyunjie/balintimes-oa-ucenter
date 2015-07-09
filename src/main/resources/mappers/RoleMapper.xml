@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mappers.RoleMapper">
+
+	<resultMap type="Role" id="roleMap">
+		<id property="uid" column="uid" />
+		<result property="parentUid" column="parentuid" />
+		<result property="name" column="name" />
+		<result property="forbidden" column="forbidden" />
+		<result property="comment" column="comment" />
+		<result property="createBy" column="createby" />
+		<result property="createTime" column="createtime" />
+		<result property="editBy" column="editby" />
+		<result property="editTime" column="edittime" />
+	</resultMap>
+
+	<select id="GetRoleList" statementType="PREPARED" resultType="Role">
+		select * from role
+	</select>
+	
+	<select id="GetRoleListByNotForbidden" statementType="PREPARED" resultType="Role">
+		select * from role where forbidden=0
+	</select>
+
+	<select id="GetRole" statementType="PREPARED" resultType="Role"
+		parameterType="String">
+		select * from role where uid =#{uid}
+	</select>
+
+	<select id="GetUserRoles"  statementType="PREPARED" resultType="Role" parameterType="String">
+		select
+			a.*
+		from
+			role as a join userroles as b on a.uid=b.roleuid
+			join user as c on b.useruid=c.uid
+		where
+			a.forbidden=0 and c.username=#{userName}
+	</select>
+	
+	<insert id="CreateRole" statementType="PREPARED" parameterType="Role">
+		insert into role(
+			uid,name,parentuid,forbidden,comment,createby,createtime,editby,edittime
+		)
+		values(
+			uuid(),#{name},#{parentUid},#{forbidden},#{comment},#{createBy},now(),null,null
+		)
+	</insert>
+
+	<update id="UpdateRole" statementType="PREPARED" parameterType="Role">
+		Update
+			role
+		set
+			name=#{name},
+			parentUid=#{parentUid},
+			forbidden=#{forbidden},
+			comment=#{comment},
+			editby=#{editBy},
+			editTime=now()
+		where
+			uid=#{uid}
+	</update>
+
+	<delete id="DeleteRole" statementType="PREPARED" parameterType="String">
+		delete from role where uid=#{uid}
+	</delete>
+
+	<delete id="DeleteRoleByParentUid" statementType="PREPARED"
+		parameterType="String">
+		delete from role where parentuid=#{parentUid}
+	</delete>
+
+</mapper>

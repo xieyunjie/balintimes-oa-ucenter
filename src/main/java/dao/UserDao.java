@@ -5,29 +5,31 @@ import java.util.List;
 import model.User;
 import tuples.TuplePage;
 
-public interface UserDao
-{
+public interface UserDao {
 
-	User getUser(String uid);
+    User getUser(String uid);
 
-	boolean createUser(User user);
+    boolean createUser(User user);
 
-	List<User> GetUserList();
-	
-	boolean ExistsUserName(String username);
-	
-	boolean ExistsUserName(String username,String useruid);
+    List<User> GetUserList();
 
-	void updateUser(User user);
+    boolean ExistsUserName(String username);
 
-	void deleteUser(String uid,String employeename);
+    boolean ExistsUserName(String username, String useruid);
 
-	String getUserPassword(String username);
+    void updateUser(User user);
 
-	User getUserByName(String username);
+    void deleteUser(String uid, String employeename);
 
-	TuplePage<List<User>, Integer> GetUserList(String username, String deptname, int page, int pageSize);
+    String getUserPassword(String username);
 
-	void UpdatePassword(String uID, String encryptPassword);
+    User getUserByName(String username);
 
+    TuplePage<List<User>, Integer> GetUserList(String username, String deptname, int page, int pageSize);
+
+    TuplePage<List<User>, Integer> GetUserList(String username, String employeename, String usertype, String isenable, int page, int pageSize);
+
+    void UpdatePassword(String uID, String encryptPassword);
+
+    void UpdateLastLogin(String username);
 }

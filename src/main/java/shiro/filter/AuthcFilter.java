@@ -17,9 +17,11 @@ public class AuthcFilter extends AuthenticationFilter
 	@Override
 	protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception
 	{
+
 		// 没有登录，重定向到登录页面
 		saveRequest(request);
 		ShiroHttpServletRequest req = (ShiroHttpServletRequest) request;
+		System.out.println("AuthcFilter:" + req.getRequestURL().toString());
 
 		boolean ajax = "XMLHttpRequest".equals(req.getHeader("X-Requested-With"));
 		String ajaxFlag = null == request.getParameter("ajax") ? "false" : request.getParameter("ajax");

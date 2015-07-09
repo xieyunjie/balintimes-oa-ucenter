@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mappers.CityMapper">
+
+    <resultMap type="City" id="cityResultMap">
+        <id property="uid" column="uid"/>
+        <result property="name" column="name"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <select id="GetCityList" statementType="PREPARED" resultType="City">
+        SELECT  * FROM city where deleted=0
+    </select>
+
+	<select id="GetCityListByPage" parameterType="Map" resultType="City">
+        SELECT  * FROM city where deleted=0
+        <if test="name!=null and name!=''">and name like "%"#{name}"%"</if>    
+        <if test="uid!=null and uid!=''">and name like "%"#{uid}"%"</if>       
+
+    </select>
+
+    <update id="UpdateCity" parameterType="Map">
+        update city set name=#{name} where uid = #{uid}
+    </update>
+    
+    <update id="DeleteCity" parameterType="string"  >
+        update city set deleted=1 where uid = #{uid}
+    </update>
+
+    <insert id="CreateCity" statementType="PREPARED" parameterType="City" keyProperty="uid" keyColumn="uid">
+        insert into city(uid,name,deleted)
+        values( #{uid},#{name},0)
+    </insert>
+
+</mapper>

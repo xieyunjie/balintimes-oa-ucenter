@@ -5,28 +5,34 @@ import java.util.List;
 import tuples.TuplePage;
 import model.User;
 
-public interface UserService
-{
-	boolean create(User user);
+public interface UserService {
+    boolean create(User user);
 
-	User getUser(String uid);
+    User getUser(String uid);
 
-	void throwEx();
+    void updateUser(User user);
 
-	void updateUser(User user);
+    void deleteUser(String uid, String employeename);
 
-	void deleteUser(String uid,String employeename);
+    String getUserPassword(String username);
 
-	String getUserPassword(String username);
+    User getUserByName(String username);
 
-	User getUserByName(String username);
+//    TuplePage<List<User>, Integer> GetUserList(String username, String deptname, int page, int pageSize);
 
-	TuplePage<List<User>, Integer> GetUserList(String username, String deptname, int page, int pageSize);
+    TuplePage<List<User>, Integer> GetUserList(String username, String employeename, String usertype, String isenable, int page, int pageSize);
 
-	List<User> GetUserList();
+    List<User> GetUserList();
 
-	boolean ExistsUserName(String username);
-	boolean ExistsUserName(String username,String uid);
+    boolean ExistsUserName(String username);
 
-	void UpdatePassword(String uID, String password);
+    boolean ExistsUserName(String username, String uid);
+
+    void UpdatePassword(String uID, String password);
+
+    String UpdatePassword(String uid, String oldpassword, String newpassword) throws Exception;
+
+    void UpdateLastLogin(String username);
+
+    User InitWebUserByName(String username);
 }

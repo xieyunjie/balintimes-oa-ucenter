@@ -1,0 +1,203 @@
+<ol class="breadcrumb">
+	<li><a href="#">首页</a></li>
+	<li><a href="#">基础信息</a></li>
+	<li class="active">功能模块编辑</li>
+</ol>
+
+<form name="editForm" class="form-horizontal " role="form" novalidate>
+
+	<!-- 名称 -->
+	<div class="form-group">
+		<label class="col-sm-1 control-label">名称:</label>
+
+		<div class="col-sm-4">
+			<input type="hidden" name="uid" ng-model="resource.uid"> <input
+				type="text" class="form-control" name='name'
+				ng-model="resource.name" required="required" />
+
+			<div ng-if="editForm.name.$dirty">
+				<div ng-messages="editForm.name.$error" class="errormsg"
+					role="alert">
+					<div
+						ng-messages-include='{{rootpath}}/views/tpls/messageerror/require.html' />
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 应用程序 -->
+	<div class="form-group">
+		<label class="col-sm-1 control-label">应用程序:</label>
+
+		<div class="col-sm-4">
+
+			<select class="form-control" name="appUid" ng-model="resource.appUid"
+				required="required"
+				ng-options="item.uid as item.name for item in applicationList">
+			</select>
+
+			<div ng-if="editForm.appUid.$dirty">
+				<div ng-messages="editForm.appUid.$error" class="errormsg"
+					role="alert">
+					<div
+						ng-messages-include='{{rootpath}}/views/tpls/messageerror/require.html' />
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 上级菜单 -->
+	<div class="form-group">
+		<label class="col-sm-1 control-label">上级菜单</label>
+
+		<div class="col-sm-4 dropdown combo-select">
+			<div class="input-group">
+				<input type="hidden" ng-model="resource.parentUid">
+				<input type="text" class="form-control" name='parnetname'
+					ng-model="parentname" readonly> <span
+					class="input-group-btn">
+					<button class="btn btn-default" type="button"
+						ng-click="orgDropDown=!orgDropDown">
+						<i class="fa fa-angle-double-right"></i> 选择
+					</button>
+				</span>
+			</div>
+			<div class="dropdown-menu combo-dropdown-menu collapse"
+				ng-class="{in: orgDropDown}" ng-blur="orgDropDown = false">
+				<treecontrol class="tree-light treecontrolfont"
+					tree-model="treeData" expanded-nodes="expandedNodes" on-selection="SelectTreeResource(node)">
+				{{node.name}} </treecontrol>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- 资源类型 -->
+	<div class="form-group">
+		<label class="col-sm-1 control-label">类型:</label>
+
+		<div class="col-sm-4">
+
+			<select class="form-control" name="resourceType"
+				ng-model="resource.resourceType" required="required"
+				ng-options="item.id as item.name for item in resourceTypeList">
+			</select>
+
+			<div ng-if="editForm.resourceType.$dirty">
+				<div ng-messages="editForm.resourceType.$error" class="errormsg"
+					role="alert">
+					<div
+						ng-messages-include='{{rootpath}}/views/tpls/messageerror/require.html' />
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- URL -->
+	<div class="form-group ng-hide" ng-show="IsShow()">
+		<label class="col-sm-1 control-label">地址:</label>
+
+		<div class="col-sm-4">
+			<input type="text" class="form-control" name='url'
+				ng-model="resource.url" />
+		</div>
+	</div>
+
+	<!-- authorityCode -->
+	<div class="form-group ng-hide" ng-show="!IsShow()">
+		<label class="col-sm-1 control-label">编号:</label>
+
+		<div class="col-sm-4">
+			<input type="text" class="form-control" name='authorityCode'
+				ng-model="resource.authorityCode"  />
+
+		</div>
+	</div>
+	
+	<!-- state -->
+	<div class="form-group">
+		<label class="col-sm-1 control-label">状态:</label>
+
+		<div class="col-sm-4">
+			<input type="text" class="form-control" name='state'
+				ng-model="resource.state"  />
+
+		</div>
+	</div>
+
+	<!-- 优先级 -->
+	<div class="form-group">
+		<label class="col-sm-1 control-label">优先级:</label>
+
+		<div class="col-sm-4">
+			<input type="number" class="form-control" name='priority'
+				ng-model="resource.priority" required="required" />
+
+			<div ng-if="editForm.priority.$dirty">
+				<div ng-messages="editForm.priority.$error" class="errormsg"
+					role="alert">
+					<div
+						ng-messages-include='{{rootpath}}/views/tpls/messageerror/require.html' />
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 图标 -->
+	<div class="form-group">
+		<label class="col-sm-1 control-label">图标:</label>
+
+		<div class="col-sm-4">
+			<input type="text" class="form-control" name='iconClass'
+				ng-model="resource.iconClass" />
+		</div>
+	</div>
+
+	<!-- 显示菜单 -->
+	<div class="form-group">
+		<label class="col-sm-1 control-label">显示菜单:</label>
+
+		<div class="col-sm-4">
+			<input type="checkbox" name='showInMenu'
+				ng-model="resource.showInMenu">
+
+		</div>
+	</div>
+
+	<!-- 是否禁用 -->
+	<div class="form-group">
+		<label class="col-sm-1 control-label">是否禁用:</label>
+
+		<div class="col-sm-4">
+			<input type="checkbox" name='forbidden' ng-model="resource.forbidden">
+		</div>
+	</div>
+
+	<!-- 备注 -->
+	<div class="form-group">
+		<label for="comment" class="col-sm-1 control-label">备注:</label>
+
+		<div class="col-sm-4">
+			<textarea type="text" class="form-control" name='comment'
+				ng-model="resource.comment" />
+		</div>
+	</div>
+
+	<div class="form-group">
+		<div class="col-sm-offset-1 col-sm-6">
+			<button class="btn btn-primary" ng-click="saveResource()"
+				ng-disabled="editForm.$invalid">
+				<i class="fa fa-check"></i>保存
+			</button>
+			<button class="btn btn-info" ng-click="revert()">
+				<i class="fa fa-undo"></i> 重置
+			</button>
+			<a ui-sref="application/resource({appuid:resource.appUid})" class="btn btn-warning"> <i
+				class="fa fa-times"></i>取消并返回
+			</a>
+		</div>
+	</div>
+
+
+
+</form>

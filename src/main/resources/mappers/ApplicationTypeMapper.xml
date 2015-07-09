@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mappers.ApplicationTypeMapper">
+
+    <resultMap type="ApplicationType" id="applicationTypeResultMap">
+        <id property="uid" column="uid"/>
+        <result property="name" column="name"/>
+    </resultMap>
+
+    <select id="getApplicationTypeList" statementType="PREPARED" resultType="ApplicationType" parameterType="String">
+        SELECT  * FROM applicationtype where name like #{name}
+    </select>
+    
+    <select id="getApplicationType" statementType="PREPARED" resultType="ApplicationType" parameterType="String">
+        SELECT  * FROM applicationtype where uid = #{uid}
+    </select>
+    
+    <insert id="createApplicationType" parameterType="ApplicationType" statementType="PREPARED" keyProperty="uid" keyColumn="uid"
+            useGeneratedKeys="false">
+        INSERT INTO applicationtype (
+            uid,name
+        )
+        VALUES
+            (
+                uuid(),#{name}
+            );
+    </insert>
+
+    <update id="updateApplicationType" parameterType="ApplicationType">
+		update applicationtype set name=#{name} where uid = #{uid};
+	</update>
+	
+	<delete id="deleteApplicationType" parameterType="String">
+		delete from applicationtype where uid = #{uid};
+	</delete >
+
+</mapper>

@@ -1,0 +1,111 @@
+<ol class="breadcrumb">
+	<li><a href="#">首页</a></li>
+	<li><a href="#">基础信息</a></li>
+	<li class="active">应用程序</li>
+</ol>
+
+<div class="panel-body">
+
+	<form name="searchForm" class="form-horizontal" role="form" novalidate>
+
+		<div class="form-group">
+
+			<label for="username" class="control-label col-sm-1">名称:</label>
+
+			<div class="controls col-sm-2">
+				<input type="text" class="form-control" name='name'
+					ng-model="searchParams.name" />
+			</div>
+
+			<label for="username" class="control-label col-sm-1">类型:</label>
+			<div class="controls col-sm-2">
+				<select class="form-control" name="type"
+					ng-model="searchParams.typeUid"
+					ng-options="item.uid as item.name for item in types">
+				</select>
+			</div>
+
+			<label for="isenable" class="control-label col-sm-1">是否显示:</label>
+
+			<div class="controls col-sm-2">
+				<select class="form-control" name='showInMenu'
+					ng-model="searchParams.showInMenu">
+					<option value="1">是</option>
+					<option value="0">否</option>
+					<option value="-1">全部</option>
+				</select>
+			</div>
+
+			<label for="isenable" class="control-label col-sm-1">是否禁用:</label>
+
+			<div class="controls col-sm-2">
+				<select class="form-control" name='forbidden'
+					ng-model="searchParams.forbidden">
+					<option value="true">是</option>
+					<option value="false">否</option>
+					<option value="-1">全部</option>
+				</select>
+			</div>
+
+		</div>
+
+		<div class="form-group">
+
+			<div class=" col-sm-3 col-sm-offset-1">
+				<button class="btn btn-primary" ng-click="loadData()">
+					<i class="fa fa-search"></i> 查询
+				</button>
+				<button class="btn btn-info" ng-click="resetForm()">
+					<i class="fa fa-undo"></i> 重置
+				</button>
+				<a ui-sref="application/app/edit({uid:0})" class="btn btn-success">
+					<i class="fa fa-plus"></i> 添加应用程序
+				</a>
+
+			</div>
+		</div>
+	</form>
+
+	<div class="box">
+		<div class="box-body box-body table-responsive no-padding">
+			<table
+				class="table table-responsive table-striped table-bordered table-hover">
+				<thead>
+					<tr>
+						<th>名称</th>
+						<th>类型</th>
+						<th>图标地址</th>
+						<th>地址</th>
+						<th>是否显示菜单</th>
+						<th>是否禁用</th>
+						<th>备注</th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="item in applications"
+						ng-class="{warning:item.isenable == 0}">
+						<td>{{item.name}}</td>
+						<td>{{item.typeName}}</td>
+						<td>{{item.iconUrl}}</td>
+						<td>{{item.url}}</td>
+						<td><i ng-if="item.showInMenu"
+							class="fa fa-check-circle-o text-success fa-lg"></i> <i
+							ng-if="!item.showInMenu"
+							class="fa fa-times-circle text-danger  fa-lg"></i></td>
+						<td><i ng-if="item.forbidden"
+							class="fa fa-check-circle-o text-success fa-lg"></i> <i
+							ng-if="!item.forbidden"
+							class="fa fa-times-circle text-danger  fa-lg"></i></td>
+						<td>{{item.comment}}</td>
+						<td><a href="#"
+							ui-sref="application/app/edit({uid:item.uid})">修改</a></td>
+						<td><a href="#" ng-click="deleteFn(item.uid)">删除</a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+	</div>
+</div>

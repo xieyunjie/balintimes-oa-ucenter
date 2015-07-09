@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mappers.OrganizationMapper">
+
+    <resultMap type="Organization" id="organizationResultMap">
+        <id property="uid" column="uid"/>
+        <result property="parentuid" column="parentuid"/>
+        <result property="name" column="name"/>
+        <result property="cityuid" column="cityuid"/>
+        <result property="cityname" column="cityname"/>
+        <result property="status" column="status"/>
+        <result property="delflag" column="delflag"/>
+        <result property="comment" column="comment"/>
+        <result property="createby" column="createby"/>
+        <result property="createtime" column="createtime"/>
+        <result property="editby" column="editby"/>
+        <result property="edittime" column="edittime"/>
+    </resultMap>
+
+    <sql id="orgColumns">
+        a.*,b.name as cityname
+    </sql>
+
+
+    <select id="GetOrgList" statementType="PREPARED" resultType="Organization">
+        select
+        <include refid="orgColumns"/>
+        from organization a
+        inner join city b on a.cityuid = b.uid where a.delflag = 0
+    </select>
+
+    <select id="GetOrgSet" statementType="PREPARED" resultType="Organization" parameterType="String">
+        select
+        <include refid="orgColumns"/>
+        from organization a
+        inner join city b on a.cityuid = b.uid where a.delflag = 0 AND  FIND_IN_SET(a.uid, fun_GetOrganizationTreeSet(#{orgname},1))
+    </select>
+
+    <select id="GetOneOrg" parameterType="String" statementType="PREPARED" resultType="Organization">
+        select
+        <include refid="orgColumns"/>
+        from organization a
+        inner join city b on a.cityuid = b.uid
+        where a.uid = #{uid}
+    </select>
+
+    <insert id="CreateOrg" parameterType="User" statementType="PREPARED" keyProperty="uid" keyColumn="uid"
+            useGeneratedKeys="false">
+        INSERT INTO organization (
+            uid, parentuid, name, cityuid,
+            status, delflag, typeflag, comment,
+            createby, createtime
+        )
+        VALUES
+            (
+                #{uid}, #{parentuid}, #{name}, #{cityuid},
+                1, 0, 1, #{comment},
+                #{createby},now()
+            );
+    </insert>
+
+    <update id="UpdateOrg" parameterType="User" statementType="PREPARED" keyProperty="uid" keyColumn="uid">
+        UPDATE organization
+        SET  parentuid = #{parentuid},
+             name = #{name},
+             cityuid = #{cityuid},
+             status = #{status},
+             comment = #{comment},
+             editby = #{editby},
+             edittime = now()
+        WHERE uid = #{uid}
+
+    </update>
+
+    <update id="UpdateOrgDel" parameterType="Map">
+      UPDATE organization
+        SET  delflag = 1,
+             editby = #{editby},
+             edittime = now()
+        WHERE uid = #{uid}
+
+    </update>
+
+    <update id="TransferParent" parameterType="Map">
+        UPDATE organization
+        SET  parentuid=#{parentuid}
+             editby = #{editby},
+             edittime = now()
+        WHERE uid = #{uid}
+    </update>
+
+</mapper>

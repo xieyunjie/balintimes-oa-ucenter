@@ -1,0 +1,78 @@
+<ol class="breadcrumb">
+	<li><a href="#">首页</a></li>
+	<li><a href="#">系统设置</a></li>
+	<li class="active">用户角色设置</li>
+</ol>
+
+
+<div class="panel-body">
+
+	<script src="/oaucenter/resources/js/jquery.treetable.js"></script>
+	<link rel="stylesheet"
+		href="/oaucenter/resources/css/jquery.treetable.css">
+	<link rel="stylesheet"
+		href="/oaucenter/resources/css/jquery.treetable.theme.default.css">
+		
+		<script type="text/ng-template" id='tree_node'>
+		<tr tt-node is-branch="node.children.length > 0">
+			<td><span ng-bind="node.name"></span></td>
+			<td ng-bind="node.comment"></td>
+			<td style="width: 50px; text-align: center">
+				<div>
+					<input type="checkbox" ng-model="node.checked"  ng-change="saveCheckedValue(node.uid,node.checked)"  />
+				</div>
+			</td>
+		</tr>
+		
+	</script>	
+		
+		
+		<div class="box">
+		
+			<div class="box-header">
+				
+				<div class="box-title">
+				<h4><i class="fa fa-list-ol"></i>用户：{{user.employeename}}</h4>
+			</div>
+			<div class="box-tools">
+				<div class="input-group" style="width: 150px;">
+				
+					<div class="input-group-btn">
+
+						<button class="btn btn-sm btn-default" ng-click="cleanSetting()">
+							<i class="fa fa-trash-o fa-fw text-danger"></i> 清空所有设置
+						</button>
+						
+						<button class="btn btn-sm btn-default" ui-sref="auth/user">
+							<i class="fa fa-times"></i> 返回
+						</button>
+					</div>
+				</div>
+			</div>
+				
+			</div>
+			
+			
+		<div class="box-body box-body table-responsive no-padding">
+
+			<table class="table table-bordered table-striped table-hover"
+				tt-table tt-params="expanded_params">
+
+				<thead>
+					<tr>
+						<th>名称</th>
+						<th>备注</th>
+						<th style="width: 50px; text-align: center"></th>
+					</tr>
+				</thead>
+
+				<tbody>
+				</tbody>
+
+			</table>
+
+		</div>
+		
+		</div>
+
+</div>

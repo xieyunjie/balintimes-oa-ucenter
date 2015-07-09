@@ -1,0 +1,88 @@
+<ol class="breadcrumb">
+	<li><a href="#">首页</a></li>
+	<li><a href="#">权限设置</a></li>
+	<li class="active">角色设置</li>
+</ol>
+
+<div class="panel-body">
+
+	<script src="/oaucenter/resources/js/jquery.treetable.js"></script>
+	<link rel="stylesheet"
+		href="/oaucenter/resources/css/jquery.treetable.css">
+	<link rel="stylesheet"
+		href="/oaucenter/resources/css/jquery.treetable.theme.default.css">
+
+	<script type="text/ng-template" id='tree_node'>
+		<tr tt-node is-branch="node.children.length > 0">
+			<td style="width:250px;"><span ng-bind="node.name"></span></td>
+			<td ng-bind="node.iconClass"></td>
+			<td ng-bind="node.url"></td>
+			<td ng-bind="node.authorityCode"></td>
+			<td style="width: 50px; text-align: center">
+				<div>
+					<input class="ng-hide" ng-show="{{node.treeType==2}}" type="checkbox" ng-model="node.checked"  ng-change="saveCheckedValue(node.appUid,node.uid,node.checked)"  />
+				</div>
+			</td>
+		</tr>
+	</script>
+
+
+	<div class="box">
+
+		<div class="box-header">
+
+			<div class="box-title">
+				<h4><i class="fa fa-list-ol"></i>角色：{{role.name}}</h4>
+			</div>
+			<div class="box-tools">
+				<div class="input-group" style="width: 150px;">
+					<select class="form-control" style="width: 120px;" name="appUid"
+						ng-model="appUid" required="required"
+						ng-options="item.uid as item.name for item in applicationList">
+					</select>
+
+					<div class="input-group-btn">
+						<button class="btn btn-sm btn-default" ng-click="loadData()">
+							<i class="fa fa-search"></i> 查找
+						</button>
+						
+						<button class="btn btn-sm btn-default" ng-click="cleanSetting()">
+							<i class="fa fa-trash-o fa-fw text-danger"></i> 清空所有设置
+						</button>
+						
+						<button class="btn btn-sm btn-default" ui-sref="auth/role">
+							<i class="fa fa-times"></i> 返回
+						</button>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+
+		<div class="box-body box-body table-responsive no-padding">
+
+			<table class="table table-bordered table-striped table-hover"
+				tt-table tt-params="expanded_params">
+
+				<thead>
+					<tr>
+						<th style="width: 250px;">名称</th>
+						<th>图标</th>
+						<th>地址</th>
+						<th>编号</th>
+						<th style="width: 50px; text-align: center"></th>
+					</tr>
+				</thead>
+
+				<tbody>
+				</tbody>
+
+			</table>
+
+		</div>
+
+	</div>
+
+
+</div>

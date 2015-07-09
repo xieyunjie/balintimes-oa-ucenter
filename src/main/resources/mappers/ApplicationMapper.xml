@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mappers.ApplicationMapper">
+
+	<resultMap type="Application" id="applicationMap">
+		<id property="uid" column="uid" />
+		<result property="name" column="name" />
+		<result property="typeUid" column="typeuid" />
+		<result property="typeName" column="typename" />
+		<result property="iconUrl" column="iconurl" />
+		<result property="url" column="url" />
+		<result property="showInMenu" column="showinmenu" />
+		<result property="forbidden" column="forbidden" />
+		<result property="comment" column="comment" />
+		<result property="createBy" column="createby" />
+		<result property="createTime" column="createtime" />
+		<result property="editBy" column="editby" />
+		<result property="editTime" column="edittime" />
+	</resultMap>
+
+	<select id="GetApplicationList" statementType="PREPARED"
+		resultType="Application" parameterType="Map">
+		select
+		a.*,b.name as typename
+		from
+		application as a join applicationtype as b on a.typeuid=b.uid
+		where
+		a.name like #{name}
+		and (ifnull(#{typeUid},'')='' or a.typeuid=#{typeUid})
+		and (#{showInMenu}=-1 or a.showinmenu=#{showInMenu})
+		and (#{forbidden}=-1 or a.forbidden=#{forbidden})
+	</select>
+	
+	<select id="GetApplicationListByNotForbidden" statementType="PREPARED"
+		resultType="Application">
+		select
+			a.*,b.name as typename
+		from
+		application as a join applicationtype as b on a.typeuid=b.uid
+		where
+			a.forbidden=0
+	</select>
+
+	<select id="GetApplication" statementType="PREPARED" resultType="Application"
+		parameterType="String">
+		select
+		a.*,b.name as typename
+		from
+		application as a join applicationtype as b on a.typeuid=b.uid
+		where
+		a.uid=#{uid}
+	</select>
+	
+	<select id="GetUserApplications" statementType="PREPARED" resultType="Application" parameterType="String">
+		select
+			a.*,b.name as typename
+		from
+			application as a join applicationtype as b on a.typeuid=b.uid
+		where
+			a.forbidden=0 
+			and exists(select 
+							1 
+						from 
+							userroles as z join role as y on z.roleuid=y.uid 
+							join user as u on u.uid=z.useruid
+							join roleapplication as x on y.uid =x.roleuid 
+						where 
+							u.username=#{userName} and x.appuid=a.uid)
+	</select>
+
+	<insert id="CreateApplication" parameterType="Application"
+		statementType="PREPARED" keyProperty="uid" keyColumn="uid"
+		useGeneratedKeys="false">
+		insert into application(
+			uid,name,typeuid,iconurl,url,showinmenu,forbidden,comment,createby,createtime,editby,edittime
+		)
+		values(
+			uuid(),#{name},#{typeUid},#{iconUrl},#{url},#{showInMenu},#{forbidden},#{comment},#{createBy},now(),null,null
+		);
+	</insert>
+
+	<update id="UpdateApplication" parameterType="Application">
+		update 
+			application 
+		set 
+			name=#{name} ,
+			typeuid=#{typeUid},
+			iconurl=#{iconUrl},
+			url=#{url},
+			showinmenu=#{showInMenu},
+			forbidden=#{forbidden},
+			comment=#{comment},
+			editby=#{editBy},
+			edittime=now()
+		where 
+			uid = #{uid};
+	</update>
+	
+	<delete id="DeleteApplication" parameterType="String">
+		delete from application where uid = #{uid};
+	</delete >
+
+</mapper>

@@ -1,0 +1,16 @@
+<div class="modal-header">
+    <h4 class="modal-title">{{title}}</h4>
+</div>
+<div class="modal-body">
+    <treecontrol class="tree-light treecontrolfont" tree-model="treedata" on-selection="showSelected(node)">
+        {{node.name}}
+    </treecontrol>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="btnClick('ok')">
+        <i class="fa fa-check"></i> 确认
+    </button>
+    <button class="btn btn-warning" ng-click="cancel()">
+        <i class="fa fa-times"></i> 取消
+    </button>
+</div>

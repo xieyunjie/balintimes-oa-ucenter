@@ -5,27 +5,30 @@ import java.util.Map;
 
 import model.User;
 
-public interface UserMapper
-{
-	public User getUser(String uid);
+public interface UserMapper {
+    User getUser(String uid);
 
-	public void createUser(User user);
+    void createUser(User user);
 
-	public List<User> GetUserList();
+    List<User> GetUserList();
 
-	public List<String> CheckUserName(String username);
+    List<String> CheckUserName(String username);
 
-	public void updateUser(User user);
+    void updateUser(User user);
 
-	public void deleteUser(Map<String, Object> params);
+    void deleteUser(Map<String, Object> params);
 
-	public String getUserPassword(String username);
+    String getUserPassword(String username);
 
-	public User getUserByName(String username);
+    User getUserByName(String username);
 
-	public List<User> GetUserByPage(Map<String, Object> params);
+    List<User> GetUserByPage(Map<String, Object> params);
 
-	public int GetUserTotalCount(Map<String, Object> params);
+    int GetUserTotalCount(Map<String, Object> params);
 
-	public void UpdatePassword(Map<String, Object> params);
+    void UpdatePassword(Map<String, Object> params);
+
+    void UpdateLastLogin(String username);
+
+    List<User> Pro_UserList(Map<String, Object> params);
 }

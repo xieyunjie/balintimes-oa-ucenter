@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mappers.RoleResourceMapper">
+
+	<resultMap type="RoleResource" id="roleResourceMap">
+		<id property="uid" column="uid" />
+		<result property="roleUid" column="roleuid" />
+		<result property="resourcesUid" column="resourcesuid" />
+	</resultMap>
+
+	<select id="GetRoleResourceListByRole" statementType="PREPARED"
+		resultType="RoleResource" parameterType="String">
+		select * from roleresources
+		where roleuid=#{roleUid}
+	</select>
+	
+	<select id="GetRoleResourceCountByRoleAndApp" statementType="PREPARED" resultType="int" parameterType="map" >
+		select
+			count(a.uid) as datacount
+		from
+			roleresources as a join role as b on a.roleuid=b.uid
+			join resource as c on a.resourcesuid=c.uid
+		where
+			a.roleuid=#{roleUid} and c.appuid=#{appUid}
+	
+	</select>
+
+	<insert id="CreateRoleResource" statementType="PREPARED"
+		parameterType="RoleResource">
+		insert into roleresources (uid,roleuid,resourcesuid)
+		values(uuid(),#{roleUid},#{resourcesUid})
+	</insert>
+	
+	<delete id="DeleteRoleResourceByRoleAndResource" statementType="PREPARED" parameterType="map">
+		delete from roleresources where roleuid=#{roleUid} and resourcesuid =#{resourcesUid}
+	</delete>
+	
+	<delete id="DeleteRoleResourceByRole" statementType="PREPARED" parameterType="String">
+		delete from roleresources where roleuid=#{roleUid}
+	</delete>
+	
+	<delete id="DeleteRoleResourceByResource" statementType="PREPARED" parameterType="String">
+		delete from roleresources where resourcesuid=#{resourcesUid}
+	</delete>
+
+</mapper>

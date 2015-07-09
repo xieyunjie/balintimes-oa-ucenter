@@ -1,0 +1,74 @@
+<ol class="breadcrumb">
+    <li><a href="#">首页</a></li>
+    <li><a href="#">系统设置</a></li>
+    <li class="active">城市列表</li>
+</ol>
+<div class="panel-body">
+    <form name="searchForm" class="form-horizontal" role="form" novalidate>
+        <div class="form-group">
+<!--             <label for="cityname" class="control-label col-sm-1">城市名:</label> -->
+
+<!--             <div class="controls col-sm-3"> -->
+<!--                 <input type="text" class="form-control" name='cityname' ng-model="searchParams.cityname"/> -->
+<!--             </div>                                  -->
+<!--         </div> -->
+<!--         <div class="form-group">           -->
+<!--             <div class=" col-sm-3 col-sm-offset-1"> -->
+<!--                 <button class="btn btn-primary" ng-click="searchCity()"> -->
+<!--                     <i class="fa fa-search"></i> 查询 -->
+<!--                 </button> -->
+<!--                 <button class="btn btn-info" ng-click="resetForm()"> -->
+<!--                     <i class="fa fa-undo"></i> 重置 -->
+<!--                 </button> -->
+                <a ui-sref="org/city/edit({uid:0})" class="btn btn-success">
+                    <i class="fa fa-plus"></i> 添加新城市</a>
+
+<!--             </div> -->
+        </div>
+    </form>
+
+    <div class="box">
+        <div class="box-header">
+            <div class="box-title">城市列表</div>
+            <div class="box-tools">
+                <div class="input-group" style="width: 150px;">
+                    <input type="text" name="table_search" class="form-control input-sm pull-right" placeholder="请输入城市名" ng-model="searchParams.cityName">
+
+                    <div class="input-group-btn">
+                        <button class="btn btn-sm btn-default" ng-click="searchCity()"><i class="fa fa-search"></i></button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="box-body box-body table-responsive no-padding">
+            <table class="table table-responsive table-striped table-bordered table-hover">
+                <thead>
+                <tr>                                    
+                    <th style="text-align: center">城市名</th>   
+                    <th style="width: 105px; text-align: center;">操作</th>                  
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="item in Citys" ng-class="{warning:item.isenable == 0}">
+                   <td style="text-align: center"> {{item.name}} </td>
+                   <td class="text-center">
+                     <a href="#" ui-sref="org/city/edit({uid:item.uid})"><i class="fa fa-pencil fa-fw"></i></a>
+					 <a href="#" ng-click="deleteCity(item.uid)"><i class="fa fa-trash-o fa-fw text-danger"></i></a>  
+                   </td>                                      
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        
+<!--         <div class="box-footer clearfix"> -->
+<!--             <pagination class="paginationnomargin" ng-change="loadPage()" total-items="searchParams.total" ng-model="searchParams.page" -->
+<!--                         class="pagination-sm" max-size="10" boundary-links="true" rotate="false"></pagination> -->
+<!--         </div> -->
+    </div>
+
+
+    <div>
+    </div>
+
+</div>

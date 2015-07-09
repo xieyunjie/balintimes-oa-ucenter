@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mappers.RoleApplicationMapper">
+
+	<resultMap type="RoleApplication" id="roleApplicationMap">
+		<id property="uid" column="uid" />
+		<result property="roleUid" column="roleuid" />
+		<result property="appUid" column="appuid" />
+	</resultMap>
+
+	<select id="GetRoleApplicationListByRole" statementType="PREPARED"
+		resultType="RoleApplication" parameterType="String">
+		select * from
+		roleapplication where roleuid=#{roleUid}
+	</select>
+
+	<select id="GetRoleApplicationCountByRole" statementType="PREPARED"
+		resultType="int" parameterType="map">
+		select count(uid) as datacount from
+		roleapplication where roleuid=#{roleUid} and appuid =#{appUid}
+	</select>
+
+	<insert id="CreateRoleApplication" statementType="PREPARED"
+		parameterType="RoleApplication">
+		insert into roleapplication(uid,roleuid,appuid)
+		values(uuid(),#{roleUid},#{appUid})
+	</insert>
+	
+	<delete id="DeleteRoleApplicationByRoleAndApp" statementType="PREPARED" parameterType="map">
+		delete from roleapplication where roleuid=#{roleuid} and appuid=#{appUid}
+	</delete>
+	
+	<delete id="DeleteRoleApplicationByRole" statementType="PREPARED" parameterType="String">
+		delete from roleapplication where roleuid=#{roleUid}
+	</delete>
+	
+	<delete id="DeleteRoleApplicationByApp" statementType="PREPARED" parameterType="String">
+		delete from roleapplication where appuid=#{appUid}
+	</delete>
+
+</mapper>

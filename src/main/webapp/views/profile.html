@@ -1,0 +1,204 @@
+<ol class="breadcrumb">
+    <li><a href="#">首页</a></li>
+    <li class="active">个人设置</li>
+</ol>
+
+<tabset>
+    <tab>
+        <tab-heading><i class="fa fa-bars text-blue"></i> 个人资料</tab-heading>
+        <form class="col-md-4" name="userInfoForm" role="form" novalidate>
+            <br>
+
+            <div class="form-group">
+                <label for="username">用户名</label>
+                <input type="password" class="form-control" name="username" disabled>
+            </div>
+            <div class="form-group">
+                <label for="employeename">员工名</label>
+                <input type="password" class="form-control" name="employeename" disabled>
+            </div>
+            <div class="form-group">
+                <label for="confirmpassword">职位</label>
+                <input type="password" class="form-control" name="confirmpassword" disabled>
+            </div>
+            <div class="form-group">
+                <label for="confirmpassword">移动电话</label>
+                <input type="password" class="form-control" name="confirmpassword">
+            </div>
+            <div class="form-group">
+                <label for="confirmpassword">办公电话</label>
+                <input type="password" class="form-control" name="confirmpassword">
+            </div>
+            <div class="form-group">
+                <label for="email">电子邮箱</label>
+                <input type="email" class="form-control" name="email" ng-model="email">
+
+                <div class="errormsg" ng-messages="userInfoForm.email.$error" role="alert">
+                    <div ng-messages-include="{{rootpath}}/views/tpls/messageerror/require.html"/>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" ng-click="SaveUserInfo()">保存</button>
+
+        </form>
+    </tab>
+    <tab>
+        <tab-heading><i class="fa fa-key text-blue"></i> 密码修改</tab-heading>
+        <form class="col-md-4" name="passwordForm" ng-if="activeTabIndex == 1" role="form" novalidate>
+            <br>
+
+            <div class="form-group">
+                <label for="oldpassword">原密码</label>
+                <input type="password" class="form-control" name="oldpassword" ng-model="userpassword.oldpassword"
+                       required="required">
+
+                <div ng-if="passwordForm.oldpassword.$dirty">
+
+                    <div ng-messages="passwordForm.oldpassword.$error" class="errormsg" role="alert">
+                        <div ng-messages-include="{{rootpath}}/views/tpls/messageerror/require.html"/>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label for="newpassword">新密码</label>
+
+                <input type="password" class="form-control" name="newpassword" ng-model="userpassword.newpassword"
+                       required="required" ng-maxlength="15" ng-minlength='7'>
+
+                <div ng-if="passwordForm.newpassword.$dirty">
+                    <div class="errormsg" ng-messages="passwordForm.newpassword.$error" role="alert">
+                        <div ng-messages-include="{{rootpath}}/views/tpls/messageerror/require.html"/>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <label for="confirmpassword">确认密码</label>
+
+                <input type="password" class="form-control" name="confirmpassword" ng-model="confirmpassword"
+                       required="required" ng-maxlength="15" ng-minlength='7'
+                       match-validator="userpassword.newpassword">
+
+                <div ng-if="passwordForm.confirmpassword.$dirty">
+                    <div ng-messages="passwordForm.confirmpassword.$error" class="errormsg" role="alert">
+                        <div ng-messages-include="{{rootpath}}/views/tpls/messageerror/require.html"/>
+                        <div ng-message="match">你输入的确认密码与之前的不匹配</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary" ng-click="SavePassword()"
+                        ng-disabled="passwordForm.$invalid"><i class="fa fa-check"></i>保存
+                </button>
+
+            </div>
+
+        </form>
+    </tab>
+    <tab>
+        <tab-heading><i class="fa fa-meh-o text-blue"></i> 头像设置</tab-heading>
+        头像设置
+    </tab>
+</tabset>
+<!--
+<div>
+    <ul class="nav nav-tabs">
+        <li role="presentation" ng-class="{active: activeTabIndex == 0}"><a href="#" ng-click="activeTab(0)"><i class="fa fa-bars text-blue"></i> 个人资料</a></li>
+        <li role="presentation" ng-class="{active: activeTabIndex == 1}"><a href="#" ng-click="activeTab(1)"><i class="fa fa-key text-blue"></i> 密码修改</a></li>
+        <li role="presentation" ng-class="{active: activeTabIndex == 2}"><a href="#" ng-click="activeTab(2)"><i class="fa fa-meh-o text-blue"></i> 头像设置</a></li>
+    </ul>
+    &lt;!&ndash;个人资料&ndash;&gt;
+    <div ng-if="activeTabIndex == 0">
+        <form class="col-md-4" name="userInfoForm" role="form" novalidate>
+            <br>
+
+            <div class="form-group">
+                <label for="username">用户名</label>
+                <input type="password" class="form-control" name="username" disabled>
+            </div>
+            <div class="form-group">
+                <label for="employeename">员工名</label>
+                <input type="password" class="form-control" name="employeename" disabled>
+            </div>
+            <div class="form-group">
+                <label for="confirmpassword">职位</label>
+                <input type="password" class="form-control" name="confirmpassword" disabled>
+            </div>
+            <div class="form-group">
+                <label for="confirmpassword">移动电话</label>
+                <input type="password" class="form-control" name="confirmpassword">
+            </div>
+            <div class="form-group">
+                <label for="confirmpassword">办公电话</label>
+                <input type="password" class="form-control" name="confirmpassword">
+            </div>
+            <div class="form-group">
+                <label for="email">电子邮箱</label>
+                <input type="email" class="form-control" name="email" ng-model="email">
+
+                <div class="errormsg" ng-messages="userInfoForm.email.$error" role="alert">
+                    <div ng-messages-include="{{rootpath}}/views/tpls/messageerror/require.html"/>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" ng-click="SaveUserInfo()">保存</button>
+
+        </form>
+    </div>
+    &lt;!&ndash;密码修改&ndash;&gt;
+    <div id="passwordDiv" ng-if="activeTabIndex == 1">
+        <form class="col-md-4" name="passwordForm" ng-if="activeTabIndex == 1" role="form" novalidate>
+            <br>
+
+            <div class="form-group">
+                <label for="oldpassword">原密码</label>
+                <input type="password" class="form-control" name="oldpassword" ng-model="userpassword.oldpassword" required="required">
+
+                <div ng-if="passwordForm.oldpassword.$dirty">
+
+                    <div ng-messages="passwordForm.oldpassword.$error" class="errormsg" role="alert">
+                        <div ng-messages-include="{{rootpath}}/views/tpls/messageerror/require.html"/>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label for="newpassword">新密码</label>
+
+                <input type="password" class="form-control" name="newpassword" ng-model="userpassword.newpassword" required="required" ng-maxlength="15" ng-minlength='7'>
+
+                <div ng-if="passwordForm.newpassword.$dirty">
+                    <div class="errormsg" ng-messages="passwordForm.newpassword.$error" role="alert">
+                        <div ng-messages-include="{{rootpath}}/views/tpls/messageerror/require.html"/>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <label for="confirmpassword">确认密码</label>
+
+                <input type="password" class="form-control" name="confirmpassword" ng-model="confirmpassword" required="required" ng-maxlength="15" ng-minlength='7'
+                       match-validator="userpassword.newpassword">
+
+                <div ng-if="passwordForm.confirmpassword.$dirty">
+                    <div ng-messages="passwordForm.confirmpassword.$error" class="errormsg" role="alert">
+                        <div ng-messages-include="{{rootpath}}/views/tpls/messageerror/require.html"/>
+                        <div ng-message="match">你输入的确认密码与之前的不匹配</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary" ng-click="SavePassword()" ng-disabled="passwordForm.$invalid"><i class="fa fa-check"></i>保存</button>
+
+            </div>
+
+        </form>
+    </div>
+    &lt;!&ndash;头像&ndash;&gt;
+    <div ng-if="activeTabIndex == 2"> Messages</div>
+</div>-->

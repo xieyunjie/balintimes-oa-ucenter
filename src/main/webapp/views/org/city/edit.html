@@ -1,0 +1,30 @@
+<ol class="breadcrumb">
+    <li><a href="#">首页</a></li>
+    <li><a href="#">系统设置</a></li>
+    <li class="active">城市编辑</li>
+</ol>
+<form name="editForm" class="form-horizontal " role="form" novalidate>
+    <div class="form-group">
+        <label for="cityname" class="col-sm-1 control-label">城市名:</label>
+
+        <div class="col-sm-4">
+            <input type="text" class="form-control" name='cityname' ng-model="City.name"
+                   required="required" ng-maxlength="10" ng-minlength='2'/>
+
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-offset-1 col-sm-6">
+            <button class="btn btn-primary" ng-click="saveCity()">
+                <i class="fa fa-check"></i>保存
+            </button>
+
+            <a class="btn btn-warning" ng-click="returnView()">
+                <i class="fa fa-times"></i>取消并s返回
+            </a>
+
+        </div>
+    </div>
+</form>
+

@@ -1,0 +1,113 @@
+<ol class="breadcrumb">
+	<li><a href="#">首页</a></li>
+	<li><a href="#">基础信息</a></li>
+	<li class="active">应用程序编辑</li>
+</ol>
+
+<form name="editForm" class="form-horizontal " role="form" novalidate>
+
+	<div class="form-group">
+		<label for="name" class="col-sm-1 control-label">名称:</label>
+
+		<div class="col-sm-4">
+			<input type="hidden" name="uid" ng-model="application.uid"> <input
+				type="text" class="form-control" name='name'
+				ng-model="application.name" required="required" />
+
+			<div ng-if="editForm.name.$dirty">
+				<div ng-messages="editForm.name.$error" class="errormsg"
+					role="alert">
+					<div
+						ng-messages-include='{{rootpath}}/views/tpls/messageerror/require.html' />
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label for="typeUid" class="col-sm-1 control-label">类型:</label>
+
+		<div class="col-sm-4">
+			<select class="form-control" name="typeUid"
+				ng-model="application.typeUid"
+				ng-options="item.uid as item.name for item in applicationTypeList">
+			</select>
+
+			<div ng-if="editForm.typeUid.$dirty">
+				<div ng-messages="editForm.typeUid.$error" class="errormsg"
+					role="alert">
+					<div
+						ng-messages-include='{{rootpath}}/views/tpls/messageerror/require.html' />
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label for="iconUrl" class="col-sm-1 control-label">图标地址:</label>
+
+		<div class="col-sm-4">
+			<input type="text" class="form-control" name='iconUrl'
+				ng-model="application.iconUrl" />
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label for="url" class="col-sm-1 control-label">地址:</label>
+
+		<div class="col-sm-4">
+			<input type="text" class="form-control" name='url'
+				ng-model="application.url" />
+
+			<div ng-if="editForm.url.$dirty">
+				<div ng-messages="editForm.url.$error" class="errormsg" role="alert">
+					<div
+						ng-messages-include='{{rootpath}}/views/tpls/messageerror/require.html' />
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="form-group">
+		<label for="showInMenu" class="col-sm-1 control-label">显示菜单:</label>
+
+		<div class="col-sm-4">
+                <input type="checkbox" name='showInMenu' ng-model="application.showInMenu">
+                
+            </div>
+	</div>
+
+	<div class="form-group">
+		<label for="forbidden" class="col-sm-1 control-label">是否禁用:</label>
+
+		<div class="col-sm-4">
+                 <input type="checkbox" name='forbidden' ng-model="application.forbidden"> 
+            </div>
+	</div>
+
+	<div class="form-group">
+		<label for="comment" class="col-sm-1 control-label">备注:</label>
+
+		<div class="col-sm-4">
+			<textarea type="text" class="form-control" name='comment'
+				ng-model="application.comment" />
+		</div>
+	</div>
+
+	<div class="form-group">
+		<div class="col-sm-offset-1 col-sm-6">
+			<button class="btn btn-primary" ng-click="saveApp()"
+				ng-disabled="editForm.$invalid">
+				<i class="fa fa-check"></i>保存
+			</button>
+			<button class="btn btn-info" ng-click="revert()">
+				<i class="fa fa-undo"></i> 重置
+			</button>
+			<a ui-sref="application/app" class="btn btn-warning"> <i
+				class="fa fa-times"></i>取消并返回
+			</a>
+		</div>
+	</div>
+
+</form>

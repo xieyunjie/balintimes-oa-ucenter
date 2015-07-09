@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mappers.ResourceMapper">
+
+	<resultMap type="Resource" id="resourceMap">
+		<id property="uid" column="uid" />
+		<result property="appUid" column="appuid" />
+		<result property="appName" column="appname" />
+		<result property="parentUid" column="parentuid" />
+		<result property="name" column="name" />
+		<result property="priority" column="priority" />
+		<result property="resourceType" column="resourcetype" />
+		<result property="iconClass" column="iconclass" />
+		<result property="url" column="url" />
+		<result property="authorityCode" column="authoritycode" />
+		<result property="showInMenu" column="showinmenu" />
+		<result property="forbidden" column="forbidden" />
+		<result property="comment" column="comment" />
+		<result property="createBy" column="createby" />
+		<result property="createTime" column="createtime" />
+		<result property="editBy" column="editby" />
+		<result property="editTime" column="edittime" />
+		<result property="state" column="state" />
+	</resultMap>
+
+	<select id="GetResourceList" statementType="PREPARED"
+		resultType="Resource" parameterType="String">
+		select
+			a.*,b.name as appname
+		from
+			resource as a join application as b on a.appuid=b.uid
+		where
+			appuid = #{appUid}
+	</select>
+	
+	<select id="GetResourceListByNotForbidden" statementType="PREPARED"
+		resultType="Resource" parameterType="String">
+		select
+			a.*,b.name as appname
+		from
+			resource as a join application as b on a.appuid=b.uid
+		where
+			appuid = #{appUid} and a.forbidden=0
+	</select>
+
+	<select id="GetResource" statementType="PREPARED" resultType="Resource"
+		parameterType="String">
+		select
+			a.*,b.name as appname
+		from
+			resource as a join application as b on a.appuid=b.uid
+		where
+			a.uid = #{uid}
+	</select>
+	
+	<select id="GetUserMenu" statementType="PREPARED" resultType="Resource" parameterType="map">
+		select 
+			a.*,b.name as appname
+		from
+			resource as a join application as b on a.appuid=b.uid
+		where
+			a.resourcetype=1 and a.forbidden=0 and b.forbidden=0
+			and (ifnull(#{appUid},'')='' or b.uid=#{appUid}) and 
+			exists(
+				select 
+					1
+				from 
+					userroles as z join role as y on z.roleuid=y.uid
+					join user as u on u.uid=z.useruid
+					join roleresources as x on y.uid=x.roleuid
+					join resource as r on r.uid=x.resourcesuid
+				where
+					u.username=#{userName} and r.parentuid=a.uid
+					)
+	</select>
+	
+	<select id="GetUserPermissions" statementType="PREPARED" resultType="Resource" parameterType="map">
+		select 
+			a.*,b.name as appname
+		from
+			resource as a join application as b on a.appuid=b.uid
+		where
+			a.resourcetype=2 and a.forbidden=0 and b.forbidden=0 and 
+			 (ifnull(#{appUid},'')='' or b.uid=#{appUid}) and 
+			exists(
+				select 
+					1
+				from 	
+					userroles as z join role as y on z.roleuid=y.uid
+					join user as u on u.uid=z.useruid
+					join roleresources as x on y.uid=x.roleuid
+				where
+					u.username=#{userName} and x.resourcesuid=a.uid
+				)
+	</select>
+	
+	<select id="GetUserMenuPermissions" statementType="PREPARED" resultType="Resource" parameterType="map">
+		select 
+			a.*,b.name as appname
+		from
+			resource as a join application as b on a.appuid=b.uid
+		where
+			a.resourcetype=2 and a.forbidden=0 and b.forbidden=0 and 
+			exists(
+				select 
+					1
+				from 
+					userroles as z join role as y on z.roleuid=y.uid
+					join user as u on u.uid=z.useruid
+					join roleresources as x on y.uid=x.roleuid
+					join resource as r on x.resourcesuid=r.uid
+				where
+					u.username=#{userName} and x.resourcesuid=a.uid
+					and r.parentuid=#{menuUid}
+				)	
+	</select>
+	
+	<insert id="CreateResourceInfo" statementType="PREPARED"
+		parameterType="Resource">
+		insert into resource(
+			uid,appuid,parentuid,name,priority,resourcetype,iconclass,url,authoritycode,showinmenu,forbidden,comment,createby,createtime,editby,edittime,state
+		)values(
+			uuid(),#{appUid},#{parentUid},#{name},#{priority},#{resourceType},#{iconClass},#{url},#{authorityCode},#{showInMenu},#{forbidden},#{comment},#{createBy},now(),null,null,#{state}
+		)
+	</insert>
+	
+	<update id="UpdateResourceInfo" statementType="PREPARED" parameterType="Resource">
+		update
+			resource
+		set  
+			appuid=#{appUid},
+			parentuid=#{parentUid},
+			name=#{name},
+			priority=#{priority},
+			resourcetype=#{resourceType},
+			iconclass=#{iconClass},
+			url=#{url},
+			authoritycode=#{authorityCode},
+			showinmenu=#{showInMenu},
+			forbidden=#{forbidden},
+			comment=#{comment},
+			editby=#{editBy},
+			edittime=#{editTime},
+			state=#{state}
+		where
+			uid=#{uid}
+	</update>
+
+	<delete id="DeleteResourceInfo" statementType="PREPARED" parameterType="String">
+		delete from resource where uid=#{uid}
+	</delete>
+				
+	<delete id="DeleteResourceByParentUid" statementType="PREPARED" parameterType="String">
+		delete from resource where parentuid=#{parentUid}
+	</delete>
+
+</mapper>

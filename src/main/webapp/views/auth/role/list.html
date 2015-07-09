@@ -1,0 +1,80 @@
+<ol class="breadcrumb">
+	<li><a href="#">首页</a></li>
+	<li><a href="#">权限设置</a></li>
+	<li class="active">角色设置</li>
+</ol>
+
+<div class="panel-body">
+	<script src="/oaucenter/resources/js/jquery.treetable.js"></script>
+	<link rel="stylesheet"
+		href="/oaucenter/resources/css/jquery.treetable.css">
+	<link rel="stylesheet"
+		href="/oaucenter/resources/css/jquery.treetable.theme.default.css">
+
+	<script type="text/ng-template" id='tree_node'>
+		<tr tr-mouseover-toggle="3" tt-node is-branch="node.children.length > 0">
+			<td><span ng-bind="node.name"></span></td>
+			<td style="width:100px;">
+				<i ng-class="{'fa fa-check-circle text-green fa-lg':node.forbidden == true,'fa fa-times-circle text-red  fa-lg':node.forbidden == false}"></i>
+			</td>
+			<td ng-bind="node.comment"></td>
+			<td style="width: 350px; text-align: center">
+				<div>
+					<a href="#" ui-sref="auth/role/edit({uid:0,parentuid:node.uid})"> <i class="fa fa-angle-double-down"></i> 添加下级角色</a>
+					<a href="#" ui-sref="auth/role/edit({uid:node.uid,parentuid:node.parentUid})"><i class="fa fa-pencil fa-fw"></i>修改</a>
+                    <a href="#" ng-click="deleteRole(node.uid)"><i class="fa fa-trash-o fa-fw text-danger"></i> 删除</a>
+					<a href="#" ui-sref="auth/role/setting({uid:node.uid})"><i class="fa fa-trash-o fa-fw fa-angle-double-up"></i> 设置角色</a>
+				</div>
+			</td>
+		</tr>
+		
+	</script>
+
+	<div class="box">
+
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-list-ol"></i>
+			</div>
+			<div class="box-tools">
+				<div class="input-group" style="width: 150px;">
+					<div class="input-group-btn">
+						<button class="btn btn-sm btn-default"
+							ui-sref="auth/role/edit({uid:0,parentuid:0})">
+							<i class="fa fa-plus"></i> 新建
+						</button>
+						<button class="btn btn-sm btn-default"
+							ng-click="loadData()">
+							<i class="fa fa-search"></i> 刷新
+						</button>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+
+		<div class="box-body box-body table-responsive no-padding">
+
+			<table class="table table-bordered table-striped table-hover"
+				tt-table tt-params="expanded_params">
+
+				<thead>
+					<tr>
+						<th>名称</th>
+						<th style="width: 100px;">是否禁用</th>
+						<th>备注</th>
+						<th style="width: 350px; text-align: center"></th>
+					</tr>
+				</thead>
+
+				<tbody>
+				</tbody>
+
+			</table>
+
+		</div>
+
+
+	</div>
+</div>

@@ -1,53 +1,76 @@
 /**
- * 
+ *
  */
 'use strict';
-define([ 'angular', 'balintimesConstant' ], function(angular, balintimesConstant) {
+define(['angular', 'balintimesConstant'], function (angular, balintimesConstant) {
 
-	var appDirective = angular.module('appDirective', []);
+    var appDirective = angular.module('appDirective', []);
 
-	appDirective.directive('bltextinput', function() {
-		return {
-			scope : {
-				label : "@",
-				name : "@",
-				value : "="
-			},
-			require : 'ngModel',
-			restrict : 'AE',
-			templateUrl : balintimesConstant.rootpath + "/views/tpls/directive/bl-textinput.html",
-			replace : true,
-			transclude : true,
-			link : function(scope, elem, attrs, ngModel) {
-				elem.find('input').attr('ng-maxlength', attrs.maxlength);
-				elem.find('input').attr('ng-minlength', attrs.minlength);
-				elem.find('input').attr('required', attrs.required);
-				scope.$watch(attrs.ngModel, function(e) {
-					console.info("link link link link");
+    appDirective.directive("trMouseoverToggle", function () {
+        return {
+            restrict: 'A',
+            link: function (scope, element, attrs) {
 
-					ngModel.$setValidity("minlength", false);
-				});
-				scope.$parent.$watch(attrs.ngModel, function(e) {
-					console.info("$parent link link link");
-					ngModel.$validators.minlength = false;
-				});
-			}
-		};
-	});
+                angular.element(element.find("td")[attrs["trMouseoverToggle"]]).children().hide();
 
-	appDirective.directive("matchValidator", function() {
-		return {
-			require : "ngModel",
-			link : function(scope, element, attrs, ngModel) {
-				ngModel.$parsers.push(function(value) {
-					ngModel.$setValidity("match", value == scope.$eval(attrs.matchValidator));
-					return value;
-				})
+                element.on("mouseover", function () {
+                    angular.element(element.find("td")[attrs["trMouseoverToggle"]]).children().show();
+                });
+                element.on("mouseout", function () {
+                    angular.element(element.find("td")[attrs["trMouseoverToggle"]]).children().hide();
+                })
+            }
+        }
+    });
+    appDirective.directive("matchValidator", function () {
+        return {
+            require: "ngModel",
+            link: function (scope, element, attrs, ngModel) {
+                ngModel.$parsers.push(function (value) {
+                    ngModel.$setValidity("match", value == scope.$eval(attrs.matchValidator));
+                    return value;
+                })
 
-			}
-		}
-	});
+            }
+        }
+    });
 
-	return appDirective;
+    appDirective.directive("userMenu", function () {
+        return {
+            restrict: 'EA',
+            //scope: {
+            //    userMenus:"="
+            //},
+            link: function (scope, element, attrs) {
+
+                var menus = scope.$eval(attrs["userMenus"])
+
+                console.info(menus);
+
+                //angular.element(element).append('<li class="treeview" litype="module"><a href="#">sssss</a><ul class="treeview-menu"></ul></li>');
+
+                for (var i = 0; i < menus.length; i++) {
+                    angular.element(element).append('<li class="treeview" litype="module"><i class="fa fa-share"></i> <span>' + menus[i].name + '</span><i class="fa fa-angle-left pull-right"></i><ul class="treeview-menu"></ul></li>');
+                }
+
+                //var genTree = function (menu, elem) {
+                //
+                //    if(menu.children.length > 0){
+                //
+                //        angular.element(elem).append('<li class="treeview" litype="module"><a href="#">sssss</a><ul class="treeview-menu"></ul></li>');
+                //
+                //    }
+                //    else{
+                //
+                //    }
+                //
+                //}
+            }
+        }
+
+    });
+
+
+    return appDirective;
 
 });

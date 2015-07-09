@@ -1,0 +1,49 @@
+<ol class="breadcrumb">
+	<li><a href="#">首页</a></li>
+	<li><a href="#">基础信息</a></li>
+	<li class="active">应用程序类型</li>
+</ol>
+<div class="panel-body">
+	<div class="box">
+
+		<div class="box-header">
+			<div class="box-title">应用程序类型</div>
+			<div class="box-tools">
+				<div class="input-group" style="width: 150px;">
+					<input type="text" name="table_search"
+						class="form-control input-sm pull-right" placeholder="Search"
+						ng-model="name">
+
+					<div class="input-group-btn">
+						<button class="btn btn-sm btn-default" ng-click="loadData()">
+							<i class="fa fa-search"></i>
+						</button>
+						<button class="btn btn-sm btn-default" ng-click="createFn();">
+							<i class="fa fa-user fa-fw">新建</i>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="box-body box-body table-responsive no-padding">
+			<table class="table table-bordered table-striped table-hover">
+				<thead>
+					<th colspan="3">名称</th>
+					<th></th>
+					<th></th>
+				</thead>
+				<tbody>
+					<tr ng-repeat="item in types">
+						<td colspan="3">{{item.name}}</td>
+						<td><a href="javascript:void(0)"
+							ng-click="updateFn(item.uid)">修改</a></td>
+						<td><a href="javascript:void(0)"
+							ng-click="deleteFn(item.uid)">删除</a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+	</div>
+</div>
