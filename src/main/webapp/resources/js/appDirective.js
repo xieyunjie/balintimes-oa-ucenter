@@ -2,7 +2,7 @@
  *
  */
 'use strict';
-define(['angular', 'balintimesConstant'], function (angular, balintimesConstant) {
+define(['angular', 'balintimesConstant'], function (angular) {
 
     var appDirective = angular.module('appDirective', []);
 
@@ -35,40 +35,57 @@ define(['angular', 'balintimesConstant'], function (angular, balintimesConstant)
         }
     });
 
-    appDirective.directive("userMenu", function () {
+    appDirective.directive("userMenu", ["$compile", function ($compile) {
         return {
-            restrict: 'EA',
-            //scope: {
-            //    userMenus:"="
-            //},
-            link: function (scope, element, attrs) {
+            restrict: 'E',
+            scope: {
+                userMenus: "="
+            },
+            link: function (scope, element) {
 
-                var menus = scope.$eval(attrs["userMenus"])
+                scope.$watch("userMenus", function (menus) {
+                    if (!menus.length) {
+                        return;
+                    }
+                    var menu = {};
+                    var html_menu = "";
+                    for (var i = 0; i < menus.length; i++) {
+                        menu = menus[i];
+                        html_menu += '<li class="treeview"><a href="#"><i class="fa ' + menu.iconclass + '"></i> ' +
+                            '<span>' + menu.name + '</span><i class="fa fa-angle-left pull-right"></i></a><ul class="treeview-menu">';
+                        html_menu += gentree(menu);
+                        html_menu += '</ul></li>';
+                    }
 
-                console.info(menus);
+                    angular.element(element).after($compile(angular.element(html_menu))(scope));
+                });
 
-                //angular.element(element).append('<li class="treeview" litype="module"><a href="#">sssss</a><ul class="treeview-menu"></ul></li>');
+                var gentree = function (menu) {
 
-                for (var i = 0; i < menus.length; i++) {
-                    angular.element(element).append('<li class="treeview" litype="module"><i class="fa fa-share"></i> <span>' + menus[i].name + '</span><i class="fa fa-angle-left pull-right"></i><ul class="treeview-menu"></ul></li>');
-                }
+                    var child = {},
+                        html = '';
 
-                //var genTree = function (menu, elem) {
-                //
-                //    if(menu.children.length > 0){
-                //
-                //        angular.element(elem).append('<li class="treeview" litype="module"><a href="#">sssss</a><ul class="treeview-menu"></ul></li>');
-                //
-                //    }
-                //    else{
-                //
-                //    }
-                //
+                    for (var i = 0; i < menu.children.length; i++) {
+                        child = menu.children[i];
+
+                        if (child.children.length == 0) {
+                            html += '<li><a href="#" ui-sref="' + child.state + '"><i class="fa ' + child.iconclass + '"></i>' + child.name + '</a></li>';
+                        }
+                        else {
+                            html += '<li><a href="#"><i class="fa ' + child.iconclass + '"></i>' + child.name + '<i class="fa fa-angle-left pull-right"></i></a>' +
+                                '<ul class="treeview-menu">';
+                            html += gentree(child);
+                            html += '</ul></li>';
+                        }
+                    }
+
+                    return html;
+                };
                 //}
             }
         }
 
-    });
+    }]);
 
 
     return appDirective;

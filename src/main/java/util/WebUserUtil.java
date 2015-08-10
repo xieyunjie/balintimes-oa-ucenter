@@ -39,7 +39,7 @@ public class WebUserUtil {
         return webUser;
     }
 
-    public List<Menu> GetUserMenus() {
+    public List<Menu> GetUserMenuTree() {
 
         List<Menu> list = new ArrayList<>();
         Subject subject = SecurityUtils.getSubject();
@@ -62,6 +62,24 @@ public class WebUserUtil {
         return list;
     }
 
+    public List<Menu> GetUserMenus() {
+
+        List<Menu> list = new ArrayList<>();
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.isRemembered() == false && subject.isAuthenticated() == false) {
+            return list;
+        }
+        List<model.Resource> list_resources = this.authorityService.GetUserMenu(SecurityUtils.getSubject().getPrincipal().toString(), APPUID);
+
+        for (model.Resource resource : list_resources) {
+            Menu menu = new Menu(resource.getUid(), resource.getName(), resource.getState(), resource.getIconClass(), resource.getUrl(), resource.getPriority());
+            list.add(menu);
+        }
+
+        Collections.sort(list);
+        return list;
+    }
+
     public List<Permission> GetUserPermission() {
 
         List<Permission> list = new ArrayList<>();
@@ -70,7 +88,7 @@ public class WebUserUtil {
             return list;
         }
 
-        List<model.Resource> list_resources = this.authorityService.GetUserMenuPermissions(SecurityUtils.getSubject().getPrincipal().toString(), APPUID);
+        List<model.Resource> list_resources = this.authorityService.GetUserPermissions(SecurityUtils.getSubject().getPrincipal().toString(), APPUID);
         list = new ArrayList<>(list_resources.size());
         for (model.Resource resource : list_resources) {
             Permission permission = new Permission(resource.getUid(), resource.getName(), resource.getAuthorityCode(), resource.getParentUid());

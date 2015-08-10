@@ -58,7 +58,7 @@
             return {ttNodeCounter: 0}
         })
 
-        .controller('TreetableController', ['$scope', '$element', '$compile', '$templateCache', '$q', '$http','tableParams', function ($scope, $element, $compile, $templateCache, $q, $http,tableParams) {
+        .controller('TreetableController', ['$scope', '$element', '$compile', '$templateCache', '$q', '$http', 'tableParams', function ($scope, $element, $compile, $templateCache, $q, $http, tableParams) {
 
             var params = $scope.ttParams;
             var table = $element;
@@ -73,7 +73,7 @@
                 return templatePromise.then(function (template) {
                     var template_scope = $scope.$parent.$new();
                     angular.extend(template_scope, {
-                        node      : node,
+                        node: node,
                         parentNode: parentNode
                     });
                     template_scope._ttParentId = parentId;
@@ -87,7 +87,7 @@
              * @param parentElement the parent node element, or null for the root
              * @param shouldExpand whether all descendants of `parentElement` should also be expanded
              */
-            $scope.addChildren = function (parentElement, shouldExpand) {
+            $scope.addChildren = function (parentElement, shouldExpand, expression) {
                 var parentNode = parentElement ? parentElement.scope().node : null;
                 var parentId = parentElement ? parentElement.data('ttId') : null;
 
@@ -109,7 +109,18 @@
 
                         if (shouldExpand) {
                             angular.forEach(newElements, function (el) {
-                                $scope.addChildren($(el), shouldExpand);
+                                var d = $(el).scope().node;
+                                //if(d[expression.key] != expression.value){
+                                //    $scope.addChildren($(el), shouldExpand);
+                                //}
+                                var expand = expression ? (d[expression.key] != expression.value) : shouldExpand;
+                                if (expand == true) {
+                                    $scope.addChildren($(el), shouldExpand, expression);
+                                }
+
+                                //if(shouldExpand){
+                                //    $scope.addChildren($(el), shouldExpand)
+                                //}
                             });
                         }
 
@@ -147,13 +158,14 @@
             /**
              * Rebuilds the entire table.
              */
-            $scope.refresh = function () {
+            $scope.refresh = function (expression) {
                 var rootNodes = table.data('treetable').nodes;
                 while (rootNodes.length > 0) {
                     table.treetable('removeNode', rootNodes[0].id);
                 }
                 tableParams.ttNodeCounter = 0;
-                return $scope.addChildren(null, $scope.shouldExpand());
+
+                return $scope.addChildren(null, expression ? true : $scope.shouldExpand(), expression);
             }
 
             // attach to params for convenience
@@ -169,8 +181,8 @@
              */
             $scope.getOptions = function () {
                 var opts = angular.extend({
-                    expandable    : true,
-                    onNodeExpand  : $scope.onNodeExpand,
+                    expandable: true,
+                    onNodeExpand: $scope.onNodeExpand,
                     onNodeCollapse: $scope.onNodeCollapse
                 }, params.options);
 
@@ -201,8 +213,8 @@
 
         .directive('ttTable', [function () {
             return {
-                restrict  : 'AC',
-                scope     : {
+                restrict: 'AC',
+                scope: {
                     ttParams: '='
                 },
                 controller: 'TreetableController'
@@ -213,11 +225,11 @@
             var ttNodeCounter = 0;
             return {
                 restrict: 'AC',
-                scope   : {
+                scope: {
                     isBranch: '=',
-                    parent  : '='
+                    parent: '='
                 },
-                link    : function (scope, element, attrs) {
+                link: function (scope, element, attrs) {
 
                     var branch = angular.isDefined(scope.isBranch) ? scope.isBranch : true;
 

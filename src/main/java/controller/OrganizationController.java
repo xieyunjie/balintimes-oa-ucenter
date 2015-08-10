@@ -72,7 +72,6 @@ public class OrganizationController extends BaseController {
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
     @ResponseBody
-    @RequiresPermissions("organization:create | organization:edit")
     public String SaveOrg(Organization organization) {
 
         try {

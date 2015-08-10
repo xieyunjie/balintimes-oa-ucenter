@@ -1,0 +1,39 @@
+<ol class="breadcrumb">
+	<li><a href="#">首页</a></li>
+	<li><a href="#">权限设置</a></li>
+	<li class="active">角色应用程序设置</li>
+</ol>
+
+<div class="panel-body">
+
+	<div class="box">
+
+		<div class="box-body box-body table-responsive no-padding">
+			<table
+				class="table table-responsive table-striped table-bordered table-hover">
+				<thead>
+					<tr>
+						<th style="width: 50px; text-align: center;"></th>
+						<th>名称</th>
+						<th>类型</th>
+						<th>备注</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="item in applicationList">
+						<td style="width: 50px; text-align: center;"><input
+							type="checkbox" ng-model="item.checked"
+							ng-change="saveCheckedValue(item.uid,item.checked)"></td>
+						<td>{{item.name}}</td>
+						<td>{{item.typeName}}</td>
+						<td>{{item.comment}}</td>
+					</tr>
+				</tbody>
+			</table>
+
+		</div>
+
+	</div>
+
+
+</div>

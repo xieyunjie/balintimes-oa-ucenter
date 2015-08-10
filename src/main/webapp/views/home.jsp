@@ -224,31 +224,18 @@
                 <li><a href="#" ui-sref="index"><i class="fa fa-home text-bold"></i> <span>主页</span></a></li>
 
 
-                <li class="treeview" ng-repeat="module in modules" litype="module">
-                    <a href="#"><i class="fa {{module.iconclass}}"></i> <span>{{module.name}}</span> <i
-                            class=" fa fa-angle-left pull-right"></i></a>
-                    <ul class="treeview-menu">
-                        <li ng-repeat="menu in module.children">
-                            <a href="#" ui-sref="{{menu.state}}">&nbsp;&nbsp;&nbsp;&nbsp;<i
-                                    class="fa {{menu.iconclass}}"></i>{{menu.name}} </a></li>
-                    </ul>
+                <%--<li class="treeview" ng-repeat="module in modules" litype="module">--%>
+                <%--<a href="#"><i class="fa {{module.iconclass}}"></i> <span>{{module.name}}</span> <i--%>
+                <%--class=" fa fa-angle-left pull-right"></i></a>--%>
+                <%--<ul class="treeview-menu">--%>
+                <%--<li ng-repeat="menu in module.children">--%>
+                <%--<a href="#" ui-sref="{{menu.state}}">&nbsp;&nbsp;&nbsp;&nbsp;<i--%>
+                <%--class="fa {{menu.iconclass}}"></i>{{menu.name}} </a></li>--%>
+                <%--</ul>--%>
 
-                </li>
+                <%--</li>--%>
 
-                <li class="treeview" litype="module">
-                    <a href="#">sssss</a>
-                    <ul class="treeview-menu">
-                        <li>Appended item</li>
-                        <li>Appended item</li>
-                        <li>Appended item</li>
-                        <li>Appended item</li>
-                        <li>Appended item</li>
-                        <li>Appended item</li>
-                        <li>Appended item</li>
-                    </ul>
-                </li>
-
-                <user-menu user-menus="modules"></user-menu>
+                <user-menu user-menus="MenuTree"></user-menu>
 
                 <%--                <!-- Optionally, you can add icons to the links -->
                                 <li class="active"><a href="#"><i class="icon-link"></i>

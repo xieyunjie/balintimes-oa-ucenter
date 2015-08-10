@@ -14,7 +14,7 @@
 	<script type="text/ng-template" id='tree_node'>
 		<tr tr-mouseover-toggle="7" tt-node is-branch="node.children.length > 0">
 			<td style="width:250px;"><span ng-bind="node.name"></span></td>
-			<td ng-bind="node.iconClass"></td>
+			<td style="text-align: center;width: 100px" ><i class="fa {{node.iconClass}}"></i></td>
 			<td ng-bind="node.url"></td>
 			<td ng-bind="node.authorityCode"></td>
 			<td ng-bind="node.state"></td>
@@ -66,7 +66,7 @@
 				<thead>
 					<tr>
 						<th style="width: 250px;">名称</th>
-						<th>图标</th>
+						<th  style="text-align: center;width: 100px">图标</th>
 						<th>地址</th>
 						<th>编号</th>
 						<th>状态</th>

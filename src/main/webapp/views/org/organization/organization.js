@@ -58,10 +58,13 @@ define(['angularAMD', 'balintimesConstant', 'ui-bootstrap', 'angular-messages', 
             return AjaxRequest.Get("/organization/tree", param).then(function (rs) {
                 treeData = rs.data;
                 if (treeData.length > 0) {
-                    $scope.expanded_params.refresh().then(function () {
-                        $scope.expanded_params.expendNode("0");
-                        /* console.info("expendNode");*/
-                    });
+                    $scope.expanded_params.refresh();
+                    //$scope.expanded_params.refresh().then(function () {
+                    //    $scope.expanded_params.expendNode("0");
+                    //    /* console.info("expendNode");*/
+                    //});
+
+                    //$scope.expanded_params.refresh({"key": "name", "value": name});
                 } else {
                     DlgMsg.alert("系统提示", "没有查找的机构信息！");
                 }
@@ -89,6 +92,9 @@ define(['angularAMD', 'balintimesConstant', 'ui-bootstrap', 'angular-messages', 
             },
             getTemplate: function (node) {
                 return 'tree_node';
+            },
+            options: {
+                initialState: 'expanded'
             }
         });
         $scope.initOrgTree();

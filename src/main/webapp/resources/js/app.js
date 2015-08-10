@@ -23,16 +23,16 @@ define(['angularAMD', 'balintimesConstant', 'angular-ui-router', 'ui-router-extr
                     }
                 );
 
-                angular.forEach(resp.data, function (module) {
-                    angular.forEach(module.children, function (m) {
-                        $futureStateProvider.futureState({
-                            stateName: m.state,
-                            urlPrefix: '/' + m.state,
-                            type: 'ngload',
-                            src: balintimesConstant.rootpath + m.url
-                        });
+                //angular.forEach(resp.data, function (module) {
+                angular.forEach(resp.data, function (m) {
+                    $futureStateProvider.futureState({
+                        stateName: m.state,
+                        urlPrefix: '/' + m.state,
+                        type: 'ngload',
+                        src: balintimesConstant.rootpath + m.url
                     });
                 });
+                //});
             })
         };
 
@@ -48,7 +48,7 @@ define(['angularAMD', 'balintimesConstant', 'angular-ui-router', 'ui-router-extr
         $rootScope.rootpath = balintimesConstant.rootpath;
         $rootScope.$state = $state;
         $rootScope.$window = $window;
-        $rootScope.modules = {};
+        $rootScope.MenuTree = {};
         $rootScope.WebUser = {};
         $rootScope.permissions = {};
 
@@ -66,13 +66,13 @@ define(['angularAMD', 'balintimesConstant', 'angular-ui-router', 'ui-router-extr
         });
 
         $rootScope.init = function () {
-            var menuPromise = $http.get(balintimesConstant.rootpath + '/home/usermenus'),
+            var menuPromise = $http.get(balintimesConstant.rootpath + '/home/usermenutree'),
                 userPromise = $http.get(balintimesConstant.rootpath + "/home/inituser"),
-                userPermission = $http.get(balintimesConstant.rootpath + "/home/userpermissions");
+                permissionPromise = $http.get(balintimesConstant.rootpath + "/home/userpermissions");
 
-            $q.all({menu: menuPromise, user: userPromise, permission: userPermission}).then(function (results) {
+            $q.all({menu: menuPromise, user: userPromise, permission: permissionPromise}).then(function (results) {
                 $rootScope.rootpath = balintimesConstant.rootpath;
-                $rootScope.modules = results.menu.data;
+                $rootScope.MenuTree = results.menu.data;
                 $rootScope.WebUser = results.user.data;
                 $rootScope.permissions = results.permission.data;
 
@@ -89,27 +89,6 @@ define(['angularAMD', 'balintimesConstant', 'angular-ui-router', 'ui-router-extr
 
                 });
             });
-            //$http.get(balintimesConstant.rootpath + "/home/inituser").then(function (resp) {
-            //
-            //    var webuser = resp.data;
-            //    $rootScope.rootpath = balintimesConstant.rootpath;
-            //    $rootScope.modules = webuser.modules;
-            //    $rootScope.WebUser = webuser;
-            //
-            //    var uiUrl = $window.location.hash.replace("#", "").replace("/", "");
-            //    require(["appadmin"], function ngloadCallback() {
-            //
-            //        if (uiUrl == "") {
-            //
-            //            $state.go("index");
-            //        }
-            //        else {
-            //            angular.element("li a[ui-sref='" + uiUrl + "']").parents("li[litype='module']").children('a').trigger('click')
-            //        }
-            //
-            //    });
-            //
-            //});
 
         };
         $rootScope.init();

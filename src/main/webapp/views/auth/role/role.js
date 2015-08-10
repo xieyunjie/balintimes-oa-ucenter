@@ -54,10 +54,29 @@ define([ 'angularAMD', 'balintimesConstant', 'ui-bootstrap',
 			}
 		}
 	};
+	
+	var appSettingState={
+			name : 'auth/role/appsetting',
+			url : '/auth/role/appsetting/:uid',
+			templateUrl : balintimesConstant.rootpath
+					+ '/views/auth/role/appsetting.html',
+			controller : 'AppSettingController',
+			resolve : {
+				roleData : function(AjaxRequest, $stateParams) {
+					return AjaxRequest.Get("/role/getRole", {
+						uid : $stateParams.uid
+					});
+				},
+				
+				applicationListData : function(AjaxRequest, $stateParams) {
+					return AjaxRequest.Get("/application/listByRole",{roleuid:$stateParams.uid});
+				}
+			}	
+	};
 
 	app.config([ '$stateProvider', '$urlRouterProvider',
 			function($stateProvider, $urlRouterProvider) {
-				$stateProvider.state(mainState).state(editState).state(roleSettingState);
+				$stateProvider.state(mainState).state(editState).state(roleSettingState).state(appSettingState);
 			} ]);
 
 	app.controller('RoleListController', function($scope, $state, $stateParams,
@@ -228,6 +247,36 @@ define([ 'angularAMD', 'balintimesConstant', 'ui-bootstrap',
 		}
 		
 		$scope.loadData();
+	});
+	
+	app.controller('AppSettingController',function($scope, $state, $stateParams,
+			roleData, applicationListData,AjaxRequest, DlgMsg, AlertMsg){
+		
+		$scope.role=roleData.data;
+		$scope.applicationList=applicationListData.data;
+		
+		$scope.loadData=function(){
+			var url = "/application/listByRole";
+			AjaxRequest.Get(url,{roleuid:$scope.role.uid} ).then(
+					function(rs) {
+						$scope.applicationList = rs.data;
+					});
+		};
+		
+		$scope.saveCheckedValue=function(appuid,checked){
+			var url = "/role/saveRoleApplication"
+				var params={
+					roleuid:$scope.role.uid,
+					appuid:appuid,
+					checked:checked
+				};
+				AjaxRequest.Post(url, params).then(
+					function(rsBody) {
+						if (rsBody.success == 'true') {
+								$scope.loadData();
+							}
+						});
+		};
 	});
 
 	return {

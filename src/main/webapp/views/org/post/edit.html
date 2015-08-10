@@ -12,10 +12,10 @@
             <div class="input-group">                                
                 <input type="text" class="form-control" name='parentname2' ng-model="post.parentname" readonly>
                   <span class="input-group-btn">
-                    <button class="btn btn-default" type="button" ng-click="postDropDown=!postDropDown"><i
-                            class="fa fa-angle-double-right"></i> 选择
-                    </button>
-                  </span>
+                    <button class="btn btn-default" type="button" ng-click="postDropDown=!postDropDown">
+						<i class="fa fa-angle-double-right"></i> 选择
+					</button>
+				</span>
             </div>
             <div class="dropdown-menu combo-dropdown-menu collapse" ng-class="{in: postDropDown}"
                  ng-blur="postDropDown = false">
@@ -44,14 +44,25 @@
     <div class="form-group">
         <label for="organizationuid" class="col-sm-1 control-label">所属机构:</label>
 
-        <div class="col-sm-4">
-            <select class="form-control" name="organizationuid" ng-model="post.organizationuid" required="required"
-                    ng-options="org.uid as org.name for org in orgData"></select>
+        <div class="col-sm-4 dropdown combo-select">
+<!--             <select class="form-control" name="organizationuid" ng-model="post.organizationuid" required="required" -->
+<!--                     ng-options="org.uid as org.name for org in orgData"></select> -->
 
-            <div ng-if="editForm.organizationuid.$dirty">
-                <div ng-messages="editForm.organizationuid.$error" class="errormsg" role="alert">
-                    <div ng-messages-include='{{rootpath}}/views/tpls/messageerror/require.html'/>
-                </div>
+            <div class="input-group">
+                <input type="text" class="form-control" name='parentname3' ng-model="post.organizationname" readonly>
+                  <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" ng-click="orgDropDown=!orgDropDown"><i
+                            class="fa fa-angle-double-right"></i> 选择
+                    </button>
+                  </span>
+            </div>
+                       
+            <div class="dropdown-menu combo-dropdown-menu collapse" ng-class="{in: orgDropDown}"
+                 ng-blur="orgDropDown = false">
+                <treecontrol class="tree-light treecontrolfont" tree-model="organization" expanded-nodes="expandedNodes"
+                             on-selection="SelectTreeOrg(node)">
+                    {{node.name}}
+                </treecontrol>
             </div>
         </div>
     </div>

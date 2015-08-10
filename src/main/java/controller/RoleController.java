@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import service.RoleApplicationService;
 import service.RoleResourceService;
 import service.RoleService;
 import service.UserRolesService;
@@ -32,6 +33,8 @@ public class RoleController extends BaseController {
 	private RoleResourceService roleResourceService;
 	@Resource
 	private UserRolesService userRolesService;
+	@Resource
+	private RoleApplicationService roleApplicationService;
 
 	@RequestMapping("list")
 	@ResponseBody
@@ -154,6 +157,15 @@ public class RoleController extends BaseController {
 	@ResponseBody
 	public String CleanUserSetting(String userUid) {
 		this.userRolesService.CleanUserRoles(userUid);
+		return JsonUtil.ResponseSuccessfulMessage("保存成功");
+	}
+
+	@RequestMapping(value = "saveRoleApplication", method = RequestMethod.POST)
+	@ResponseBody
+	public String SaveRoleApplicationSetting(String roleuid, String appuid,
+			boolean checked) {
+		this.roleApplicationService.SaveRoleApplicationSetting(roleuid, appuid,
+				checked);
 		return JsonUtil.ResponseSuccessfulMessage("保存成功");
 	}
 }
