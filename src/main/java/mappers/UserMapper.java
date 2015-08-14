@@ -31,4 +31,8 @@ public interface UserMapper {
     void UpdateLastLogin(String username);
 
     List<User> Pro_UserList(Map<String, Object> params);
+    
+    List<User> GetUserTreeList();
+    
+    List<User> GetUserTreeSet(String employeeName);
 }

@@ -42,10 +42,11 @@ define(['angularAMD', 'balintimesConstant', 'ui-bootstrap', 'angular-messages', 
         $stateProvider.state(mainState).state(editState);
     }]);
 
-    app.controller("OrganizationListController", function ($scope, $state, $location, AjaxRequest, DlgMsg, AlertMsg, ngTreetableParams) {
+    app.controller("OrganizationListController", function ($scope, $state, $location, $timeout, DndTreeUtil, AjaxRequest, DlgMsg, AlertMsg, ngTreetableParams) {
 
         var treeData = [];
         $scope.search_orgname = "";
+        $scope._filter = {};
 
         $scope.initOrgTree = function (name) {
             var param = {};
@@ -59,12 +60,6 @@ define(['angularAMD', 'balintimesConstant', 'ui-bootstrap', 'angular-messages', 
                 treeData = rs.data;
                 if (treeData.length > 0) {
                     $scope.expanded_params.refresh();
-                    //$scope.expanded_params.refresh().then(function () {
-                    //    $scope.expanded_params.expendNode("0");
-                    //    /* console.info("expendNode");*/
-                    //});
-
-                    //$scope.expanded_params.refresh({"key": "name", "value": name});
                 } else {
                     DlgMsg.alert("系统提示", "没有查找的机构信息！");
                 }
@@ -81,11 +76,11 @@ define(['angularAMD', 'balintimesConstant', 'ui-bootstrap', 'angular-messages', 
             })
 
 
-        }
+        };
         $scope.updateTreeData = function () {
             //$scope.expanded_params.expendNode("0");
             AlertMsg.info("这只是一个提示一个提示提示。。。")
-        }
+        };
         $scope.expanded_params = new ngTreetableParams({
             getNodes: function (parent) {
                 return parent ? parent.children : treeData;
@@ -97,7 +92,41 @@ define(['angularAMD', 'balintimesConstant', 'ui-bootstrap', 'angular-messages', 
                 initialState: 'expanded'
             }
         });
-        $scope.initOrgTree();
+        //$scope.initOrgTree();
+
+        /*dnd-tree*/
+
+        $scope.tree_data = {};
+        var tree = $scope.tree_control = {};
+
+        $scope.initDndTree = function (name) {
+            var param = {};
+            if (name != "" && name != null) {
+                param = {
+                    orgname: name
+
+                }
+            }
+            return AjaxRequest.Get("/organization/tree", param).then(function (rs) {
+                $scope.tree_data = DndTreeUtil.convertToDndTreeData(rs.data);
+                if (name != "" && name != null) {
+                    DndTreeUtil.expendNode($scope.tree_data, tree, name, 'name');
+                }
+            });
+        };
+        $scope.collapseDndTree = function () {
+            tree.collapse_all();
+        };
+
+        $scope.expandDndTree = function () {
+            tree.expand_all();
+        };
+        $scope.expendDndNode = function (name) {
+            DndTreeUtil.expendNode($scope.tree_data, tree, name, 'name');
+
+        };
+        $scope.initDndTree();
+
 
     }).controller("OrganizationEditController", function ($scope, $state, $location, AjaxRequest, TreeSelectModal, DlgMsg, OrgData, CityData) {
 

@@ -99,7 +99,7 @@ define(
 
 			app.controller('ApplicationEditController', function($scope,
 					$state, applicationTypeListData, applicationData,
-					AjaxRequest, DlgMsg, AlertMsg) {
+					AjaxRequest, DlgMsg, AlertMsg, $modal) {
 
 				$scope.application = applicationData.data;
 				$scope.applicationTypeList = applicationTypeListData.data;
@@ -124,6 +124,39 @@ define(
 					$scope.application = angular.copy(original);
 					$scope.editForm.$setPristine();
 				};
+
+				$scope.openTypeWin = function() {
+					var ary= $scope.applicationTypeList; 
+					
+					$modal.open({
+						animation: true,
+						templateUrl:"templateId",
+						controller:function($scope,AjaxRequest,$modalInstance){
+							$scope.applicationType={
+								uid:"0",
+								name:""
+							};
+							$scope.saveType=function(){
+								var url = "/applicationType/create";
+								AjaxRequest.Post(url, $scope.applicationType).then(
+										function(r) {
+											if (r.success == 'true') {
+												
+												ary.push(r.data);
+												$scope.applicationTypeList=ary;
+												
+												$modalInstance.dismiss('cancel');
+											}
+										})
+							}
+							
+							$scope.closeWin=function(){
+								$modalInstance.dismiss('cancel');
+							}
+						}
+					})
+				};
+				
 
 			});
 

@@ -32,4 +32,8 @@ public interface UserDao {
     void UpdatePassword(String uID, String encryptPassword);
 
     void UpdateLastLogin(String username);
+    
+    List<User> GetUserTreeList();
+    
+    List<User> GetUserTreeSet(String employeeName);
 }

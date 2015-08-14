@@ -46,7 +46,8 @@ public class ApplicationTypeController extends BaseController {
 	public String createApplicationType(ApplicationType applicationType){
 		applicationType.setUid(UUID.randomUUID().toString());
 		this.applicationTypeService.createApplicationType(applicationType);
-		return JsonUtil.ResponseSuccessfulMessage("保存成功");
+		//return JsonUtil.ResponseSuccessfulMessage("保存成功");
+		return JsonUtil.ResponseSuccessfulMessage(applicationType);
 	}
 	
 	@RequestMapping(value = "update",method=RequestMethod.POST)

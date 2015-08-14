@@ -1,0 +1,100 @@
+<ol class="breadcrumb">
+    <li><a href="#">首页</a></li>
+    <li><a href="#">员工设置</a></li>
+    <li class="active">员工编辑</li>
+</ol>
+
+<form class="form-horizontal" name="editForm" role="form" novalidate>
+
+    <div class="form-group">
+        <label for="parentname2" class="col-sm-1 control-label">上级员工</label>
+
+        <div class="col-sm-4 dropdown combo-select">
+            <div class="input-group">
+                <input type="text" class="form-control" name='parentname2' ng-model="user.parentname" readonly>
+                  <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" ng-click="userDropDown=!userDropDown"><i
+                            class="fa fa-angle-double-right"></i> 选择
+                    </button>
+                  </span>
+            </div>
+            <div class="dropdown-menu combo-dropdown-menu collapse" ng-class="{in: userDropDown}"
+                 ng-blur="userDropDown = false">
+                <treecontrol class="tree-light treecontrolfont" tree-model="treeData" expanded-nodes="expandedNodes"
+                             on-selection="SelectTreeUser(node)">
+                    {{node.username}}
+                </treecontrol>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="postname" class="col-sm-1 control-label">员工名称:</label>
+
+        <div class="col-sm-4">
+            <input type="text" class="form-control" name='name' ng-model="user.employeename"
+                   required="required" ng-maxlength="10" ng-minlength="2"/>
+
+            <div ng-if="editForm.name.$dirty">
+                <div ng-messages="editForm.name.$error" class="errormsg" role="alert">
+                    <div ng-messages-include='{{rootpath}}/views/tpls/messageerror/require.html'/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="postuid" class="col-sm-1 control-label">职位:</label>
+
+        <div class="col-sm-4">
+            <div class="input-group">
+                <select class="form-control" name="postuid" ng-model="user.postuid" required="required"
+                        ng-options="post.uid as post.name for post in postData"></select>
+                <span class="input-group-btn"><a class="btn btn-default" ng-click="AddPost()">添加</a></span>
+            </div>
+            <div ng-if="editForm.postuid.$dirty">
+                <div ng-messages="editForm.postuid.$error" class="errormsg" role="alert">
+                    <div ng-messages-include='{{rootpath}}/views/tpls/messageerror/require.html'/>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="username" class="col-sm-1 control-label">用户名:</label>
+
+        <div class="col-sm-4">
+            <select class="form-control" name="status" ng-model="user.username"
+                    ng-options="status.value as status.text for status in orgStatus"></select>
+
+            <div ng-if="editForm.status.$dirty">
+                <div ng-messages="editForm.status.$error" class="errormsg" role="alert">
+                    <div ng-messages-include='{{rootpath}}/views/tpls/messageerror/require.html'/>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="comment" class="col-sm-1 control-label">备注:</label>
+
+        <div class="col-sm-4">
+            <textarea name="comment" class="form-control" ng-model="user.comment"></textarea>
+        </div>
+
+    </div>
+
+
+    <div class="form-group">
+        <div class="col-sm-offset-1 col-sm-6">
+            <button class="btn btn-primary" ng-click="SaveOrg()" ng-disabled="editForm.$invalid">
+                <i class="fa fa-check"></i>保存
+            </button>
+            <button class="btn btn-info" ng-click="Revert()">
+                <i class="fa fa-undo"></i> 重置
+            </button>
+            <a ui-sref="org/organization" class="btn btn-warning">
+                <i class="fa fa-times"></i>取消并返回</a>
+
+        </div>
+    </div>
+</form>

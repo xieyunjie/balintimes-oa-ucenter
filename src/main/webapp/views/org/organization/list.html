@@ -7,9 +7,56 @@
     <script src="/oaucenter/resources/js/jquery.treetable.js"></script>
     <link rel="stylesheet" href="/oaucenter/resources/css/jquery.treetable.css">
     <link rel="stylesheet" href="/oaucenter/resources/css/jquery.treetable.theme.default.css">
+    <link rel="stylesheet" href="/oaucenter/resources/css/ng-tree-dnd.css">
+
+    <script type="text/ng-template" id="tree_organization_table">
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+            <tr>
+                <th class="text-center">
+                    名称
+                </th>
+                <th class="text-center" style="width: 100px">城市</th>
+                <th class="text-center" style="width: 100px">状态</th>
+                <th class="text-center">备注</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody tree-dnd-nodes="tree_nodes">
+            <tr tree-dnd-node="node" ng-repeat="node in nodes track by node.__hashKey__ "
+                ng-click="onSelect(node)"
+                ng-show="enabledFilter ? node.__filtered_visible__ === true && node.__visible__ : node.__visible__"
+                ng-class="{'success': enabledFilter && node.__filtered__,'success': node.__finded__,'active':node.__selected__,'danger':node.status == 0}">
+                <td tree-dnd-node-handle ng-style="{'padding-left': $callbacks.calsIndent(node.__level__)}">
+                    <a data-nodrag>
+                        <i ng-class="$icon_class" ng-click="toggleExpand(node)"></i>
+                    </a>
+                    <a href="#"
+                       ui-sref="org/organization/edit({uid:node.uid,parentuid:node.parentuid,parentname:node.parentname})"><span
+                            ng-bind="node.name"></span></a>
+                </td>
+                <td class="text-center">{{node.cityname}}</td>
+                <td style="width: 60px;text-align: center">
+                    <i ng-class="{'fa fa-check-circle text-green fa-lg':node.status == '1','fa fa-times-circle text-red  fa-lg':node.status == '0'}"></i>
+                </td>
+                <td>{{node.comment}}</td>
+                <td style="width: 200px;text-align: center">
+                    <div td-mouseover-toggle>
+                        <a href="#" ui-sref="org/organization/edit({uid:'0',parentuid:node.uid,parentname:node.name})">
+                            <i class="fa fa-angle-double-down"></i> 添加下级部门</a>
+                        |
+                        <a href="#" ng-click="DeleteOrg(node.uid)"><i class="fa fa-trash-o fa-fw text-danger"></i>
+                            删除</a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </script>
 
     <script type="text/ng-template" id="tree_node">
-        <tr tr-mouseover-toggle="4" tt-node is-branch="node.children.length > 0" ng-class="{warning:node.status == 0}">
+        <tr tt-node is-branch="node.children.length > 0" ng-class="{warning:node.status == 0}">
             <td><a href="#"
                    ui-sref="org/organization/edit({uid:node.uid,parentuid:node.parentuid,parentname:node.parentname})"><span
                     ng-bind="node.name"></span></a></td>
@@ -20,7 +67,7 @@
 
             <td ng-bind="node.comment"></td>
             <td>
-                <div>
+                <div td-mouseover-toggle>
                     <a href="#" ui-sref="org/organization/edit({uid:'0',parentuid:node.uid,parentname:node.name})"> <i
                             class="fa fa-angle-double-down"></i> 添加下级部门</a>
                     |
@@ -30,6 +77,12 @@
         </tr>
     </script>
 
+    <div class="btn-group">
+        <button type="button" class="btn btn-primary" ng-click="expandDndTree()"><i class="fa fa-expand"></i> 展开所有
+        </button>
+        <button type="button" class="btn btn-success" ng-click="collapseDndTree()"><i class="fa fa-compress"></i> 折叠所有
+        </button>
+    </div>
     <div class="box">
         <div class="box-header">
             <div class="box-title"><i class="fa fa-list-ol"></i> 部门列表</div>
@@ -39,7 +92,7 @@
                            ng-model="search_orgname">
 
                     <div class="input-group-btn">
-                        <button class="btn btn-sm btn-default" ng-click="initOrgTree(search_orgname)"><i
+                        <button class="btn btn-sm btn-default" ng-click="initDndTree(search_orgname)"><i
                                 class="fa fa-search"></i> 查找
                         </button>
                     </div>
@@ -49,7 +102,8 @@
         </div>
 
         <div class="box-body box-body table-responsive no-padding">
-            <table class="table table-bordered table-striped table-hover" tt-table tt-params="expanded_params">
+            <table style="display: none" class="table table-bordered table-striped table-hover" tt-table
+                   tt-params="expanded_params">
                 <thead>
                 <tr>
                     <th>机构/部门</th>
@@ -61,6 +115,11 @@
                 </thead>
                 <tbody></tbody>
             </table>
+
+            <tree-dnd tree-data="tree_data" tree-control="tree_control" primary-key="uid"
+                      icon-leaf="none" icon-expand="fa text-black fa-fw fa-caret-right"
+                      icon-collapse="fa  text-black fa-fw fa-caret-down" expand-level='4'
+                      template-url="tree_organization_table" filter="_filter"></tree-dnd>
         </div>
     </div>
 

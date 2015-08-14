@@ -145,4 +145,16 @@ public class UserDaoImpl implements UserDao {
         this.userMapper.UpdateLastLogin(username);
     }
 
+	
+	public List<User> GetUserTreeList() {
+		List<User> listUsers= userMapper.GetUserTreeList();
+		return listUsers;
+	}
+
+	
+	public List<User> GetUserTreeSet(String employeeName) {
+		List<User> listUsersSet= userMapper.GetUserTreeSet(employeeName);
+		return listUsersSet;
+	}
+
 }

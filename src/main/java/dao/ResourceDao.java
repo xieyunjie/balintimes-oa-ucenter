@@ -15,6 +15,8 @@ public interface ResourceDao {
 	
 	List<Resource> GetUserMenuPermissions(String userName,String menuUid);
 	
+	int ExistsStateByResource(String state);
+	
 	Resource GetResource(String uid);
 
 	void CreateResourceInfo(Resource resource);

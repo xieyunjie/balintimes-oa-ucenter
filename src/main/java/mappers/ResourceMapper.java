@@ -15,6 +15,8 @@ public interface ResourceMapper {
 	List<Resource> GetUserPermissions(Map<String, Object> map);
 
 	List<Resource> GetUserMenuPermissions(Map<String, Object> map);
+	
+	int ExistsStateByResource(String state);
 
 	Resource GetResource(String uid);
 

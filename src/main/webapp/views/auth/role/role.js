@@ -1,10 +1,10 @@
 "use strict"
 define([ 'angularAMD', 'balintimesConstant', 'ui-bootstrap',
 		'angular-messages', 'angular-treetable' ], function(angularAMD,
-		balintimesConstant) {
+		balintimesConstant, appDirective) {
 
 	var app = angular.module("roleModule", [ 'ui.router', 'ui.bootstrap',
-			'ngMessages', 'ngTreetable' ]);
+			'ngMessages', 'ngTreetable']);
 
 	var mainState = {
 		name : 'auth/role',
@@ -80,31 +80,64 @@ define([ 'angularAMD', 'balintimesConstant', 'ui-bootstrap',
 			} ]);
 
 	app.controller('RoleListController', function($scope, $state, $stateParams,
-			AjaxRequest, DlgMsg, AlertMsg, ngTreetableParams) {
+			AjaxRequest, DlgMsg, AlertMsg, ngTreetableParams,$modal) {
 		
 		var treeData=[];
+		
+		$scope.tree=[];
+		
 		$scope.expanded_params = new ngTreetableParams({
 			getNodes : function(parent) {
 				return parent ? parent.children : treeData;
 			},
 			getTemplate : function(node) {
 				return 'tree_node';
-			}
+			},
+            options: {
+                initialState: 'expanded'
+            }
 		});
 		
 		$scope.loadData=function(){
 			return AjaxRequest.Get("/role/list").then(function(rs) {
 				treeData = rs.data;
 				if (treeData.length>0) {
-					$scope.expanded_params.refresh().then(function() {
-						$scope.expanded_params.expendNode("0");
-					});
+					$scope.expanded_params.refresh();
 				} else {
 					//DlgMsg.alert("系统提示", "没有查找的权限信息！");
 				}
 
 			});
 		};
+		
+		$scope.loadRoleResource=function(roleuid){
+			var param = {
+					roleuid:roleuid,
+					appuid : "0"
+				};
+				
+				return AjaxRequest.Get("/resource/listByRole",param).then(function(rs){
+					//$scope.tree = rs.data;
+					
+					$modal.open({
+						animation: true,
+						templateUrl:"role_Resource",
+						controller:function($scope,AjaxRequest,$modalInstance){
+							
+							$scope.tree=rs.data;
+							
+							$scope.closeWin=function(){
+								$modalInstance.dismiss('cancel');
+							}
+						}
+					})
+					
+				});
+		};
+		
+		$scope.openRoleResourceWin=function(roleuid){
+			$scope.loadRoleResource(roleuid);
+		}
 		
 		$scope.deleteRole=function(uid){
 			DlgMsg.confirm("系统提示", "注意！！是否确认删除此信息？此信息删除后，其下属信息也会一拼删除。").result.then(function (btn) {
@@ -193,7 +226,10 @@ define([ 'angularAMD', 'balintimesConstant', 'ui-bootstrap',
 			},
 			getTemplate : function(node) {
 				return 'tree_node';
-			}
+			},
+            options: {
+                initialState: 'expanded'
+            }
 		});
 		
 		$scope.loadData = function() {
@@ -206,9 +242,7 @@ define([ 'angularAMD', 'balintimesConstant', 'ui-bootstrap',
 			return AjaxRequest.Get("/resource/listByRole",param).then(function(rs){
 				treeData = rs.data;
 				if (treeData.length>0) {
-					$scope.expanded_params.refresh().then(function() {
-						$scope.expanded_params.expendNode("0");
-					});
+					$scope.expanded_params.refresh();
 				} else {
 					DlgMsg.alert("系统提示", "没有查找的功能模块信息！");
 				}

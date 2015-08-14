@@ -80,7 +80,6 @@
 						<th>是否禁用</th>
 						<th>备注</th>
 						<th></th>
-						<th></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -90,18 +89,15 @@
 						<td>{{item.typeName}}</td>
 						<td>{{item.iconUrl}}</td>
 						<td>{{item.url}}</td>
-						<td><i ng-if="item.showInMenu"
-							class="fa fa-check-circle-o text-success fa-lg"></i> <i
-							ng-if="!item.showInMenu"
+						<td><i ng-if="!item.showInMenu"
 							class="fa fa-times-circle text-danger  fa-lg"></i></td>
 						<td><i ng-if="item.forbidden"
-							class="fa fa-check-circle-o text-success fa-lg"></i> <i
-							ng-if="!item.forbidden"
-							class="fa fa-times-circle text-danger  fa-lg"></i></td>
+							class="fa fa-check-circle-o text-success fa-lg"></i></td>
 						<td>{{item.comment}}</td>
 						<td><a href="#"
-							ui-sref="application/app/edit({uid:item.uid})">修改</a></td>
-						<td><a href="#" ng-click="deleteFn(item.uid)">删除</a></td>
+							ui-sref="application/app/edit({uid:item.uid})">修改</a> <a href="#"
+							ng-click="deleteFn(item.uid)">删除</a> <a href="#"
+							ui-sref="application/resource({appuid:item.uid})">设置资源</a></td>
 					</tr>
 				</tbody>
 			</table>

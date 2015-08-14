@@ -50,8 +50,11 @@ public class ResourceController extends BaseController {
 		tree.setForbidden(app.isForbidden());
 		tree.setShowInMenu(app.isShowInMenu());
 		tree.setChildren(new ArrayList<ResourceTree>());
+		tree.setFunctions(new ArrayList<Resource>());
+		tree.setState("");
 		
-		this.SetTreeNode(tree, resources, "00000000-0000-0000-0000-000000000000");
+		this.SetTreeNode(tree, resources,
+				"00000000-0000-0000-0000-000000000000");
 
 		list.add(tree);
 
@@ -65,6 +68,9 @@ public class ResourceController extends BaseController {
 
 		for (Resource item : list) {
 			if (item.getParentUid().equals(parentUid)) {
+
+				if (item.getResourceType() == 2)
+					continue;
 
 				ResourceTree node = new ResourceTree();
 				node.setUid(item.getUid());
@@ -86,6 +92,11 @@ public class ResourceController extends BaseController {
 				node.setUrl(item.getUrl());
 				node.setTreeType(item.getResourceType());
 				node.setChildren(new ArrayList<ResourceTree>());
+				node.setFunctions(new ArrayList<Resource>());
+				node.setState(item.getState());
+				
+				List<Resource> rs = this.SetFunction(list, item.getUid());
+				node.setFunctions(rs);
 
 				this.SetTreeNode(node, list, node.getUid());
 
@@ -97,16 +108,28 @@ public class ResourceController extends BaseController {
 
 	}
 
+	private List<Resource> SetFunction(List<Resource> list, String parentUid) {
+		List<Resource> children = new ArrayList<Resource>();
+		for (Resource item : list) {
+			if (item.getResourceType() == 2
+					&& item.getParentUid().equals(parentUid)) {
+				children.add(item);
+			}
+		}
+		return children;
+	}
+
 	@RequestMapping("listBytreebox/{appUid}/{istree}")
 	@ResponseBody
-	public String GetResourceTreeListByTreeBox(@PathVariable String appUid,@PathVariable int istree) {
+	public String GetResourceTreeListByTreeBox(@PathVariable String appUid,
+			@PathVariable int istree) {
 		Application app = this.applicationService.GetApplication(appUid);
 		List<Resource> resources = this.resourceService.GetResourceList(appUid);
 
 		List<ResourceTree> list = new ArrayList<ResourceTree>();
 
 		ResourceTree tree = new ResourceTree();
-		//tree.setUid(app.getUid());
+		// tree.setUid(app.getUid());
 		tree.setUid("00000000-0000-0000-0000-000000000000");
 		tree.setAppUid(app.getUid());
 		tree.setAppName(app.getName());
@@ -117,8 +140,9 @@ public class ResourceController extends BaseController {
 		tree.setShowInMenu(app.isShowInMenu());
 		tree.setParentUid("00000000-0000-0000-0000-000000000000");
 		tree.setChildren(new ArrayList<ResourceTree>());
-		
-		this.SetTreeNodeByTreeBox(tree, resources, "00000000-0000-0000-0000-000000000000",istree);
+
+		this.SetTreeNodeByTreeBox(tree, resources,
+				"00000000-0000-0000-0000-000000000000", istree);
 
 		list.add(tree);
 
@@ -126,15 +150,14 @@ public class ResourceController extends BaseController {
 	}
 
 	private void SetTreeNodeByTreeBox(ResourceTree tree, List<Resource> list,
-			String parentUid,int istree) {
+			String parentUid, int istree) {
 		if (tree == null)
 			return;
 
 		for (Resource item : list) {
 			if (item.getParentUid().equals(parentUid)) {
-				
-				if(istree==1 && item.getResourceType()==2)
-				{
+
+				if (istree == 1 && item.getResourceType() == 2) {
 					continue;
 				}
 
@@ -158,8 +181,8 @@ public class ResourceController extends BaseController {
 				node.setUrl(item.getUrl());
 				node.setTreeType(item.getResourceType());
 				node.setChildren(new ArrayList<ResourceTree>());
-
-				this.SetTreeNodeByTreeBox(node, list, node.getUid(),istree);
+				
+				this.SetTreeNodeByTreeBox(node, list, node.getUid(), istree);
 
 				List<ResourceTree> cs = tree.getChildren();
 				cs.add(node);
@@ -168,8 +191,7 @@ public class ResourceController extends BaseController {
 		}
 
 	}
-	
-	
+
 	private void SetTreeNodeByRole(ResourceTree tree, List<Resource> list,
 			String parentUid, List<RoleResource> roleResourceList) {
 
@@ -227,7 +249,8 @@ public class ResourceController extends BaseController {
 				.GetRoleResourceListByRole(roleuid);
 
 		if (appuid.equals("0")) {
-			appList = this.applicationService.GetApplicationListByNotForbidden();
+			appList = this.applicationService
+					.GetApplicationListByNotForbidden();
 		} else {
 			Application app = this.applicationService.GetApplication(appuid);
 			if (app != null)
@@ -236,7 +259,8 @@ public class ResourceController extends BaseController {
 
 		for (Application app : appList) {
 
-			List<Resource> resources = this.resourceService.GetResourceListByNotForbidden(app.getUid());
+			List<Resource> resources = this.resourceService
+					.GetResourceListByNotForbidden(app.getUid());
 
 			ResourceTree tree = new ResourceTree();
 			tree.setUid(app.getUid());
@@ -271,7 +295,12 @@ public class ResourceController extends BaseController {
 	public String CreateResourceInfo(Resource resource) {
 		resource.setUid(UUID.randomUUID().toString());
 		resource.setCreateBy(this.webUsrUtil.CurrentUser().getEmployeeName());
-		this.resourceService.CreateResourceInfo(resource);
+		try {
+			this.resourceService.CreateResourceInfo(resource);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return JsonUtil.ResponseFailureMessage(e.getMessage());
+		}
 		return JsonUtil.ResponseSuccessfulMessage("保存成功");
 	}
 
@@ -279,7 +308,12 @@ public class ResourceController extends BaseController {
 	@ResponseBody
 	public String UpdateResourceInfo(Resource resource) {
 		resource.setEditBy(this.webUsrUtil.CurrentUser().getEmployeeName());
-		this.resourceService.UpdateResourceInfo(resource);
+		try {
+			this.resourceService.UpdateResourceInfo(resource);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return JsonUtil.ResponseFailureMessage(e.getMessage());
+		}
 		return JsonUtil.ResponseSuccessfulMessage("保存成功");
 	}
 

@@ -1,3 +1,18 @@
+<script type="text/ng-template" id='role_Resource'>
+	<div class="panel-body" >
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-list-ol"></i> 角色资源编辑
+			</div>
+		</div>
+		
+		<ul class="tree">
+        	<node-tree children="tree" text="name" expanded="true">
+        	</node-tree>
+    	</ul>
+	</div>
+</script>
+
 <ol class="breadcrumb">
 	<li><a href="#">首页</a></li>
 	<li><a href="#">权限设置</a></li>
@@ -15,7 +30,7 @@
 		<tr tr-mouseover-toggle="3" tt-node is-branch="node.children.length > 0">
 			<td><span ng-bind="node.name"></span></td>
 			<td style="width:100px;">
-				<i ng-class="{'fa fa-check-circle text-green fa-lg':node.forbidden == true,'fa fa-times-circle text-red  fa-lg':node.forbidden == false}"></i>
+				<i ng-class="{'fa fa-check-circle text-red fa-lg':node.forbidden == true}"></i>
 			</td>
 			<td ng-bind="node.comment"></td>
 			<td style="width: 450px; text-align: center">
@@ -25,6 +40,8 @@
                     <a href="#" ng-click="deleteRole(node.uid)"><i class="fa fa-trash-o fa-fw text-danger"></i> 删除</a>
 					<a href="#" ui-sref="auth/role/appsetting({uid:node.uid})"><i class="fa fa-trash-o fa-fw fa-arrows-v"></i> 角色应用设置</a>
 					<a href="#" ui-sref="auth/role/setting({uid:node.uid})"><i class="fa fa-trash-o fa-fw fa-angle-double-up"></i> 设置角色</a>
+
+					<a href="#" ng-click="openRoleResourceWin(node.uid)"> 1234设置角色</a>
 				</div>
 			</td>
 		</tr>
@@ -76,6 +93,6 @@
 
 		</div>
 
-
+		
 	</div>
 </div>

@@ -2,9 +2,9 @@
  *
  */
 'use strict';
-define(['angular', 'balintimesConstant', 'ui-bootstrap', 'angular-tree-control'], function (angular, balintimesConstant) {
+define(['angular', 'balintimesConstant', 'ui-bootstrap', 'angular-tree-control', 'ng-tree-dnd'], function (angular, balintimesConstant) {
 
-    var appFactory = angular.module('appFactory', ['ui.bootstrap', 'treeControl']);
+    var appFactory = angular.module('appFactory', ['ui.bootstrap', 'treeControl', 'ntt.TreeDnD']);
 
     appFactory.factory('securityInterceptor', ['$q', '$rootScope', '$location', 'AlertMsg', function ($q, $rootScope, $location, AlertMsg) {
         /*错误有两种 1、filter出错。shiro会抛401异常，所以程序重写方法，以区分普通请求还是ajax请求，普通请求会跳转页面，而ajax则会返回“正常”的json数据，不会报401错误，由界面进行处理。
@@ -265,6 +265,69 @@ define(['angular', 'balintimesConstant', 'ui-bootstrap', 'angular-tree-control']
             Remove: Remove
         }
 
+    }]);
+
+    appFactory.factory("DndTreeUtil", ['$TreeDnDConvert', function ($TreeDnDConvert) {
+
+        var expendNode = function (tree_data, tree_Ctrl, value, key) {
+            if (!key) key = 'uid';
+            cancelFinded(tree_data);
+            var node = findNode(tree_data, key, value);
+
+            if (node) {
+                tree_Ctrl.expand_all_parents(node);
+                node.__finded__ = true;
+            }
+
+        };
+        var findNode = function (nodes, key, value) {
+            var n;
+            for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i][key] == value) {
+                    return nodes[i];
+                }
+
+                if (nodes[i].__children__.length > 0) {
+                    n = findNode(nodes[i].__children__, key, value);
+                }
+                nodes[i].__finded__ = false;
+
+                if (n) return n;
+            }
+        };
+
+        var cancelFinded = function (nodes) {
+            for (var i = 0; i < nodes.length; i++) {
+                nodes[i].__finded__ = false;
+
+                if (angular.isArray(nodes[i].__children__) && nodes[i].__children__.length > 0) {
+                    cancelFinded(nodes[i].__children__);
+                }
+            }
+        };
+
+
+        var convertToDndTreeData = function (trees, childrenKey) {
+
+            if (!childrenKey) childrenKey = "children";
+
+            var dndTree = $TreeDnDConvert.tree2tree(trees, childrenKey);
+            return dndTree;
+            //angular.forEach(trees, function (node) {
+            //
+            //    if (node.children) node.__children__ = node.children;
+            //
+            //    convertToDndTreeData(node.__children__);
+            //});
+            //
+            //return trees;
+        };
+
+
+        return {
+            expendNode: expendNode,
+            convertToDndTreeData: convertToDndTreeData
+        };
     }]);
 
     return appFactory;

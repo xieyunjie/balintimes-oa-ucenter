@@ -1,15 +1,18 @@
 package service.impl;
 
-import annotation.CustomerTransactional;
-import dao.UserDao;
-import model.User;
-import org.apache.shiro.authc.credential.PasswordService;
-import org.springframework.stereotype.Service;
-import service.UserService;
-import tuples.TuplePage;
+import java.util.List;
 
 import javax.annotation.Resource;
-import java.util.List;
+
+import model.User;
+
+import org.apache.shiro.authc.credential.PasswordService;
+import org.springframework.stereotype.Service;
+
+import service.UserService;
+import tuples.TuplePage;
+import annotation.CustomerTransactional;
+import dao.UserDao;
 
 @Service("userService")
 public class UserServiceImpl implements UserService {
@@ -99,5 +102,17 @@ public class UserServiceImpl implements UserService {
     public User InitWebUserByName(String username) {
         return this.userDao.getUserByName(username);
     }
+
+	
+	public List<User> GetUserTreeList() {
+		List<User> listUsers= userDao.GetUserTreeList();
+		return listUsers;
+	}
+
+	
+	public List<User> GetUserTreeSet(String employeeName) {
+		List<User> listUsersSet= userDao.GetUserTreeSet(employeeName);
+		return listUsersSet;
+	}
 
 }

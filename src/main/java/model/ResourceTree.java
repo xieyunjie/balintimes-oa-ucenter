@@ -9,6 +9,15 @@ public class ResourceTree extends Resource {
 	private int treeType;
 	private List<ResourceTree> children;
 	private boolean checked;
+	private List<Resource> functions;
+
+	public List<Resource> getFunctions() {
+		return functions;
+	}
+
+	public void setFunctions(List<Resource> functions) {
+		this.functions = functions;
+	}
 	
 	public boolean isChecked() {
 		return checked;

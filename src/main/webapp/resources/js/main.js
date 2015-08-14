@@ -27,7 +27,8 @@ require.config({
 
         'appadmin': 'appadmin',
         'jquery-treetable': 'jquery.treetable',
-        'angular-treetable': 'angularjs/angular-treetable'
+        'angular-treetable': 'angularjs/angular-treetable',
+        'ng-tree-dnd': 'angularjs/ng-tree-dnd'
 
 
     },
@@ -44,7 +45,8 @@ require.config({
         'angular-animate': ['angular'],
         'ui-router-extras': ['angular'],
         'ui-bootstrap': ['angular'],
-        'angular-tree-control': ['angular']
+        'angular-tree-control': ['angular'],
+        'ng-tree-dnd': ['angular']
 
     },
 

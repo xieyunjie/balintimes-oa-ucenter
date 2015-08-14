@@ -1,10 +1,10 @@
 "use strict"
 
-define(['angularAMD', 'balintimesConstant', 'angular-ui-router', 'ui-router-extras', 'blockUI', 'inform', 'ui-bootstrap', 'angular-messages', 'appConfig', 'appFactory',
+define(['angularAMD', 'balintimesConstant', 'angular-ui-router', 'ui-router-extras', 'blockUI', 'inform', 'ui-bootstrap', 'angular-messages','ng-tree-dnd', 'appConfig', 'appFactory',
     'appDirective'], function (angularAMD, balintimesConstant) {
 
     var app =
-        angular.module("mainModule", ['ct.ui.router.extras.future', 'ct.ui.router.extras.statevis', 'blockUI', 'inform', 'ui.bootstrap', 'ngMessages', 'appConfig',
+        angular.module("mainModule", ['ct.ui.router.extras.future', 'ct.ui.router.extras.statevis', 'blockUI', 'inform', 'ui.bootstrap', 'ngMessages','ntt.TreeDnD', 'appConfig',
             'appFactory', 'appDirective']);
 
     app.config(['$futureStateProvider', '$controllerProvider', function ($futureStateProvider, $controllerProvider) {

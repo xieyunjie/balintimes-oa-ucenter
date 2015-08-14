@@ -69,6 +69,6 @@
 	</update>
 
 	<delete id="DeletePost" parameterType="String">
-    	delete from post where uid = #{uid} or FIND_IN_SET(uid, fun_GetPostTreeSet(#{uid}))>0
+    	delete from post where uid = #{uid} or FIND_IN_SET(uid, fun_GetPostAllChildren(#{uid}))>0
 	</delete>
 </mapper>

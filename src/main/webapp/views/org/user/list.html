@@ -1,0 +1,65 @@
+<ol class="breadcrumb">
+    <li><a href="#">首页</a></li>
+    <li><a href="#">员工设置</a></li>
+    <li class="active">员工列表</li>
+</ol>
+<div class="panel-body">
+    <script src="/oaucenter/resources/js/jquery.treetable.js"></script>
+    <link rel="stylesheet" href="/oaucenter/resources/css/jquery.treetable.css">
+    <link rel="stylesheet" href="/oaucenter/resources/css/jquery.treetable.theme.default.css">
+
+    <script type="text/ng-template" id="tree_node">
+        <tr tr-mouseover-toggle="4" tt-node is-branch="node.children.length > 0" ng-class="{warning:node.status == 0}">
+            <td style="width: 300px;text-align: left"><a href="#"
+                   ui-sref="org/user/edit({uid:node.uid,parentuid:node.parentuid,parentname:node.parentname})"><span
+                    ng-bind="node.employeename"></span></a></td>
+            <td style="width: 100px;text-align: center" ng-bind="node.username"></td>
+           
+            <td style="width: 100px;text-align: center" ng-bind="node.postname"></td>
+            <td style="width: 80px;text-align: center" ng-bind="node.usertypename"></td>
+            <td>
+                <div>
+                    <a href="#" ui-sref="org/user/edit({uid:'0',parentuid:node.uid,parentname:node.name})"> <i
+                            class="fa fa-angle-double-down"></i> 添加下级员工</a>
+                    |
+                    <a href="#" ng-click="DeleteOrg(node.uid)"><i class="fa fa-trash-o fa-fw text-danger"></i> 删除</a>
+                </div>
+            </td>
+        </tr>
+    </script>
+
+    <div class="box">
+        <div class="box-header">
+            <div class="box-title"><i class="fa fa-list-ol"></i> 员工列表</div>
+            <div class="box-tools">
+                <div class="input-group" style="width: 150px;">
+                    <input class="form-control input-sm pull-right" type="text" name="table_search"
+                           ng-model="search_orgname">
+
+                    <div class="input-group-btn">
+                        <button class="btn btn-sm btn-default" ng-click="initOrgTree(search_orgname)"><i
+                                class="fa fa-search"></i> 查找
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="box-body box-body table-responsive no-padding">
+            <table class="table table-bordered table-striped table-hover" tt-table tt-params="expanded_params">
+                <thead>
+                <tr>
+                    <th>员工</th>
+                    <th>用户名</th>
+                    <th>职位</th>
+                    <th>类型</th>
+                    <th style="width: 200px;text-align: center"></th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+</div>

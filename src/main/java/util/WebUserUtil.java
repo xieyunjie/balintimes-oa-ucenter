@@ -1,18 +1,25 @@
 package util;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.annotation.Resource;
+
 import model.Role;
 import model.User;
 import model.authority.Menu;
 import model.authority.Permission;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Component;
+
 import service.AuthorityService;
 import service.UserService;
 import shiro.WebUser;
-
-import javax.annotation.Resource;
-import java.util.*;
 
 @Component
 public class WebUserUtil {
@@ -174,7 +181,7 @@ public class WebUserUtil {
 //        m.getMenus().add(new model.Menu(UUID.randomUUID().toString(), "部门设置", "dept", "/views/org/dept/dept.js"));
 //        m.getMenus().add(new model.Menu(UUID.randomUUID().toString(), "职位设置", "post", "/views/org/post/post.js"));
 //        m.getMenus().add(new model.Menu(UUID.randomUUID().toString(), "地区设置", "region", "/views/org/user.js"));
-//        m.getMenus().add(new model.Menu(UUID.randomUUID().toString(), "人员管理", "employee", "/views/org/user.js"));
+//        m.getMenus().add(new model.Menu(UUID.randomUUID().toString(), "人员管理", "employee", "/views/org/user/user.js"));
 //        list.add(m);
 //
 //        m = new Module(UUID.randomUUID().toString(), "权限设置", "auth", "fa-wrench");

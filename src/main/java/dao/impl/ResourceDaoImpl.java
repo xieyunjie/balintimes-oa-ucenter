@@ -79,4 +79,10 @@ public class ResourceDaoImpl implements ResourceDao {
 		return this.resourceMapper.GetUserMenuPermissions(map);
 	}
 
+	public int ExistsStateByResource(String state) {
+		// TODO Auto-generated method stub
+		int i = this.resourceMapper.ExistsStateByResource(state);
+		return i;
+	}
+
 }

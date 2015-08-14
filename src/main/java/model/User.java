@@ -23,7 +23,19 @@ public class User implements Serializable
 	private String editby;
 	private Date edittime;
 	private Date lastlogin;
-
+	private int sex;
+	private Date birthday;
+	private String idcard;
+	private String address;
+	private String mobile;
+	private String telephone;
+	private String emergencycontact;
+	private String avatarurl;
+	private String postuid;	
+	private String postname;
+	private String parentuid;
+	private String parentname;
+	
 	public User()
 	{
 		this.uid = "0";
@@ -190,8 +202,103 @@ public class User implements Serializable
 	{
 		this.lastlogin = lastlogin;
 	}
+	
+	public int getSex() {
+		return sex;
+	}
+	
+	public void setSex(int sex) {
+		this.sex = sex;
+	}
 
+	public Date getBirthday() {
+		return birthday;
+	}
+	
+	public void setBirthday(Date birthday) {
+		this.birthday = birthday;
+	}
+	
+	public String getIdcard() {
+		return idcard;
+	}
+	
+	public void setIdcard(String idcard) {
+		this.idcard = idcard;
+	}
+	
+	public String getAddress() {
+		return address;
+	}
+	
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	
+	public String getMobile() {
+		return mobile;
+	}
+	
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+	
+	public String getTelephone() {
+		return telephone;
+	}
+	
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
+	}
+	
+	public String getEmergencycontact() {
+		return emergencycontact;
+	}
+	
+	public void setEmergencycontact(String emergencycontact) {
+		this.emergencycontact = emergencycontact;
+	}
+	
+	public String getAvatarurl() {
+		return avatarurl;
+	}
+	
+	public void setAvatarurl(String avatarurl) {
+		this.avatarurl = avatarurl;
+	}
+	
+	public String getPostuid() {
+		return postuid;
+	}
+	
+	public void setPostuid(String postuid) {
+		this.postuid = postuid;
+	}
 
+	public void setParentuid(String parentuid) {
+		this.parentuid = parentuid;
+	}
+	
+	public String getParentuid() {
+		return parentuid;
+	}
+	
+	public void setPostname(String postname) {
+		this.postname = postname;
+	}
+	
+	public String getPostname() {
+		return postname;
+	}
+
+	public void setParentname(String parentname) {
+		this.parentname = parentname;
+	}
+	
+	public String getParentname() {
+		return parentname;
+	}
+	
 	@Override
 	public String toString() {
 		return uid + " ## " + username;

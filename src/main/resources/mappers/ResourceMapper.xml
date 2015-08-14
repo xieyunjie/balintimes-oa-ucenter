@@ -38,7 +38,7 @@
 		select
 			a.*,b.name as appname
 		from
-			resource as a join application as b on a.appuid=b.uid
+			resource as a join application as b on a.appuid=b.uid	
 		where
 			appuid = #{appUid} and a.forbidden=0
 	</select>
@@ -113,6 +113,15 @@
 					u.username=#{userName} and x.resourcesuid=a.uid
 					and r.parentuid=#{menuUid}
 				)	
+	</select>
+	
+	<select id="ExistsStateByResource" statementType="PREPARED" resultType="int" parameterType="String">
+		select 
+			count(uid) as datacount
+		from
+			resource 
+		where
+			state=#{state}
 	</select>
 	
 	<insert id="CreateResourceInfo" statementType="PREPARED"

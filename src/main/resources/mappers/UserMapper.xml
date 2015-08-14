@@ -19,16 +19,37 @@
         <result property="editby" column="editby"/>
         <result property="edittime" column="edittime"/>
         <result property="lastlogin" column="lastlogin"/>
+        <result property="sex" column="sex"/>
+        <result property="birthday" column="birthday"/>
+        <result property="idcard" column="idcard"/>
+        <result property="address" column="address"/>
+        <result property="mobile" column="mobile"/>
+        <result property="telephone" column="telephone"/>
+        <result property="emergencycontact" column="emergencycontact"/>
+        <result property="HeadPic" column="HeadPic"/>
     </resultMap>
 
+	<sql id="userColumns">
+		a.uid,a.username,a.password,a.isadmin,
+		a.employeename,a.isenable,a.delflag,a.usertype,
+		a.email,a.comment,a.createby,a.createtime,
+		a.editby,a.edittime,a.lastlogin, b.name as usertypename
+	</sql>
+
+	<sql id="userTreeColumns">
+		a.*,c.uid as postuid, c.name as postname,c.parentuid, d.name as usertypename
+	</sql>
+	
     <insert id="createUser" parameterType="User" statementType="PREPARED" keyProperty="uid" keyColumn="uid"
             useGeneratedKeys="false">
 		insert into user (uid, username, password, isadmin, employeename, isenable, delflag,
 		usertype, email,
-		comment, createby, createtime )
+		comment, createby, createtime,
+		sex,birthday,idcard,address,mobile,telephone,emergencycontact,HeadPic )
 		values( #{uid}, #{username}, #{password}, #{isadmin}, #{employeename}, #{isenable},
 		#{delflag},
-		#{usertype}, #{email}, #{comment}, #{createby}, #{createtime})
+		#{usertype}, #{email}, #{comment}, #{createby}, #{createtime},
+		#{sex},#{birthday},#{idcard},#{address},#{mobile},#{telephone},#{emergencycontact},#{HeadPic})
 	</insert>
 
     <update id="UpdatePassword" parameterType="Map">
@@ -61,13 +82,8 @@
 		1,editby=#{employeename},edittime=now() where uid=#{uid}
 	</update>
 
-    <sql id="userColumns">
-		a.uid,a.username,a.password,a.isadmin,
-		a.employeename,a.isenable,a.delflag,a.usertype,
-		a.email,a.comment,a.createby,a.createtime,
-		a.editby,a.edittime,a.lastlogin, b.name as usertypename
-	</sql>
 
+	
     <select id="getUser" parameterType="string" resultType="User">
         select
         <include refid="userColumns"/>
@@ -138,4 +154,22 @@
                             #{totalcount,mode=OUT,jdbcType=INTEGER})
     </select>
 
+    <select id="GetUserTreeList" statementType="PREPARED" parameterType="string" resultMap="userResultMap">
+    	select 
+		<include refid="userTreeColumns" />
+        from user a 
+        inner join userpost b on a.uid=b.useruid
+        inner join post c on c.uid=b.postuid	
+        inner join usertype d on d.uid = a.usertype
+    </select>
+    
+	<select id="GetUserTreeSet" parameterType="String" statementType="PREPARED" resultType="User">		
+		select 
+		<include refid="userTreeColumns" />
+        from user a 
+        inner join userpost b on a.uid=b.useruid
+        inner join post c on c.uid=b.postuid	
+        inner join usertype d on d.uid = a.usertype
+        where FIND_IN_SET(c.uid,fun_GetUserTreeSet(#{employeename}))
+	</select>
 </mapper>

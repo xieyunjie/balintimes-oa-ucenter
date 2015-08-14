@@ -2,8 +2,8 @@ package service;
 
 import java.util.List;
 
-import tuples.TuplePage;
 import model.User;
+import tuples.TuplePage;
 
 public interface UserService {
     boolean create(User user);
@@ -35,4 +35,8 @@ public interface UserService {
     void UpdateLastLogin(String username);
 
     User InitWebUserByName(String username);
+    
+    List<User> GetUserTreeList();
+    
+    List<User> GetUserTreeSet(String employeeName);
 }

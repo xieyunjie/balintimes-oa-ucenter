@@ -83,7 +83,10 @@ define([ 'angularAMD', 'balintimesConstant', 'ui-bootstrap',
 			},
 			getTemplate : function(node) {
 				return 'tree_node';
-			}
+			},
+            options: {
+                initialState: 'expanded'
+            }
 		});
 
 		$scope.loadData = function() {
@@ -100,9 +103,7 @@ define([ 'angularAMD', 'balintimesConstant', 'ui-bootstrap',
 			return AjaxRequest.Get("/resource/list", param).then(function(rs) {
 				treeData = rs.data;
 				if (treeData.length>0) {
-					$scope.expanded_params.refresh().then(function() {
-						$scope.expanded_params.expendNode("0");
-					});
+					$scope.expanded_params.refresh();
 				} else {
 					DlgMsg.alert("系统提示", "没有查找的功能模块信息！");
 				}
@@ -130,7 +131,6 @@ define([ 'angularAMD', 'balintimesConstant', 'ui-bootstrap',
 	app.controller('ResourceEditController', function($scope, $state,
 			applicationListData, resourceData,parentResourceData, AjaxRequest, $stateParams,DlgMsg, AlertMsg,
 			TreeSelectModal) {
-		
 		$scope.resourceTypeList=[
 		                         {
 		                        	 id:1,
@@ -146,6 +146,7 @@ define([ 'angularAMD', 'balintimesConstant', 'ui-bootstrap',
 		
 		if($stateParams.treetype==-1){
 			$scope.resource=resourceData;
+			$scope.resource.resourceType=1;
 		}
 		else{
 			if($stateParams.uid!="0"){
@@ -165,7 +166,14 @@ define([ 'angularAMD', 'balintimesConstant', 'ui-bootstrap',
 				};
 				$scope.parentname=$stateParams.parentname;
 			}
+			
+			if($stateParams.treetype==1){
+				$scope.resource.resourceType=1;
+			}else if($stateParams.treetype==2){
+				$scope.resource.resourceType=2;
+			}
 		}
+		
 		
 		$scope.applicationList=applicationListData.data;
 		var original = angular.copy($scope.resource);

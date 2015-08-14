@@ -7,9 +7,9 @@
 <form class="form-horizontal" name="editForm" role="form" novalidate>
 
     <div class="form-group">
-        <label for="parentname" class="col-sm-1 control-label">上级机构</label>
+        <label for="parentname" class="col-md-1 control-label">上级机构:</label>
 
-        <div class="col-sm-4">
+        <div class="col-md-4">
             <!--<input type="text" class="form-control" name='parentname' ng-model="organization.parentname" disabled/>-->
             <div class="input-group">
                 <input type="text" class="form-control" name='parentname' ng-model="organization.parentname" readonly>
@@ -23,9 +23,9 @@
     </div>
 
     <div class="form-group">
-        <label for="parentname2" class="col-sm-1 control-label">上级机构</label>
+        <label for="parentname2" class="col-md-1 control-label">上级机构:</label>
 
-        <div class="col-sm-4 dropdown combo-select">
+        <div class="col-md-4 dropdown combo-select">
             <div class="input-group">
                 <input type="text" class="form-control" name='parentname2' ng-model="organization.parentname" readonly>
                   <span class="input-group-btn">
@@ -45,9 +45,9 @@
     </div>
 
     <div class="form-group">
-        <label for="name" class="col-sm-1 control-label">机构名称:</label>
+        <label for="name" class="col-md-1 control-label">机构名称:</label>
 
-        <div class="col-sm-4">
+        <div class="col-md-4">
             <input type="text" class="form-control" name='name' ng-model="organization.name"
                    required="required" ng-maxlength="10" ng-minlength="2"/>
 
@@ -59,9 +59,9 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="cityuid" class="col-sm-1 control-label">所在城市:</label>
+        <label for="cityuid" class="col-md-1 control-label">所在城市:</label>
 
-        <div class="col-sm-4">
+        <div class="col-md-4">
             <div class="input-group">
                 <select class="form-control" name="cityuid" ng-model="organization.cityuid" required="required"
                         ng-options="city.uid as city.name for city in cityData"></select>
@@ -76,9 +76,9 @@
     </div>
 
     <div class="form-group">
-        <label for="status" class="col-sm-1 control-label">状态:</label>
+        <label for="status" class="col-md-1 control-label">状态:</label>
 
-        <div class="col-sm-4">
+        <div class="col-md-4">
             <select class="form-control" name="status" ng-model="organization.status"
                     ng-options="status.value as status.text for status in orgStatus"></select>
 
@@ -91,9 +91,9 @@
     </div>
 
     <div class="form-group">
-        <label for="comment" class="col-sm-1 control-label">备注:</label>
+        <label for="comment" class="col-md-1 control-label">备注:</label>
 
-        <div class="col-sm-4">
+        <div class="col-md-4">
             <textarea name="comment" class="form-control" ng-model="organization.comment"></textarea>
         </div>
 
@@ -101,7 +101,7 @@
 
 
     <div class="form-group">
-        <div class="col-sm-offset-1 col-sm-6">
+        <div class="col-md-offset-1 col-md-6">
             <button class="btn btn-primary" ng-click="SaveOrg()" ng-disabled="editForm.$invalid">
                 <i class="fa fa-check"></i>保存
             </button>

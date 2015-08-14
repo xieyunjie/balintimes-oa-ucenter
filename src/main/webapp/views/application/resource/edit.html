@@ -31,9 +31,11 @@
 
 		<div class="col-sm-4">
 
+		<input class="form-control" name='appName' type="text" readonly="readonly" ng-model="resource.appName" />
+		<!-- 
 			<select class="form-control" name="appUid" ng-model="resource.appUid"
 				required="required"
-				ng-options="item.uid as item.name for item in applicationList">
+				ng-options="item.uid as item.name for item in applicationList" readonly="readonly">
 			</select>
 
 			<div ng-if="editForm.appUid.$dirty">
@@ -43,6 +45,7 @@
 						ng-messages-include='{{rootpath}}/views/tpls/messageerror/require.html' />
 				</div>
 			</div>
+			 -->
 		</div>
 	</div>
 
@@ -56,8 +59,8 @@
 				<input type="text" class="form-control" name='parnetname'
 					ng-model="parentname" readonly> <span
 					class="input-group-btn">
-					<button class="btn btn-default" type="button"
-						ng-click="orgDropDown=!orgDropDown">
+					<button class="btn btn-default " type="button"
+						ng-click="orgDropDown=!orgDropDown" >
 						<i class="fa fa-angle-double-right"></i> 选择
 					</button>
 				</span>
@@ -71,8 +74,9 @@
 		</div>
 	</div>
 
+<!-- 
 
-	<!-- 资源类型 -->
+	
 	<div class="form-group">
 		<label class="col-sm-1 control-label">类型:</label>
 
@@ -92,7 +96,9 @@
 			</div>
 		</div>
 	</div>
-
+ -->
+ 
+ 
 	<!-- URL -->
 	<div class="form-group ng-hide" ng-show="IsShow()">
 		<label class="col-sm-1 control-label">地址:</label>
@@ -115,7 +121,7 @@
 	</div>
 	
 	<!-- state -->
-	<div class="form-group">
+	<div class="form-group ng-hide" ng-show="resource.resourceType==1">
 		<label class="col-sm-1 control-label">状态:</label>
 
 		<div class="col-sm-4">
@@ -126,7 +132,7 @@
 	</div>
 
 	<!-- 优先级 -->
-	<div class="form-group">
+	<div class="form-group ng-hide" ng-show="resource.resourceType==1">
 		<label class="col-sm-1 control-label">优先级:</label>
 
 		<div class="col-sm-4">
@@ -144,7 +150,7 @@
 	</div>
 
 	<!-- 图标 -->
-	<div class="form-group">
+	<div class="form-group ng-hide" ng-show="resource.resourceType==1">
 		<label class="col-sm-1 control-label">图标:</label>
 
 		<div class="col-sm-4">

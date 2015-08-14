@@ -12,9 +12,9 @@
 		href="/oaucenter/resources/css/jquery.treetable.theme.default.css">
 
 	<script type="text/ng-template" id='tree_node'>
-		<tr tr-mouseover-toggle="7" tt-node is-branch="node.children.length > 0">
+		<tr tr-mouseover-toggle="9" tt-node is-branch="node.children.length > 0">
 			<td style="width:250px;"><span ng-bind="node.name"></span></td>
-			<td style="text-align: center;width: 100px" ><i class="fa {{node.iconClass}}"></i></td>
+			<td style="text-align: center;width: 80px" ><i class="fa {{node.iconClass}}"></i></td>
 			<td ng-bind="node.url"></td>
 			<td ng-bind="node.authorityCode"></td>
 			<td ng-bind="node.state"></td>
@@ -24,10 +24,20 @@
 			<td style="width:80px;">
 				<i ng-class="{'fa fa-check-circle text-red fa-lg':node.forbidden == true}"></i>
 			</td>
-			<td ng-bind="node.comment"></td>
-			<td style="width: 250px; text-align: center">
+			<td>
 				<div>
-					<a href="#" ui-sref="application/resource/edit({uid:0,parentuid:node.uid,parentname:node.name,treetype:node.treeType})"> <i class="fa fa-angle-double-down"></i> 添加下级</a>
+					<span ng-repeat="it in node.functions">
+						 <a href="#" ui-sref="application/resource/edit({uid:it.uid,parentuid:it.parentUid,parentname:node.name,treetype:2})">{{it.name}}</a> |	
+					</span>
+				</div>
+			</td>
+			<td ng-bind="node.comment"></td>
+			<td style="width: 300px; text-align: center">
+				<div>
+					<a class="ng-hide" ng-show="{{node.treeType == -1}}" href="#" ui-sref="application/resource/edit({uid:0,parentuid:node.uid,parentname:node.name,treetype:-1})"> <i class="fa fa-angle-double-down"></i> 添加下级</a>
+					<a class="ng-hide" ng-show="{{node.treeType == 1}}" href="#" ui-sref="application/resource/edit({uid:0,parentuid:node.uid,parentname:node.name,treetype:1})"> <i class="fa fa-angle-double-down"></i> 添加下级</a>
+					
+					<a  class="ng-hide" ng-show="{{node.treeType == 1}}" href="#" ui-sref="application/resource/edit({uid:0,parentuid:node.uid,parentname:node.name,treetype:2})"><i class="fa fa-pencil fa-fw wrench"></i>添加功能</a>
 					<a  class="ng-hide" ng-show="{{node.treeType!=-1}}" href="#" ui-sref="application/resource/edit({uid:node.uid,parentuid:node.parentUid,parentname:node.name,treetype:node.treeType})"><i class="fa fa-pencil fa-fw"></i>修改</a>
                     <a  class="ng-hide" ng-show="{{node.treeType!=-1}}" href="#" ng-click="deleteResource(node.uid)"><i class="fa fa-trash-o fa-fw text-danger"></i> 删除</a>
 				</div>
@@ -66,14 +76,15 @@
 				<thead>
 					<tr>
 						<th style="width: 250px;">名称</th>
-						<th  style="text-align: center;width: 100px">图标</th>
+						<th style="text-align: center;width: 80px">图标</th>
 						<th>地址</th>
 						<th>编号</th>
 						<th>状态</th>
 						<th style="width: 80px;">显示菜单</th>
 						<th style="width: 80px;">是否禁用</th>
+						<th>功能操作</th>
 						<th>备注</th>
-						<th style="width: 250px; text-align: center"></th>
+						<th style="width: 300px; text-align: center"></th>
 					</tr>
 				</thead>
 
