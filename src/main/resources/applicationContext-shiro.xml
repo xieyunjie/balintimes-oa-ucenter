@@ -1,137 +1,139 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:util="http://www.springframework.org/schema/util"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd"
-	default-lazy-init="true">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd"
+       default-lazy-init="true">
 
 
-	<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
-		<property name="cacheManagerConfigFile" value="classpath:ehcache.xml" />
-	</bean>
-	<!-- 会话ID生成器 -->
-	<bean id="sessionIdGenerator" class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator" />
+    <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <property name="cacheManagerConfigFile" value="classpath:ehcache.xml"/>
+    </bean>
+    <!-- 会话ID生成器 -->
+    <bean id="sessionIdGenerator" class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator"/>
 
-	<!-- 会话Cookie模板 -->
-	<bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
-		<constructor-arg value="sid" />
-		<property name="httpOnly" value="true" />
-		<property name="maxAge" value="-1" />
-	</bean>
-	<!-- 会话验证调度器 -->
-	<bean id="sessionValidationScheduler" class="org.apache.shiro.session.mgt.quartz.QuartzSessionValidationScheduler">
-		<property name="sessionValidationInterval" value="1800000" />
-		<property name="sessionManager" ref="sessionManager" />
-	</bean>
-	<bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">
-		<property name="activeSessionsCacheName" value="shiro-activeSessionCache" />
-	</bean>
-	<bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
-		<property name="globalSessionTimeout" value="1800000" />
-		<property name="deleteInvalidSessions" value="true" />
-		<property name="sessionValidationSchedulerEnabled" value="true" />
-		<property name="sessionValidationScheduler" ref="sessionValidationScheduler" />
-		<property name="sessionDAO" ref="sessionDAO" />
-		<property name="sessionIdCookieEnabled" value="true" />
-		<property name="sessionIdCookie" ref="sessionIdCookie" />
-		<property name="cacheManager" ref="cacheManager"></property>
-	</bean>
-
-
-	<bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
-		<constructor-arg value="rememberMe" />
-		<property name="httpOnly" value="true" />
-		<property name="maxAge" value="2592000" /><!-- 30天 -->
-	</bean>
-	<bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
-		<property name="cipherKey" value="#{T(org.apache.shiro.codec.Base64).decode('4AvVhmFLUs0KTA3Kprsdag==')}" />
-		<property name="cookie" ref="rememberMeCookie" />
-	</bean>
+    <!-- 会话Cookie模板 -->
+    <bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <constructor-arg value="sid"/>
+        <property name="httpOnly" value="true"/>
+        <property name="maxAge" value="-1"/>
+    </bean>
+    <!-- 会话验证调度器 -->
+    <bean id="sessionValidationScheduler" class="org.apache.shiro.session.mgt.quartz.QuartzSessionValidationScheduler">
+        <property name="sessionValidationInterval" value="1800000"/>
+        <property name="sessionManager" ref="sessionManager"/>
+    </bean>
+    <bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">
+        <property name="activeSessionsCacheName" value="shiro-activeSessionCache"/>
+    </bean>
+    <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+        <property name="globalSessionTimeout" value="1800000"/>
+        <property name="deleteInvalidSessions" value="true"/>
+        <property name="sessionValidationSchedulerEnabled" value="true"/>
+        <property name="sessionValidationScheduler" ref="sessionValidationScheduler"/>
+        <property name="sessionDAO" ref="sessionDAO"/>
+        <property name="sessionIdCookieEnabled" value="true"/>
+        <property name="sessionIdCookie" ref="sessionIdCookie"/>
+        <property name="cacheManager" ref="cacheManager"></property>
+    </bean>
 
 
-	<bean id="webPasswordService" class="shiro.WebPasswordService">
-		<property name="AlgorithmName" value="MD5" />
-		<property name="Salt" value="#^8balintimes8!" />
-	</bean>
-
-	<bean id="webRealm" class="shiro.WebRealm">
-
-		<property name="cachingEnabled" value="true" />
-		<property name="authenticationCachingEnabled" value="true" />
-		<property name="authenticationCacheName" value="authenticationCache" />
-		<property name="authorizationCachingEnabled" value="true" />
-		<property name="authorizationCacheName" value="authorizationCache" />
-		<property name="cacheManager" ref="cacheManager" />
-
-		<property name="passwordService" ref="webPasswordService" />
-		<property name="CredentialsMatcher">
-			<bean class="org.apache.shiro.authc.credential.PasswordMatcher">
-				<property name="passwordService" ref="webPasswordService" />
-			</bean>
-		</property>
-	</bean>
+    <bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <constructor-arg value="rememberMe"/>
+        <property name="httpOnly" value="true"/>
+        <property name="maxAge" value="2592000"/>
+        <!-- 30天 -->
+    </bean>
+    <bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+        <property name="cipherKey" value="#{T(org.apache.shiro.codec.Base64).decode('4AvVhmFLUs0KTA3Kprsdag==')}"/>
+        <property name="cookie" ref="rememberMeCookie"/>
+    </bean>
 
 
-	<!-- <bean id="firstSuccess" class="org.apache.shiro.authc.pam.FirstSuccessfulStrategy" /> -->
-	<!-- <bean id="atLeastSuccess" class="org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy" />
-		<bean id="allSuccess" class="org.apache.shiro.authc.pam.AllSuccessfulStrategy" /> -->
+    <bean id="webPasswordService" class="shiro.WebPasswordService">
+        <property name="AlgorithmName" value="MD5"/>
+        <property name="Salt" value="#^8balintimes8!"/>
+    </bean>
 
-	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
-		<property name="realm" ref="webRealm"></property>
-		<!-- <property name="authenticator" ref="modelAuthricator" /> -->
-		<property name="sessionManager" ref="sessionManager" />
-		<property name="cacheManager" ref="cacheManager" />
-		<property name="rememberMeManager" ref="rememberMeManager" />
-	</bean>
-	<!-- <bean id="modelAuthricator" class="org.apache.shiro.authc.pam.ModularRealmAuthenticator">
-		<property name="authenticationStrategy" ref="firstSuccess" />
-		<property name="realms">
-		<list>
-		<ref local="webRealm" />
-		</list>
-		</property>
-		</bean> -->
+    <bean id="webRealm" class="shiro.WebRealm">
 
-	<!-- <bean id="adminfilter" class="shiro.AdminFilter">
-		<property name="isNotAdminUrl" value="/admin/isnotadmin" />
-		</bean> -->
-	<bean id="userfilter" class="shiro.filter.UserFilter" />
-	<bean id="authcfilter" class="shiro.filter.AuthcFilter" />
+        <property name="cachingEnabled" value="true"/>
+        <property name="authenticationCachingEnabled" value="true"/>
+        <property name="authenticationCacheName" value="authenticationCache"/>
+        <property name="authorizationCachingEnabled" value="true"/>
+        <property name="authorizationCacheName" value="authorizationCache"/>
+        <property name="cacheManager" ref="cacheManager"/>
 
-	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
-		<property name="securityManager" ref="securityManager" />
-		<property name="loginUrl" value="/login" />
-		<property name="successUrl" value="/login/index" />
-		<property name="unauthorizedUrl" value="/lonin/error" />
-		<property name="filters">
-			<map>
-				<entry key="userfilter" value-ref="userfilter" />
-				<entry key="authcfilter" value-ref="authcfilter" />
-			</map>
-		</property>
-		<property name="filterChainDefinitions">
-			<value>
-				/login/**=anon
-				/admin/**=authcfilter
-				/resources/**=anon
-				/**=userfilter
-			</value>
-		</property>
-	</bean>
-	<!-- /login/index=authc
-		/login/user=authc
-		/login/userb=user
-		/admin/isnotadmin=user
-		/admin/**=admin
-		/login/**=anon
-		/angular/**=anon
-		/restangular/**=anon
-		/js/**=anon
-		/resources/**=anon -->
+        <property name="passwordService" ref="webPasswordService"/>
+        <property name="CredentialsMatcher">
+            <bean class="org.apache.shiro.authc.credential.PasswordMatcher">
+                <property name="passwordService" ref="webPasswordService"/>
+            </bean>
+        </property>
+    </bean>
 
-	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
-	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor" />
-	<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
-		<property name="securityManager" ref="securityManager" />
-	</bean>
+
+    <!-- <bean id="firstSuccess" class="org.apache.shiro.authc.pam.FirstSuccessfulStrategy" /> -->
+    <!-- <bean id="atLeastSuccess" class="org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy" />
+        <bean id="allSuccess" class="org.apache.shiro.authc.pam.AllSuccessfulStrategy" /> -->
+
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realm" ref="webRealm"></property>
+        <!-- <property name="authenticator" ref="modelAuthricator" /> -->
+        <property name="sessionManager" ref="sessionManager"/>
+        <property name="cacheManager" ref="cacheManager"/>
+        <property name="rememberMeManager" ref="rememberMeManager"/>
+    </bean>
+    <!-- <bean id="modelAuthricator" class="org.apache.shiro.authc.pam.ModularRealmAuthenticator">
+        <property name="authenticationStrategy" ref="firstSuccess" />
+        <property name="realms">
+        <list>
+        <ref local="webRealm" />
+        </list>
+        </property>
+        </bean> -->
+
+    <!-- <bean id="adminfilter" class="shiro.AdminFilter">
+        <property name="isNotAdminUrl" value="/admin/isnotadmin" />
+        </bean> -->
+    <bean id="userfilter" class="shiro.filter.UserFilter"/>
+    <bean id="authcfilter" class="shiro.filter.AuthcFilter"/>
+
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+        <property name="loginUrl" value="/login"/>
+        <property name="successUrl" value="/login/index"/>
+        <property name="unauthorizedUrl" value="/lonin/error"/>
+        <property name="filters">
+            <map>
+                <entry key="userfilter" value-ref="userfilter"/>
+                <entry key="authcfilter" value-ref="authcfilter"/>
+            </map>
+        </property>
+        <property name="filterChainDefinitions">
+            <value>
+                /login/**=anon
+                /ws/**=anon
+                /admin/**=authcfilter
+                /resources/**=anon
+                /**=userfilter
+            </value>
+        </property>
+    </bean>
+    <!-- /login/index=authc
+        /login/user=authc
+        /login/userb=user
+        /admin/isnotadmin=user
+        /admin/**=admin
+        /login/**=anon
+        /angular/**=anon
+        /restangular/**=anon
+        /js/**=anon
+        /resources/**=anon -->
+
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+          depends-on="lifecycleBeanPostProcessor"/>
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
 
 </beans>

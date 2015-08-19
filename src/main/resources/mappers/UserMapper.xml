@@ -2,32 +2,34 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mappers.UserMapper">
 
-    <resultMap type="User" id="userResultMap">
-        <id property="uid" column="uid"/>
-        <result property="username" column="username"/>
-        <result property="password" column="password"/>
-        <result property="isadmin" column="isadmin"/>
-        <result property="employeename" column="employeename"/>
-        <result property="isenable" column="isenable"/>
-        <result property="delflag" column="delflag"/>
-        <result property="usertype" column="usertype"/>
-        <result property="usertypename" column="usertypename"/>
-        <result property="email" column="email"/>
-        <result property="comment" column="comment"/>
-        <result property="createby" column="createby"/>
-        <result property="createtime" column="createtime"/>
-        <result property="editby" column="editby"/>
-        <result property="edittime" column="edittime"/>
-        <result property="lastlogin" column="lastlogin"/>
-        <result property="sex" column="sex"/>
-        <result property="birthday" column="birthday"/>
-        <result property="idcard" column="idcard"/>
-        <result property="address" column="address"/>
-        <result property="mobile" column="mobile"/>
-        <result property="telephone" column="telephone"/>
-        <result property="emergencycontact" column="emergencycontact"/>
-        <result property="HeadPic" column="HeadPic"/>
-    </resultMap>
+	<resultMap type="User" id="userResultMap">
+		<id property="uid" column="uid"/>
+		<result property="username" column="username"/>
+		<result property="password" column="password"/>
+		<result property="isadmin" column="isadmin"/>
+		<result property="employeename" column="employeename"/>
+		<result property="isenable" column="isenable"/>
+		<result property="delflag" column="delflag"/>
+		<result property="usertype" column="usertype"/>
+		<result property="usertypename" column="usertypename"/>
+		<result property="email" column="email"/>
+		<result property="comment" column="comment"/>
+		<result property="createby" column="createby"/>
+		<result property="createtime" column="createtime"/>
+		<result property="editby" column="editby"/>
+		<result property="edittime" column="edittime"/>
+		<result property="lastlogin" column="lastlogin"/>
+		<result property="sex" column="sex"/>
+		<result property="birthday" column="birthday"/>
+		<result property="idcard" column="idcard"/>
+		<result property="address" column="address"/>
+		<result property="mobile" column="mobile"/>
+		<result property="telephone" column="telephone"/>
+		<result property="emergencycontact" column="emergencycontact"/>
+		<result property="avatarurl" column="avatarurl"/>
+		<result property="postuid" column="postuid"/>
+		<result property="userpostuid" column="userpostuid"/>
+	</resultMap>
 
 	<sql id="userColumns">
 		a.uid,a.username,a.password,a.isadmin,
@@ -37,31 +39,37 @@
 	</sql>
 
 	<sql id="userTreeColumns">
-		a.*,c.uid as postuid, c.name as postname,c.parentuid, d.name as usertypename
+		a.*,c.uid as postuid, c.name as postname,c.parentuid, d.name as usertypename,b.uid as userpostuid
 	</sql>
 	
-    <insert id="createUser" parameterType="User" statementType="PREPARED" keyProperty="uid" keyColumn="uid"
-            useGeneratedKeys="false">
+	<insert id="createUser" parameterType="User" statementType="PREPARED" keyProperty="uid" keyColumn="uid"
+		useGeneratedKeys="false">
 		insert into user (uid, username, password, isadmin, employeename, isenable, delflag,
 		usertype, email,
 		comment, createby, createtime,
-		sex,birthday,idcard,address,mobile,telephone,emergencycontact,HeadPic )
+		sex,birthday,idcard,address,mobile,telephone,emergencycontact,avatarurl )
 		values( #{uid}, #{username}, #{password}, #{isadmin}, #{employeename}, #{isenable},
 		#{delflag},
 		#{usertype}, #{email}, #{comment}, #{createby}, #{createtime},
-		#{sex},#{birthday},#{idcard},#{address},#{mobile},#{telephone},#{emergencycontact},#{HeadPic})
+		#{sex},#{birthday},#{idcard},#{address},#{mobile},#{telephone},#{emergencycontact},#{avatarurl})
 	</insert>
 
-    <update id="UpdatePassword" parameterType="Map">
+	<insert id="createUserPost" parameterType="User" statementType="PREPARED" keyProperty="uid" keyColumn="uid"
+		useGeneratedKeys="false">
+		insert into userpost (uid, useruid, postuid)
+		values(uuid(),#{uid}, #{postuid})
+	</insert>
+	
+	<update id="UpdatePassword" parameterType="Map">
 		update user set password=#{password} where uid = #{uid}
 	</update>
 
-    <update id="UpdateLastLogin" parameterType="String">
+	<update id="UpdateLastLogin" parameterType="String">
         update user set lastlogin = now() where username = #{username}
-    </update>
+	</update>
 
 
-    <update id="updateUser" parameterType="User" statementType="PREPARED" keyProperty="uid" keyColumn="uid">
+	<update id="updateUser" parameterType="User" statementType="PREPARED" keyProperty="uid" keyColumn="uid">
 		update user
 		set username = #{username},
 		isadmin = #{isadmin},
@@ -77,74 +85,81 @@
 		uid = #{uid}
 	</update>
 
-    <update id="deleteUser" parameterType="Map" statementType="PREPARED">
+	<update id="updateUserPost" parameterType="User" statementType="PREPARED" keyProperty="uid" keyColumn="uid">
+		update userpost
+		set postuid=#{postuid}
+		where
+		useruid=#{uid} and uid=#{userpostuid}
+	</update>
+	
+	<update id="deleteUser" parameterType="Map" statementType="PREPARED">
 		update user set delflag =
 		1,editby=#{employeename},edittime=now() where uid=#{uid}
 	</update>
 
-
 	
-    <select id="getUser" parameterType="string" resultType="User">
+	
+	<select id="getUser" parameterType="string" resultType="User">
         select
-        <include refid="userColumns"/>
+		<include refid="userColumns"/>
         from user a
         inner join usertype b on a.usertype = b.uid
         where a.uid = #{uid} and delflag = 0
-    </select>
+	</select>
 
-    <select id="CheckUserName" parameterType="String" resultType="String">
+	<select id="CheckUserName" parameterType="String" resultType="String">
 		select uid from user where username =
 		#{username}
 		and delflag = 0
 	</select>
 
-    <select id="GetUserList" statementType="PREPARED" parameterType="string" resultMap="userResultMap">
+	<select id="GetUserList" statementType="PREPARED" parameterType="string" resultMap="userResultMap">
         select
-        <include refid="userColumns"/>
+		<include refid="userColumns"/>
         from user a
         inner join usertype b on a.usertype = b.uid
         where a.delflag = 0
-    </select>
+	</select>
 
-    <select id="getUserPassword" statementType="PREPARED" resultType="String">
+	<select id="getUserPassword" statementType="PREPARED" resultType="String">
 		select password from user where username =
 		#{username} and delflag = 0
 	</select>
 
-    <select id="getUserByName" statementType="PREPARED" resultType="User">
+	<select id="getUserByName" statementType="PREPARED" resultType="User">
         select
-        <include refid="userColumns"/>
+		<include refid="userColumns"/>
         from user a
         inner join usertype b on a.usertype = b.uid
         where a.username = #{username}
-    </select>
+	</select>
 
-    <select id="GetUserTotalCount" parameterType="Map" resultType="int">
+	<select id="GetUserTotalCount" parameterType="Map" resultType="int">
         select count(*) from user a
         inner join usertype b on a.usertype = b.uid
         where a.delflag = 0
-        <if test="username!=null and username!=''">and a.username like "%"#{username}"%"</if>
-        <if test="employeename!=null and employeename!=''">and a.employeename like "%"#{employeename}"%"</if>
-        <if test="usertype!=null and usertype!=''">and a.usertype = #{usertype}</if>
-        <if test="isenable!=null and isenable!=''">and a.isenable = #{isenable}</if>
+		<if test="username!=null and username!=''">and a.username like "%"#{username}"%"</if>
+		<if test="employeename!=null and employeename!=''">and a.employeename like "%"#{employeename}"%"</if>
+		<if test="usertype!=null and usertype!=''">and a.usertype = #{usertype}</if>
+		<if test="isenable!=null and isenable!=''">and a.isenable = #{isenable}</if>
 
-    </select>
+	</select>
 
-    <select id="GetUserByPage" parameterType="Map" resultType="User">
+	<select id="GetUserByPage" parameterType="Map" resultType="User">
         select
-        <include refid="userColumns"/>
+		<include refid="userColumns"/>
         from user a
         inner join usertype b on a.usertype = b.uid
         where a.delflag = 0
-        <if test="username!=null and username!=''">and a.username like "%"#{username}"%"</if>
-        <if test="employeename!=null and employeename!=''">and a.employeename like "%"#{employeename}"%"</if>
-        <if test="usertype!=null and usertype!=''">and a.usertype = #{usertype}</if>
-        <if test="isenable!=null and isenable!=''">and a.isenable = #{isenable}</if>
+		<if test="username!=null and username!=''">and a.username like "%"#{username}"%"</if>
+		<if test="employeename!=null and employeename!=''">and a.employeename like "%"#{employeename}"%"</if>
+		<if test="usertype!=null and usertype!=''">and a.usertype = #{usertype}</if>
+		<if test="isenable!=null and isenable!=''">and a.isenable = #{isenable}</if>
         ORDER BY #{orderby} limit #{start},#{pageSize}
-    </select>
+	</select>
 
 
-    <select id="Pro_UserList" statementType="CALLABLE" parameterType="Map" resultType="User">
+	<select id="Pro_UserList" statementType="CALLABLE" parameterType="Map" resultType="User">
         call pro_GetUserList(#{username,mode=IN,jdbcType=VARCHAR},
                             #{employeename,mode=IN,jdbcType=VARCHAR},
                             #{usertype,mode=IN,jdbcType=VARCHAR},
@@ -152,16 +167,18 @@
                             #{page,mode=IN,jdbcType=INTEGER},
                             #{pageSize,mode=IN,jdbcType=INTEGER},
                             #{totalcount,mode=OUT,jdbcType=INTEGER})
-    </select>
+	</select>
 
-    <select id="GetUserTreeList" statementType="PREPARED" parameterType="string" resultMap="userResultMap">
+
+	<select id="GetUserTreeList" statementType="PREPARED" parameterType="string" resultMap="userResultMap">
     	select 
 		<include refid="userTreeColumns" />
         from user a 
         inner join userpost b on a.uid=b.useruid
         inner join post c on c.uid=b.postuid	
         inner join usertype d on d.uid = a.usertype
-    </select>
+        where a.delflag=0
+	</select>
     
 	<select id="GetUserTreeSet" parameterType="String" statementType="PREPARED" resultType="User">		
 		select 
@@ -170,6 +187,26 @@
         inner join userpost b on a.uid=b.useruid
         inner join post c on c.uid=b.postuid	
         inner join usertype d on d.uid = a.usertype
-        where FIND_IN_SET(c.uid,fun_GetUserTreeSet(#{employeename}))
+        where a.delflag=0 and (FIND_IN_SET(c.uid,fun_GetUserTreeSet(#{employeename})) or FIND_IN_SET(a.uid,fun_GetUserTreeSet(#{employeename})))
+	</select>
+	
+	<select id="GetOneUser" parameterType="string" resultType="User">
+        select
+		<include refid="userTreeColumns"/>
+        from user a 
+        inner join userpost b on a.uid=b.useruid
+        inner join post c on c.uid=b.postuid	
+        inner join usertype d on d.uid = a.usertype
+        where a.uid = #{uid} and a.delflag = 0
+	</select>
+    
+	<select id="GetOneUserParent" parameterType="string" resultType="User">
+        select
+		<include refid="userTreeColumns"/>
+        from user a 
+        inner join userpost b on a.uid=b.useruid
+        inner join post c on c.uid=b.postuid	
+        inner join usertype d on d.uid = a.usertype
+        where a.delflag = 0 and c.uid=#{parentuid}
 	</select>
 </mapper>

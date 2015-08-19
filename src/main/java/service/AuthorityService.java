@@ -1,6 +1,7 @@
 package service;
 
 import model.*;
+import model.authority.Employee;
 
 import java.util.List;
 
@@ -20,8 +21,15 @@ public interface AuthorityService {
 
     List<Role> GetUserRoles(String username);
 
-    User InitWebUser(String username);
+    Employee GetEmployee(String username);
 
-    List<Post> GetUserPosts(String useruid);
+    List<Employee> GetSuperiors(String username);
+
+    List<Employee> GetSubordinates(String username);
+
+
+//    User InitWebUser(String username);
+//
+//    List<Post> GetUserPosts(String useruid);
 
 }

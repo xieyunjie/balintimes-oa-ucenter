@@ -18,7 +18,7 @@ define(
 					}
 				}
 			};
-
+			
 			var editState = {
 				name : 'application/app/edit',
 				url : '/application/app/edit/:uid',

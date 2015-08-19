@@ -35,4 +35,12 @@ public interface UserMapper {
     List<User> GetUserTreeList();
     
     List<User> GetUserTreeSet(String employeeName);
+    
+    User GetOneUser(String uid);
+    
+    User GetOneUserParent(String partentuid);
+    
+    void updateUserPost(User user);
+    
+    void createUserPost(User user);
 }

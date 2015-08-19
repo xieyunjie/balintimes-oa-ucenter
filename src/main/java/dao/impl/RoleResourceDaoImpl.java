@@ -45,7 +45,7 @@ public class RoleResourceDaoImpl implements RoleResourceDao {
 
 	public int GetRoleResourceCountByRoleAndApp(String roleUid, String appUid) {
 		// TODO Auto-generated method stub
-		Map<String,Object> map=new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("roleUid", roleUid);
 		map.put("appUid", appUid);
 		return this.roleResourceMapper.GetRoleResourceCountByRoleAndApp(map);
@@ -54,6 +54,14 @@ public class RoleResourceDaoImpl implements RoleResourceDao {
 	public void DeleteRoleResourceByResource(String resourceUid) {
 		// TODO Auto-generated method stub
 		this.roleResourceMapper.DeleteRoleResourceByResource(resourceUid);
+	}
+
+	public void DeleteRoleResourceByRoleAndApp(String roleUid, String appUid) {
+		// TODO Auto-generated method stub
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("roleUid", roleUid);
+		map.put("appUid", appUid);
+		this.roleResourceMapper.DeleteRoleResourceByRoleAndApp(map);
 	}
 
 }

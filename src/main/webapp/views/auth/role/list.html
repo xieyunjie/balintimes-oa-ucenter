@@ -38,10 +38,11 @@
 					<a href="#" ui-sref="auth/role/edit({uid:0,parentuid:node.uid})"> <i class="fa fa-angle-double-down"></i> 添加下级角色</a>
 					<a href="#" ui-sref="auth/role/edit({uid:node.uid,parentuid:node.parentUid})"><i class="fa fa-pencil fa-fw"></i>修改</a>
                     <a href="#" ng-click="deleteRole(node.uid)"><i class="fa fa-trash-o fa-fw text-danger"></i> 删除</a>
-					<a href="#" ui-sref="auth/role/appsetting({uid:node.uid})"><i class="fa fa-trash-o fa-fw fa-arrows-v"></i> 角色应用设置</a>
+					<a href="#" ui-sref="auth/role/appsetting({uid:node.uid})"><i class="fa fa-trash-o fa-fw fa-arrows-v"></i> 设置角色</a>
+<!--
 					<a href="#" ui-sref="auth/role/setting({uid:node.uid})"><i class="fa fa-trash-o fa-fw fa-angle-double-up"></i> 设置角色</a>
 
-					<a href="#" ng-click="openRoleResourceWin(node.uid)"> 1234设置角色</a>
+					<a href="#" ng-click="openRoleResourceWin(node.uid)"> 1234设置角色</a> -->
 				</div>
 			</td>
 		</tr>

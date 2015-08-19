@@ -41,7 +41,7 @@ public class AuthorityServiceTest {
 
 	@Test
 	public void GetUserMenu() {
-		String username="admin";
+		String username="33";
 		String applicationuid="05bd7806-3026-11e5-8396-c86000a05d5f";
 		//List<Resource> list= this.resourceDao.GetUserMenu(username, applicationuid);
 		List<Resource> list=GetUserMenu(username,applicationuid);

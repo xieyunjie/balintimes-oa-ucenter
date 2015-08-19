@@ -42,5 +42,9 @@
 	<delete id="DeleteRoleResourceByResource" statementType="PREPARED" parameterType="String">
 		delete from roleresources where resourcesuid=#{resourcesUid}
 	</delete>
+	
+	<delete id="DeleteRoleResourceByRoleAndApp" statementType="PREPARED" parameterType="map">
+		delete from roleresources where roleuid=#{roleUid} and resourcesuid in (select uid from resource as z where z.appuid=#{appUid})
+	</delete>
 
 </mapper>

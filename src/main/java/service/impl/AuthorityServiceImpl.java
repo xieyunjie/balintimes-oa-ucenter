@@ -2,6 +2,7 @@ package service.impl;
 
 import model.*;
 
+import model.authority.Employee;
 import org.springframework.stereotype.Service;
 
 import dao.ApplicationDao;
@@ -109,11 +110,16 @@ public class AuthorityServiceImpl implements AuthorityService {
 		return this.roleDao.GetUserRoles(username);
 	}
 
-	public User InitWebUser(String username) {
+	public Employee GetEmployee(String username) {
 		return null;
 	}
 
-	public List<Post> GetUserPosts(String useruid) {
+	public List<Employee> GetSuperiors(String username) {
 		return null;
 	}
+
+	public List<Employee> GetSubordinates(String username) {
+		return null;
+	}
+
 }

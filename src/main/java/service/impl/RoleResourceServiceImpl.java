@@ -32,17 +32,17 @@ public class RoleResourceServiceImpl implements RoleResourceService {
 	public void SaveRoleResource(String roleUid, String appUid,
 			String resourceUid, boolean checked) {
 		// TODO Auto-generated method stub
-//		int rrCount = this.roleApplicationDao.GetRoleApplicationCountByRole(
-//				roleUid, appUid);
+		// int rrCount = this.roleApplicationDao.GetRoleApplicationCountByRole(
+		// roleUid, appUid);
 		if (checked == true) {
-//			if (rrCount == 0) {
-//				RoleApplication ra = new RoleApplication();
-//				ra.setUid(UUID.randomUUID().toString());
-//				ra.setRoleUid(roleUid);
-//				ra.setAppUid(appUid);
-//
-//				this.roleApplicationDao.CreateRoleApplication(ra);
-//			}
+			// if (rrCount == 0) {
+			// RoleApplication ra = new RoleApplication();
+			// ra.setUid(UUID.randomUUID().toString());
+			// ra.setRoleUid(roleUid);
+			// ra.setAppUid(appUid);
+			//
+			// this.roleApplicationDao.CreateRoleApplication(ra);
+			// }
 
 			RoleResource rr = new RoleResource();
 			rr.setUid(UUID.randomUUID().toString());
@@ -54,20 +54,37 @@ public class RoleResourceServiceImpl implements RoleResourceService {
 			this.roleResourceDao.DeleteRoleResourceByRoleAndResource(roleUid,
 					resourceUid);
 
-//			int raCount = this.roleResourceDao
-//					.GetRoleResourceCountByRoleAndApp(roleUid, appUid);
-//			if (raCount == 0) {
-//				this.roleApplicationDao.DeleteRoleApplicationByRoleAndApp(
-//						roleUid, appUid);
-//			}
+			// int raCount = this.roleResourceDao
+			// .GetRoleResourceCountByRoleAndApp(roleUid, appUid);
+			// if (raCount == 0) {
+			// this.roleApplicationDao.DeleteRoleApplicationByRoleAndApp(
+			// roleUid, appUid);
+			// }
 		}
 	}
 
 	@CustomerTransactional
 	public void CleanSetting(String roleUid) {
 		// TODO Auto-generated method stub
-//		this.roleApplicationDao.DeleteRoleApplicationByRole(roleUid);
+		// this.roleApplicationDao.DeleteRoleApplicationByRole(roleUid);
 		this.roleResourceDao.DeleteRoleResourceByRole(roleUid);
+	}
+
+	@CustomerTransactional
+	public void SaveRoleResources(String roleUid, String appUid,
+			String[] resources) {
+		// TODO Auto-generated method stub
+		this.roleResourceDao.DeleteRoleResourceByRoleAndApp(roleUid, appUid);
+		if (resources.length > 0) {
+			for (String item : resources) {
+				RoleResource rr = new RoleResource();
+				rr.setUid(UUID.randomUUID().toString());
+				rr.setRoleUid(roleUid);
+				rr.setResourcesUid(item);
+
+				this.roleResourceDao.CreateRoleResource(rr);
+			}
+		}
 	}
 
 }

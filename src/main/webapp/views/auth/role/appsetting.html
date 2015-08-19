@@ -29,24 +29,53 @@
 		</div>
 
 		<div class="box-body box-body table-responsive no-padding">
-			<table
-				class="table table-responsive table-striped table-bordered table-hover">
+			<table class="table">
 				<thead>
 					<tr>
 						<th style="width: 50px; text-align: center;"></th>
-						<th>名称</th>
-						<th>类型</th>
-						<th>备注</th>
+						<th style="width: 150px; text-align: center;">名称</th>
+						<th style="width: 150px; text-align: center;">类型</th>
+						<th style="width: 350px; text-align: center;">备注</th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr ng-repeat="item in applicationList">
-						<td style="width: 50px; text-align: center;"><input
+						<!-- 					<td style="width: 50px; text-align: center;"><input
 							type="checkbox" ng-model="item.checked"
 							ng-change="saveCheckedValue(item.uid,item.checked)"></td>
 						<td>{{item.name}}</td>
 						<td>{{item.typeName}}</td>
-						<td>{{item.comment}}</td>
+						<td>{{item.comment}}</td> -->
+
+
+
+						<td colspan="5">
+							<table class="table">
+								<tr>
+									<td style="width: 50px; text-align: center;"><input
+										type="checkbox" ng-model="item.checked"
+										ng-change="saveCheckedValue(item.uid,item.checked)"></td>
+									<td style="width: 150px; text-align: center;">{{item.name}}</td>
+									<td style="width: 150px; text-align: center;">{{item.typeName}}</td>
+									<td style="width: 350px; text-align: center;">{{item.comment}}</td>
+									<td><a href="#" ng-click="showDiv(item.uid)">设置资源功能 </a></td>
+								</tr>
+								<tr ng-if="IsShow(item.uid)">
+									<td colspan="5">
+										<ul class="tree">
+											<node-tree children="tree" text="name" expanded="true">
+											</node-tree>
+										</ul>
+										<button class="btn btn-primary" ng-click="saveRoleResources()">
+											<i class="fa fa-check"></i>保存
+										</button> <a class="btn btn-warning" herf="#" ng-click="hideDiv()">
+											<i class="fa fa-times"></i>关闭
+									</a>
+									</td>
+								</tr>
+							</table>
+						</td>
 					</tr>
 				</tbody>
 			</table>
@@ -54,6 +83,5 @@
 		</div>
 
 	</div>
-
 
 </div>

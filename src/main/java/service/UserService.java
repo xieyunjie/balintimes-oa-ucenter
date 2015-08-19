@@ -39,4 +39,8 @@ public interface UserService {
     List<User> GetUserTreeList();
     
     List<User> GetUserTreeSet(String employeeName);
+    
+    User GetOneUser(String uid);
+    
+    User GetOneUserParent(String partentuid);
 }

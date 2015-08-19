@@ -10,4 +10,6 @@ public interface RoleResourceService {
 	void SaveRoleResource(String roleUid,String appUid,String resourceUid,boolean checked);
 	
 	void CleanSetting(String roleUid);
+	
+	void SaveRoleResources(String roleUid,String appUid,String[] resources);
 }

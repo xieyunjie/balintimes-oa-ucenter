@@ -21,7 +21,7 @@ public class UserDaoImpl implements UserDao {
 
     public boolean createUser(User user) {
         userMapper.createUser(user);
-
+        userMapper.createUserPost(user);
         return true;
     }
 
@@ -44,6 +44,7 @@ public class UserDaoImpl implements UserDao {
 
     public void updateUser(User user) {
         this.userMapper.updateUser(user);
+        this.userMapper.updateUserPost(user);
     }
 
     public void deleteUser(String uid, String employeename) {
@@ -156,5 +157,19 @@ public class UserDaoImpl implements UserDao {
 		List<User> listUsersSet= userMapper.GetUserTreeSet(employeeName);
 		return listUsersSet;
 	}
+
+	
+	public User GetOneUser(String uid) {
+		User oneUser=userMapper.GetOneUser(uid);
+		return oneUser;
+	}
+
+	
+	public User GetOneUserParent(String partentuid) {
+		User oneUserParent=userMapper.GetOneUserParent(partentuid);
+		return oneUserParent;
+	}
+
+	
 
 }

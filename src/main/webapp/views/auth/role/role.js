@@ -289,6 +289,88 @@ define([ 'angularAMD', 'balintimesConstant', 'ui-bootstrap',
 		$scope.role=roleData.data;
 		$scope.applicationList=applicationListData.data;
 		
+		$scope.appuid="";
+		
+		$scope.tree=[];
+		
+		
+		$scope.loadRoleResource=function(appuid){
+			var param = {
+					roleuid:$scope.role.uid,
+					appuid : appuid
+				};
+				
+				return AjaxRequest.Get("/resource/listByRole",param).then(function(rs){
+					$scope.tree = rs.data;		
+					$scope.appuid=appuid;
+				});
+		};
+		
+		$scope.showDiv=function(appuid){
+			$scope.loadRoleResource(appuid);
+		};
+		
+		$scope.hideDiv=function(){
+			$scope.appuid="";
+		};
+		
+		
+		
+		$scope.IsShow=function(uid){
+			if(uid==$scope.appuid)
+				return true;
+			return false;
+		};
+		
+		$scope.saveRoleResources=function(){
+			var tree= $scope.tree;
+			var ary=new Array();
+			
+			for(var i=0;i<tree.length;i++){
+				setChildren(ary,tree[i]);
+			}
+			
+			
+			var resources="";
+			if(ary.length>0){
+				for(var i=0;i<ary.length;i++){
+					if(i==0){
+						resources=ary[i];
+					}else{
+						resources+=","+ary[i]
+					}
+				}
+			}
+			
+			var url="/resource/saveRoleResources";
+				var params={
+					roleUid:$scope.role.uid,
+					appUid:$scope.appuid,
+					resources:resources
+				};
+				AjaxRequest.Post(url, params).then(
+					function(rsBody) {
+						if (rsBody.success == 'true') {
+							$scope.hideDiv();
+						}
+					});
+		};
+		
+		function setChildren(ary,treeNode){
+			if(treeNode.children.length>0){
+				for(var i=0;i<treeNode.children.length;i++){
+					var item=treeNode.children[i];
+					if(item.resourceType==1){
+						setChildren(ary,item);
+					}else{
+						if(item.resourceType==2 && item.checked==true){
+							ary.push(item.uid);
+						}
+					}
+				}
+			}
+		}
+		
 		$scope.loadData=function(){
 			var url = "/application/listByRole";
 			AjaxRequest.Get(url,{roleuid:$scope.role.uid} ).then(

@@ -71,4 +71,8 @@
 	<delete id="DeletePost" parameterType="String">
     	delete from post where uid = #{uid} or FIND_IN_SET(uid, fun_GetPostAllChildren(#{uid}))>0
 	</delete>
+	
+	<delete id="DeleteUserPost" parameterType="String">
+    	delete from userpost where postuid = #{uid} or FIND_IN_SET(postuid, fun_GetPostAllChildren(#{uid}))>0
+	</delete>
 </mapper>

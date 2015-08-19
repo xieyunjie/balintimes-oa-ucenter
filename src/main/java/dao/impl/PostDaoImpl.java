@@ -56,6 +56,7 @@ public class PostDaoImpl implements PostDao {
 	
 	public void DetetePost(String uid) {
 		// TODO Auto-generated method stub
+		//this.postMapper.DeleteUserPost(uid);
 		this.postMapper.DeletePost(uid);
 	}
 	

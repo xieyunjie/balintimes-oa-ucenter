@@ -35,6 +35,7 @@ public class User implements Serializable
 	private String postname;
 	private String parentuid;
 	private String parentname;
+	private String userpostuid;
 	
 	public User()
 	{
@@ -297,6 +298,14 @@ public class User implements Serializable
 	
 	public String getParentname() {
 		return parentname;
+	}
+	
+	public void setUserpostuid(String userpostuid) {
+		this.userpostuid = userpostuid;
+	}
+	
+	public String getUserpostuid() {
+		return userpostuid;
 	}
 	
 	@Override

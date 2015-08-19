@@ -12,9 +12,11 @@ public interface RoleResourceMapper {
 	
 	void CreateRoleResource(RoleResource roleResource);
 	
-	void  DeleteRoleResourceByRoleAndResource(Map<String, Object> map);
+	void DeleteRoleResourceByRoleAndResource(Map<String, Object> map);
 	
 	void DeleteRoleResourceByRole(String roleUid);
 	
 	void DeleteRoleResourceByResource(String resourceUid);
+	
+	void DeleteRoleResourceByRoleAndApp(Map<String ,Object> map);
 }

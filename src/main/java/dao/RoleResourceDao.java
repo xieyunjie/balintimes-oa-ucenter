@@ -16,4 +16,6 @@ public interface RoleResourceDao {
 	void DeleteRoleResourceByRole(String roleUid);
 	
 	void DeleteRoleResourceByResource(String resourceUid);
+	
+	void DeleteRoleResourceByRoleAndApp(String roleUid,String appUid);
 }

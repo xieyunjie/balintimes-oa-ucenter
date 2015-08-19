@@ -35,7 +35,7 @@
         return angular.isUndefined(val) || val === null;
     }
 
-    angular.isDefined = function (val) {
+    angular.isDefinedEx = function (val) {
         return !(angular.isUndefined(val) || val === null);
     }
 
@@ -281,7 +281,7 @@
                         };
 
                         $scope.onClick = function (node) {
-                            if (angular.isDefined($scope.tree) && angular.isFunction($scope.tree.on_click)) {
+                            if (angular.isDefinedEx($scope.tree) && angular.isFunction($scope.tree.on_click)) {
                                 // We want to detach from Angular's digest cycle so we can
                                 // independently measure the time for one cycle.
                                 setTimeout(
@@ -293,7 +293,7 @@
                         };
 
                         $scope.onSelect = function (node) {
-                            if (angular.isDefined($scope.tree)) {
+                            if (angular.isDefinedEx($scope.tree)) {
                                 if (node !== $scope.tree.selected_node) {
                                     $scope.tree.select_node(node);
                                 }
@@ -442,7 +442,7 @@
                                             if (info.target.$callbacks.accept(info, info.move, info.changed)) {
                                                 if (isMove) {
                                                     _parent = _parentRemove;
-                                                    if (angular.isDefined(_parent.__children__)) {
+                                                    if (angular.isDefinedEx(_parent.__children__)) {
                                                         _parent = _parent.__children__;
                                                     }
 
@@ -555,7 +555,7 @@
                                 if (node && node.__index__ > 0) {
                                     var _parent, _index = node.__index__ - 1;
 
-                                    if (angular.isDefined(node.__parent_real__)) {
+                                    if (angular.isDefinedEx(node.__parent_real__)) {
                                         _parent = $scope.tree_nodes[node.__parent_real__];
                                         return _parent.__children__[_index];
                                     }
@@ -793,7 +793,7 @@
                                     _len,
                                     _tree_nodes = [];
                                 console.log('---------');
-                                if (angular.isDefined(oData)) {
+                                if (angular.isDefinedEx(oData)) {
                                     if (!angular.isArray(oData) || oData.length === 0) {
                                         return [];
                                     } else {
@@ -813,7 +813,7 @@
                                     getColDefs();
                                 }
 
-                                if (angular.isDefined(scope.orderBy)) {
+                                if (angular.isDefinedEx(scope.orderBy)) {
                                     if (!angular.isFunction(_fnInitOrderBy)) {
                                         _fnInitOrderBy = $TreeDnDPlugin('$TreeDnDOrderBy');
                                     }
@@ -823,7 +823,7 @@
                                     }
                                 }
 
-                                if (angular.isDefined(scope.filter)) {
+                                if (angular.isDefinedEx(scope.filter)) {
                                     if (!angular.isFunction(_fnInitFilter)) {
                                         _fnInitFilter = $TreeDnDPlugin('$TreeDnDFilter');
                                     }
@@ -858,7 +858,7 @@
                                 }
 
                                 // clear memory
-                                if (angular.isDefined(scope.tree_nodes)) {
+                                if (angular.isDefinedEx(scope.tree_nodes)) {
                                     delete(scope.tree_nodes);
                                 }
 
@@ -1011,7 +1011,7 @@
                                             }
                                         }],
                                     [
-                                        'object', 'treeControl', angular.isDefined(scope.tree) ? scope.tree : {},
+                                        'object', 'treeControl', angular.isDefinedEx(scope.tree) ? scope.tree : {},
                                         'tree', null, function ($tree) {
 
                                         if (!angular.isFunction(_fnGetControl)) {
@@ -1036,7 +1036,7 @@
                                     [
                                         ['object', 'array'], 'filter', null, 'filter', null, function (filters) {
                                         var _passed = false;
-                                        if (angular.isDefined(filters) && !angular.isArray(filters)) {
+                                        if (angular.isDefinedEx(filters) && !angular.isArray(filters)) {
                                             var _keysF = Object.keys(filters),
                                                 _lenF = _keysF.length, _iF;
 
@@ -1611,7 +1611,7 @@
                                     var _prev = targetScope.getPrevSibling(_target);
 
                                     _move.parent = _parent;
-                                    _move.pos = angular.isDefined(_prev) ? _prev.__index__ + 1 : 0;
+                                    _move.pos = angular.isDefinedEx(_prev) ? _prev.__index__ + 1 : 0;
 
                                     _drop = _prev;
                                 } else {
@@ -2468,7 +2468,7 @@
 ).factory(
     '$TreeDnDPlugin',['$injector', function ($injector) {
         var _fnget = function (name) {
-                if (angular.isDefined($injector) && $injector.has(name)) {
+                if (angular.isDefinedEx($injector) && $injector.has(name)) {
                     return $injector.get(name);
                 }
                 return null;
@@ -2536,7 +2536,7 @@
                         _nodePassed = fnBefore(options, node),
                         _childPassed = false;
 
-                    if (angular.isDefined(node[fieldChild])) {
+                    if (angular.isDefinedEx(node[fieldChild])) {
                         _nodes = node[fieldChild];
                         _len = _nodes.length;
                         for (_i = 0; _i < _len; _i++) {
@@ -2569,7 +2569,7 @@
                         if (typeof callback === 'boolean') {
                             check = !!check;
                             return check === callback;
-                        } else if (angular.isDefined(callback)) {
+                        } else if (angular.isDefinedEx(callback)) {
                             try {
                                 var _regex = new RegExp(callback);
                                 return _regex.test(check);
@@ -2602,7 +2602,7 @@
                                     return true;
                                 }
                             }
-                        } else if (angular.isDefined(node[_key])) {
+                        } else if (angular.isDefinedEx(node[_key])) {
                             return _fnCheck(_callback, node[_key]);
                         }
                     }
@@ -2726,7 +2726,7 @@
                 for_all_descendants = function for_all_descendants(options, node, name, fnOrderBy) {
                     var _i, _len, _nodes;
 
-                    if (angular.isDefined(node[name])) {
+                    if (angular.isDefinedEx(node[name])) {
                         _nodes = node[name];
                         _len = _nodes.length;
                         // OrderBy children

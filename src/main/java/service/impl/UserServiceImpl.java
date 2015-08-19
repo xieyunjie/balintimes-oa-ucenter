@@ -115,4 +115,16 @@ public class UserServiceImpl implements UserService {
 		return listUsersSet;
 	}
 
+	
+	public User GetOneUser(String uid) {
+		User oneUser=userDao.GetOneUser(uid);
+		return oneUser;
+	}
+
+	
+	public User GetOneUserParent(String partentuid) {
+		User oneUserParent=userDao.GetOneUserParent(partentuid);
+		return oneUserParent;
+	}
+
 }

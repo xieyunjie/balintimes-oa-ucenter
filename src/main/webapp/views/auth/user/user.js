@@ -154,16 +154,17 @@ define(['angularAMD', 'balintimesConstant', 'ui-bootstrap', 'angular-messages','
 			},
 			getTemplate : function(node) {
 				return 'tree_node';
-			}
+			},
+            options: {
+                initialState: 'expanded'
+            }
 		});
 		
 		$scope.loadData=function(){
 			return AjaxRequest.Get("/role/listByUser",{useruid:$scope.user.uid}).then(function(rs) {
 				treeData = rs.data;
 				if (treeData.length>0) {
-					$scope.expanded_params.refresh().then(function() {
-						$scope.expanded_params.expendNode("0");
-					});
+					$scope.expanded_params.refresh();
 				} else {
 					//DlgMsg.alert("系统提示", "没有查找的权限信息！");
 				}

@@ -21,5 +21,7 @@ public interface PostMapper
 	void DeletePost(String uid);
 	
 	void CreatePost(Post post);
+	
+	void DeleteUserPost(String uid);
         
 }

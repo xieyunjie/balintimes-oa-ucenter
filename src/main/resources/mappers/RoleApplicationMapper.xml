@@ -27,7 +27,7 @@
 	</insert>
 	
 	<delete id="DeleteRoleApplicationByRoleAndApp" statementType="PREPARED" parameterType="map">
-		delete from roleapplication where roleuid=#{roleuid} and appuid=#{appUid}
+		delete from roleapplication where roleuid=#{roleUid} and appuid=#{appUid}
 	</delete>
 	
 	<delete id="DeleteRoleApplicationByRole" statementType="PREPARED" parameterType="String">

@@ -52,7 +52,7 @@ public class ResourceController extends BaseController {
 		tree.setChildren(new ArrayList<ResourceTree>());
 		tree.setFunctions(new ArrayList<Resource>());
 		tree.setState("");
-		
+
 		this.SetTreeNode(tree, resources,
 				"00000000-0000-0000-0000-000000000000");
 
@@ -94,7 +94,7 @@ public class ResourceController extends BaseController {
 				node.setChildren(new ArrayList<ResourceTree>());
 				node.setFunctions(new ArrayList<Resource>());
 				node.setState(item.getState());
-				
+
 				List<Resource> rs = this.SetFunction(list, item.getUid());
 				node.setFunctions(rs);
 
@@ -181,7 +181,7 @@ public class ResourceController extends BaseController {
 				node.setUrl(item.getUrl());
 				node.setTreeType(item.getResourceType());
 				node.setChildren(new ArrayList<ResourceTree>());
-				
+
 				this.SetTreeNodeByTreeBox(node, list, node.getUid(), istree);
 
 				List<ResourceTree> cs = tree.getChildren();
@@ -322,6 +322,19 @@ public class ResourceController extends BaseController {
 	public String DeleteResourceInfo(String uid) {
 		this.resourceService.DeleteResourceInfo(uid);
 		return JsonUtil.ResponseSuccessfulMessage("保存成功");
+	}
+
+	@RequestMapping(value = "saveRoleResources", method = RequestMethod.POST)
+	@ResponseBody
+	public String SaveRoleResources(String roleUid, String appUid,
+			String resources) {
+		try {
+			this.roleResourceService.SaveRoleResources(roleUid, appUid,
+					resources.split(","));
+			return JsonUtil.ResponseSuccessfulMessage("保存成功");
+		} catch (Exception ex) {
+			return JsonUtil.ResponseFailureMessage(ex.getMessage());
+		}
 	}
 
 }
