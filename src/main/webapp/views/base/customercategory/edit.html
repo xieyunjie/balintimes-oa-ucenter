@@ -1,0 +1,77 @@
+<ol class="breadcrumb">
+	<li><a href="#">首页</a></li>
+	<li><a href="#">基础信息</a></li>
+	<li class="active">销售渠道编辑</li>
+</ol>
+
+<form name="editForm" class="form-horizontal " role="form" novalidate>
+
+<div class="form-group">
+		<label for="name" class="col-sm-1 control-label">名称:</label>
+
+		<div class="col-sm-4">
+			<input type="hidden" name="uid" ng-model="customerCategory.uid">
+			<input type="text" class="form-control" name='name'
+				ng-model="customerCategory.name" required="required" />
+				
+			<div ng-if="editForm.name.$dirty">
+				<div ng-messages="editForm.name.$error" class="errormsg"
+					role="alert">
+					<div
+						ng-messages-include='{{rootpath}}/views/tpls/messageerror/require.html' />
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label for="code" class="col-sm-1 control-label">编号:</label>
+
+		<div class="col-sm-4">
+			<input type="text" class="form-control" name='code'
+				ng-model="customerCategory.code" required="required" />
+
+			<div ng-if="editForm.code.$dirty">
+				<div ng-messages="editForm.code.$error" class="errormsg"
+					role="alert">
+					<div
+						ng-messages-include='{{rootpath}}/views/tpls/messageerror/require.html' />
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label for="comment" class="col-sm-1 control-label">备注:</label>
+
+		<div class="col-sm-4">
+			<textarea class="form-control" name="comment"
+				ng-model="customerCategoty.comment" ></textarea>
+
+			<div ng-if="editForm.comment.$dirty">
+				<div ng-messages="editForm.comment.$error" class="errormsg"
+					role="alert">
+					<div
+						ng-messages-include='{{rootpath}}/views/tpls/messageerror/require.html' />
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	<div class="form-group">
+		<div class="col-sm-offset-1 col-sm-6">
+			<button class="btn btn-primary" ng-click="saveType()"
+				ng-disabled="editForm.$invalid">
+				<i class="fa fa-check"></i>保存
+			</button>
+			<button class="btn btn-info" ng-click="revert()">
+				<i class="fa fa-undo"></i> 重置
+			</button>
+			<a ui-sref="base/customercategory" class="btn btn-warning"> <i
+				class="fa fa-times"></i>取消并返回
+			</a>
+		</div>
+	</div>
+
+</form>

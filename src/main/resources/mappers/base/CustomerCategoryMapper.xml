@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mappers.base.CustomerCategoryMapper">
+
+	<resultMap type="CustomerCategory" id="customerCategoryMap">
+		<id property="uid" column="uid" />
+		<result property="name" column="name" />
+		<result property="code" column="code" />
+		<result property="comment" column="comment" />
+	</resultMap>
+
+	<select id="GetCustomerCategoryList" statementType="PREPARED"
+		resultType="CustomerCategory" parameterType="String">
+		select * from
+		customercategory where name like #{name}
+	</select>
+
+	<select id="GetCustomerCategory" statementType="PREPARED"
+		resultType="CustomerCategory" parameterType="String">
+		select * from
+		customercategory where uid =#{uid}
+	</select>
+
+	<insert id="CreateCustomerCategory" statementType="PREPARED"
+		parameterType="CustomerCategory">
+		insert into customercategory(uid, name,code,comment)
+		values(uuid(),#{name},#{code},#{comment})
+	</insert>
+
+	<update id="UpdateCustomerCategory" statementType="PREPARED"
+		parameterType="CustomerCategory">
+		update
+		customercategory
+		set
+		name=#{name},
+		code=#{code},
+		comment=#{comment}
+		where
+		uid=#{uid}
+	</update>
+
+	<delete id="DeleteCustomerCategory" statementType="PREPARED"
+		parameterType="String">
+		delete from customercategory where uid=#{uid}
+	</delete>
+
+</mapper>

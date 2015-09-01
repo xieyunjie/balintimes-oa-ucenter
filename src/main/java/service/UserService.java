@@ -27,6 +27,8 @@ public interface UserService {
     boolean ExistsUserName(String username);
 
     boolean ExistsUserName(String username, String uid);
+    
+    boolean ExistsEmployeeName(String employeename);
 
     void UpdatePassword(String uID, String password);
 
@@ -40,7 +42,11 @@ public interface UserService {
     
     List<User> GetUserTreeSet(String employeeName);
     
+    List<User> GetUserTreeListByCondition(String username, String employeename,String postuid,String organizationuid);
+    
     User GetOneUser(String uid);
     
     User GetOneUserParent(String partentuid);
+    
+    List<User> GetUserByEmpName(String empName);
 }

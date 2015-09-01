@@ -125,6 +125,12 @@ define(['angular', 'balintimesConstant'], function (angular,balintimesConstant) 
                  * Here we are checking that if current node has children then compiling/rendering children.
                  * */
 				 
+            	var hasCheckChildren=element.attr("checkchildren");;
+                if(hasCheckChildren==undefined || hasCheckChildren=="")
+                	hasCheckChildren=false;
+                
+                var hcc=eval(hasCheckChildren);
+                
                  var t= element.attr("text");
                  if(t==undefined || t=="")
                     t="name";
@@ -141,7 +147,7 @@ define(['angular', 'balintimesConstant'], function (angular,balintimesConstant) 
 
                     scope.node.childrenVisibility =eval(e);//true;
                     
-                    var html='<ul class="tree" ng-if="node.childrenVisibility"><node-tree children="node.children" text="'+element.attr("text")+'" expanded="'+e+'"></node-tree></ul>';
+                    var html='<ul class="tree" ng-if="node.childrenVisibility"><node-tree children="node.children" text="'+element.attr("text")+'" expanded="'+e+'" checkchildren="'+hasCheckChildren+'"></node-tree></ul>';
 
                     var childNode = $compile(html)(scope);
                     element.append(childNode);
@@ -156,8 +162,15 @@ define(['angular', 'balintimesConstant'], function (angular,balintimesConstant) 
                     scope.checkParent(scope,scope.node);
                 }
             },
-            controller: ["$scope", function ($scope,$element) {
+            controller: ["$scope","$element", function ($scope,$element) {
                 // This function is for just toggle the visibility of children
+            	
+            	var hasCheckChildren=$element.attr("checkchildren");;
+                if(hasCheckChildren==undefined || hasCheckChildren=="")
+                	hasCheckChildren=false;
+                
+                var hcc=eval(hasCheckChildren);
+            	
                 $scope.toggleVisibility = function (node) {
                     if (node.children) {
                         node.childrenVisibility = !node.childrenVisibility;
@@ -218,6 +231,8 @@ define(['angular', 'balintimesConstant'], function (angular,balintimesConstant) 
 					
 					
                     function checkChildren(c) {
+                    	if(hcc==true)
+                    		return;
                         angular.forEach(c.children, function (c) {
                             c.checked = node.checked;
 							

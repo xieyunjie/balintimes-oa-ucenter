@@ -59,9 +59,10 @@
 									<td style="width: 150px; text-align: center;">{{item.name}}</td>
 									<td style="width: 150px; text-align: center;">{{item.typeName}}</td>
 									<td style="width: 350px; text-align: center;">{{item.comment}}</td>
-									<td><a href="#" ng-click="showDiv(item.uid)">设置资源功能 </a></td>
+									<td><a href="#" ng-click="showDiv(item.uid);">设置资源功能 </a></td>
 								</tr>
-								<tr ng-if="IsShow(item.uid)">
+								<!-- <tr ng-if="IsShow(item.uid)"> -->
+								<tr ng-if="openDiv && item.uid==appuid">
 									<td colspan="5">
 										<ul class="tree">
 											<node-tree children="tree" text="name" expanded="true">

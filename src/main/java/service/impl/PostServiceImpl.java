@@ -58,6 +58,13 @@ public class PostServiceImpl implements PostService {
 		// TODO Auto-generated method stub
 		return this.postDao.GetOnePost(uid);
 	}
+
+
+	
+	public List<Post> GetPostParent(String postuid, String organizationuid) {
+		// TODO Auto-generated method stub
+		return this.postDao.GetPostParent(postuid, organizationuid);
+	}
 	
 	
 

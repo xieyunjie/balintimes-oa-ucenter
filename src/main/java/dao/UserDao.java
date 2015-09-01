@@ -16,6 +16,8 @@ public interface UserDao {
     boolean ExistsUserName(String username);
 
     boolean ExistsUserName(String username, String useruid);
+    
+    boolean ExistsEmployeeName(String employeename);
 
     void updateUser(User user);
 
@@ -37,8 +39,17 @@ public interface UserDao {
     
     List<User> GetUserTreeSet(String employeeName);
     
+    List<User> GetUserTreeListByCondition(String username, String employeename,String postuid,String organizationuid);
+    
     User GetOneUser(String uid);
     
     User GetOneUserParent(String partentuid);
+    
+    User GetEmployee(String username);
 
+    List<User> GetSuperiors(String username);
+    
+    List<User> GetSubordinates(String username);
+    
+	List<User> GetUserByEmpName(String empName);
 }

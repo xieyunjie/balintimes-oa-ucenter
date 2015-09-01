@@ -1,0 +1,45 @@
+<ol class="breadcrumb">
+	<li><a href="#">首页</a></li>
+	<li><a href="#">基础信息</a></li>
+	<li class="active">用户组别管理</li>
+</ol>
+
+<div class="panel-body">
+
+	<div class="box">
+		<div class="box-header">
+			<div class="box-title">职位: {{user.postname}}</div>
+			<div class="box-tools">
+				<div class="input-group" style="width: 450px;">
+					<input type="text" name="table_search"
+						class="form-control input-sm pull-right" placeholder="Search"
+						ng-model="name">
+
+					<div class="input-group-btn">
+						<button class="btn btn-sm btn-default" ng-click="loadData()">
+							<i class="fa fa-search"></i>查询
+						</button>
+						<button class="btn btn-sm btn-default" ng-click="save()">
+							<i class="fa fa-save"></i>保存
+						</button>
+						<button class="btn btn-sm btn-default" ng-click="back()">
+							<i class="fa fa-backward"></i>返回
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="box-body box-body table-responsive no-padding">
+			<ul class="tree">
+				<ul class="tree">
+					<node-tree children="postTreeData" text="name" expanded="true" checkchildren="true">
+					</node-tree>
+				</ul>
+			</ul>
+		</div>
+
+	</div>
+
+</div>

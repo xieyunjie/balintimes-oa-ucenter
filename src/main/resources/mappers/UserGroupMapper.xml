@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mappers.UserGroupMapper">
+
+	<resultMap type="UserGroup" id="userGroupMap">
+		<id property="uid" column="uid" />
+		<result property="name" column="name" />
+	</resultMap>
+
+	<select id="GetUserGroupList" statementType="PREPARED"
+		resultType="UserGroup" parameterType="String">
+		select * from usergroup where
+		name like #{name}
+	</select>
+
+	<select id="GetUserGroup" statementType="PREPARED" resultType="UserGroup"
+		parameterType="String">
+		select * from usergroup where uid =#{uid}
+	</select>
+
+	<insert id="CreateUserGroup" statementType="PREPARED"
+		parameterType="UserGroup">
+		insert into usergroup
+		(uid,name)values(uuid(),#{name})
+	</insert>
+
+	<update id="UpdateUserGroup" statementType="PREPARED"
+		parameterType="UserGroup">
+		update usergroup set name=#{name} where uid=#{uid}
+	</update>
+
+	<delete id="DeleteUserGroup" statementType="PREPARED"
+		parameterType="String">
+		delete from usergroup where uid=#{uid}
+	</delete>
+
+</mapper>

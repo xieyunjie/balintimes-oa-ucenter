@@ -1,14 +1,13 @@
 package util;
 
 import model.Role;
-import model.User;
+import model.authority.Employee;
 import model.authority.Menu;
 import model.authority.Permission;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Component;
 import service.AuthorityService;
-import service.UserService;
 import shiro.WebUser;
 
 import javax.annotation.Resource;
@@ -21,9 +20,12 @@ public class WebUserUtil {
     private final String APPUID = "05bd7806-3026-11e5-8396-c86000a05d5f";
 
     @Resource
-    private UserService userService;
-    @Resource
     private AuthorityService authorityService;
+
+    public WebUser InitUser(String username) {
+        WebUser webUser = initWebUser(username);
+        return webUser;
+    }
 
     public WebUser CurrentUser() {
         Subject subject = SecurityUtils.getSubject();
@@ -33,7 +35,7 @@ public class WebUserUtil {
 
         WebUser webUser = (WebUser) subject.getSession().getAttribute(WEBUSER_KEY);
         if (webUser == null) {
-            webUser = initWebUser();
+            webUser = initWebUser(SecurityUtils.getSubject().getPrincipal().toString());
             subject.getSession().setAttribute(WEBUSER_KEY, webUser);
         }
         return webUser;
@@ -157,20 +159,23 @@ public class WebUserUtil {
         return list_menu;
     }
 
-    private WebUser initWebUser() {
-        User u = userService.InitWebUserByName(SecurityUtils.getSubject().getPrincipal().toString());
+    private WebUser initWebUser(String username) {
+        Employee employee = authorityService.GetEmployee(username);
 
         WebUser webUser = new WebUser();
-        webUser.setUid(u.getUid());
-        webUser.setUsername(u.getUsername());
-        webUser.setEmail(u.getEmail());
-        webUser.setEmployeeName(u.getUsername());
-        webUser.setIsadmin(u.isIsadmin());
-
-        webUser.setPostName("集团中心开发");
-        webUser.setLastLogin(u.getLastlogin());
-        webUser.setAvatarUrl("/resources/image/avatars/DefaultAvatar.jpg");
+        webUser.setUid(employee.getUid());
+        webUser.setEmployeeName(employee.getEmployeename());
+        webUser.setUsername(employee.getUsername());
+        webUser.setEmail(employee.getUsername());
+        webUser.setUsername(employee.getUsername());
+        webUser.setAdmin(employee.getIsadmin());
+        webUser.setEmail(employee.getEmail());
+        webUser.setUsertypename(employee.getUsertypename());
+        webUser.setLastLogin(employee.getLastlogin());
+        webUser.setAvatarUrl(employee.getAvatarurl());
+        webUser.setPostList(employee.getPosts());
 
         return webUser;
     }
 }
+

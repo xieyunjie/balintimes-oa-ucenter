@@ -1,14 +1,14 @@
 <ol class="breadcrumb">
-    <li><a href="#">首页</a></li>
-    <li><a href="#">员工设置</a></li>
-    <li class="active">员工列表</li>
+	<li><a href="#">首页</a></li>
+	<li><a href="#">员工设置</a></li>
+	<li class="active">员工列表</li>
 </ol>
 <div class="panel-body">
-    <script src="/oaucenter/resources/js/jquery.treetable.js"></script>
-    <link rel="stylesheet" href="/oaucenter/resources/css/jquery.treetable.css">
-    <link rel="stylesheet" href="/oaucenter/resources/css/jquery.treetable.theme.default.css">
+	<script src="/oaucenter/resources/js/jquery.treetable.js"></script>
+	<link rel="stylesheet" href="/oaucenter/resources/css/jquery.treetable.css">
+	<link rel="stylesheet" href="/oaucenter/resources/css/jquery.treetable.theme.default.css">
 
-    <script type="text/ng-template" id="tree_node">
+	<script type="text/ng-template" id="tree_node">
         <tr tr-mouseover-toggle="4" tt-node is-branch="node.children.length > 0" ng-class="{warning:node.status == 0}">
             <td style="width: 300px;text-align: left"><a href="#"
                    ui-sref="org/user/edit({uid:node.uid,parentuid:node.parentuid,parentname:node.parentname})"><span
@@ -28,38 +28,98 @@
         </tr>
     </script>
 
-    <div class="box">
-        <div class="box-header">
-            <div class="box-title"><i class="fa fa-list-ol"></i> 员工列表</div>
-            <div class="box-tools">
-                <div class="input-group" style="width: 150px;">
-                    <input class="form-control input-sm pull-right" type="text" name="table_search"
-                           ng-model="search_orgname">
+	<form name="searchForm" class="form-horizontal" role="form" novalidate>
+		<div class="form-group">
+			<label for="username" class="control-label col-sm-1">用户名:</label>
 
-                    <div class="input-group-btn">
-                        <button class="btn btn-sm btn-default" ng-click="inituserTree(search_orgname)"><i
-                                class="fa fa-search"></i> 查找
-                        </button>
-                    </div>
-                </div>
-            </div>
+			<div class="controls col-sm-2">
+				<input type="text" class="form-control" name='username' ng-model="searchParams.username" />
+			</div>
 
-        </div>
+			<label for="employeename" class="control-label col-sm-1">员工名:</label>
 
-        <div class="box-body box-body table-responsive no-padding">
-            <table class="table table-bordered table-striped table-hover" tt-table tt-params="expanded_params">
-                <thead>
-                <tr>
-                    <th>员工</th>
-                    <th>用户名</th>
-                    <th>职位</th>
-                    <th>类型</th>
-                    <th style="width: 200px;text-align: center"></th>
-                </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-    </div>
+			<div class="controls col-sm-2">
+				<input type="text" class="form-control" name='employeename' ng-model="searchParams.employeename" />
+			</div>
+
+			<div class="form-group">
+				<label for="postname" class="col-sm-1 control-label">职位:</label>
+
+				<div class="col-sm-2">
+					<div class="input-group">
+						<input type="text" class="form-control" name='parentname3' ng-model="searchParams.postname" readonly> <span class="input-group-btn">
+							<button class="btn btn-default" type="button" ng-click="postDropDown=!postDropDown">
+								<i class="fa fa-angle-double-right"></i> 选择
+							</button>
+						</span>
+					</div>
+					<div class="dropdown-menu combo-dropdown-menu collapse" ng-class="{in: postDropDown}" ng-blur="postDropDown = false">
+						<treecontrol class="tree-light treecontrolfont" tree-model="post2" expanded-nodes="expandedNodes" on-selection="SelectTreePost2(node)"> {{node.name}} </treecontrol>
+					</div>
+				</div>
+				
+				<label for="orgnizationname" class="col-md-1 control-label">机构:</label>
+
+				<div class="col-md-2 dropdown combo-select">
+					<div class="input-group">
+						<input type="text" class="form-control" name='parentname2' ng-model="searchParams.orgnizationname" readonly> <span class="input-group-btn">
+							<button class="btn btn-default" type="button" ng-click="orgDropDown=!orgDropDown">
+								<i class="fa fa-angle-double-right"></i> 选择
+							</button>
+						</span>
+					</div>
+					<div class="dropdown-menu combo-dropdown-menu collapse" ng-class="{in: orgDropDown}" ng-blur="orgDropDown = false">
+						<treecontrol class="tree-light treecontrolfont" tree-model="org" expanded-nodes="expandedNodes" on-selection="SelectTreeOrg(node)"> {{node.name}} </treecontrol>
+					</div>
+				</div>
+			</div>			
+			
+			<div class="form-group">
+				<div class=" col-sm-4 col-sm-offset-5">
+					<button class="btn btn-primary" ng-click="queryUserTree()">
+						<i class="fa fa-search"></i> 查询
+					</button>
+					<button class="btn btn-info" ng-click="resetForm()">
+						<i class="fa fa-undo"></i> 重置
+					</button>
+					
+				</div>
+			</div>
+	</form>
+
+	<div class="box">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-list-ol"></i> 员工列表
+			</div>
+			<div class="box-tools">
+				<div class="input-group" style="width: 150px;">
+					<input class="form-control input-sm pull-right" type="text" name="table_search" ng-model="search_orgname">
+
+					<div class="input-group-btn">
+						<button class="btn btn-sm btn-default" ng-click="inituserTree(search_orgname)">
+							<i class="fa fa-search"></i> 查找
+						</button>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="box-body box-body table-responsive no-padding">
+			<table class="table table-bordered table-striped table-hover" tt-table tt-params="expanded_params">
+				<thead>
+					<tr>
+						<th>员工</th>
+						<th>用户名</th>
+						<th>职位</th>
+						<th>类型</th>
+						<th style="width: 200px; text-align: center"></th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+		</div>
+	</div>
 
 </div>

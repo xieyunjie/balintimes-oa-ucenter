@@ -55,7 +55,7 @@ define(['angularAMD', 'balintimesConstant', 'ui-bootstrap', 'angular-messages','
 
     });
 
-    app.controller("UserListController", function ($scope, $state, AjaxRequest, DlgMsg, NgUtil, userTypeDataPromise, userServices) {
+    app.controller("UserListController", function ($scope, $state, AjaxRequest, DlgMsg, NgUtil, userTypeDataPromise, userServices,$location) {
         $scope.users = {};
         $scope.userTypes = [];
         $scope.searchParams = {};
@@ -108,6 +108,11 @@ define(['angularAMD', 'balintimesConstant', 'ui-bootstrap', 'angular-messages','
                 })
             });
         };
+        
+        $scope.go=function(uid){
+        	var url="org/usergroup/editbyuser/"+uid+"/0";
+        	$location.path(url);
+        }
 
 
     }).controller("UserEditController", function ($scope, $state, userData, userTypeDataPromise, AjaxRequest, TreeSelectModal) {

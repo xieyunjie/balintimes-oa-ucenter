@@ -23,5 +23,8 @@ public interface PostMapper
 	void CreatePost(Post post);
 	
 	void DeleteUserPost(String uid);
-        
+	
+	List<Post> GetPostByEmployee(String useruid);
+	
+	List<Post> GetPostParent(Map<String, Object> params);
 }

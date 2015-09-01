@@ -20,4 +20,8 @@ public interface PostDao {
 	List<Post> GetPostSet(String PostName);
 
 	Post GetOnePost(String uid);
+	
+	List<Post> GetPostByEmployee(String useruid);
+	
+	List<Post> GetPostParent(String postuid,String organizationuid);
 }

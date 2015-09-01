@@ -16,7 +16,7 @@
 		<script type="text/ng-template" id='tree_node'>
 		<tr tt-node is-branch="node.children.length > 0">
 			<td><span ng-bind="node.name"></span></td>
-			<td ng-bind="node.comment"></td>
+			<!--<td ng-bind="node.comment"></td>-->
 			<td style="width: 50px; text-align: center">
 				<div>
 					<input type="checkbox" ng-model="node.checked"  ng-change="saveCheckedValue(node.uid,node.checked)"  />
@@ -61,7 +61,7 @@
 				<thead>
 					<tr>
 						<th>名称</th>
-						<th>备注</th>
+						<!-- <th>备注</th> -->
 						<th style="width: 50px; text-align: center"></th>
 					</tr>
 				</thead>

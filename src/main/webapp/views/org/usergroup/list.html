@@ -1,0 +1,83 @@
+<script src="/oaucenter/resources/js/jquery.treetable.js"></script>
+<link rel="stylesheet"
+	href="/oaucenter/resources/css/jquery.treetable.css">
+<link rel="stylesheet"
+	href="/oaucenter/resources/css/jquery.treetable.theme.default.css">
+
+<script type="text/ng-template" id='tree_node'>
+	<tr tt-node is-branch="node.children.length > 0">
+		<td><i class="fa fa-group" ng-if="node.treeType == 0"></i> <i class="fa fa-user" ng-if="node.treeType != 0"></i> <span ng-bind="node.name"></span></td>
+		<td><span ng-bind="node.roleTypeName"></span></td>
+		<td style="width:300px;">
+			<div>
+				<a class="ng-hide" ng-show="{{node.treeType == 0}}" href="#" ui-sref="org/usergroup/editdetail({uid:node.uid})">添加组员</a>
+				<a class="ng-hide" ng-show="{{node.treeType == 0}}" href="#" ui-sref="org/usergroup/edit({uid:node.uid})">修改</a>
+				<a class="ng-hide" ng-show="{{node.treeType == 0}}" href="#" ng-click="deleteFn(node.uid)">删除组</a>
+				<a class="ng-hide" ng-show="{{node.treeType == 0}}" href="#" ng-click="deleteFnByAllUser(node.uid)">清除所有组员</a>
+				<a class="ng-hide" ng-show="{{node.treeType != 0}}" href="#" ng-click="deleteFnByUser(node.uid)">删除组员</a>
+
+			<!--	<a class="ng-hide" ng-show="{{node.treeType != 0}}" href="#" ng-click="go(node.uid)">aaaaaaaa</a>--> 
+			</div>
+		</td>
+	</tr>
+
+</script>
+
+<ol class="breadcrumb">
+	<li><a href="#">首页</a></li>
+	<li><a href="#">基础信息</a></li>
+	<li class="active">用户组管理</li>
+</ol>
+
+<div class="panel-body">
+
+	<div class="box">
+
+		<div class="box-header">
+			<div class="box-title">用户组</div>
+			<div class="box-tools">
+				<div class="input-group" style="width: 350px;">
+					<input type="text" name="table_search"
+						class="form-control input-sm pull-right" placeholder="Search"
+						ng-model="name">
+
+					<div class="input-group-btn">
+						<button class="btn btn-sm btn-default" ng-click="loadData()">
+							<i class="fa fa-search"></i>查询
+						</button>
+						<button class="btn btn-sm btn-default"
+							ui-sref="org/usergroup/edit({uid:0})">
+							<i class="fa fa-plus-square"></i>新建
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="box-body box-body table-responsive no-padding">
+			<!-- <table class="table table-bordered table-striped table-hover">-->
+			<table class="table table-bordered table-striped table-hover"
+				tt-table tt-params="expanded_params">
+				<thead>
+					<tr>
+						<th>名称</th>
+						<th>类型</th>
+						<th style="width:300px;"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- 
+					<tr ng-repeat="item in userGroupList">
+						<td style="width: 200px;">{{item.name}}</td>
+						<td><a href="#" ui-sref="org/usergroup/edit({uid:item.uid})">修改</a>
+							<a href="#" ng-click="deleteFn(item.uid)">删除</a></td>
+					</tr>
+					
+				-->
+				</tbody>
+			</table>
+		</div>
+
+	</div>
+
+</div>

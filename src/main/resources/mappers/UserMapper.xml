@@ -28,7 +28,10 @@
 		<result property="emergencycontact" column="emergencycontact"/>
 		<result property="avatarurl" column="avatarurl"/>
 		<result property="postuid" column="postuid"/>
+		<result property="postname" column="postname"/>
 		<result property="userpostuid" column="userpostuid"/>
+		<result property="organizationuid" column="organizationuid"/>
+		<result property="organizationname" column="organizationname"/>
 	</resultMap>
 
 	<sql id="userColumns">
@@ -39,7 +42,12 @@
 	</sql>
 
 	<sql id="userTreeColumns">
-		a.*,c.uid as postuid, c.name as postname,c.parentuid, d.name as usertypename,b.uid as userpostuid
+		a.*, d.name as usertypename,b.uid as userpostuid,b.postuid,c.name as postname
+	</sql>
+	
+	<sql id="userTreeSelectColumns">
+		a.*,c.uid as postuid, c.name as postname,c.parentuid, d.name as usertypename,b.uid as userpostuid,
+		e.uid as organizationuid,e.name as organizationname
 	</sql>
 	
 	<insert id="createUser" parameterType="User" statementType="PREPARED" keyProperty="uid" keyColumn="uid"
@@ -97,7 +105,16 @@
 		1,editby=#{employeename},edittime=now() where uid=#{uid}
 	</update>
 
-	
+	<select id="GetUserByEmpName" statementType="PREPARED" resultType="User" parameterType="String">
+		select
+			<include refid="userColumns"/>
+		from user a
+        	inner join usertype b on a.usertype = b.uid
+        where 
+        	delflag = 0
+        	and a.employeename like #{empName}
+			 
+	</select>
 	
 	<select id="getUser" parameterType="string" resultType="User">
         select
@@ -110,6 +127,12 @@
 	<select id="CheckUserName" parameterType="String" resultType="String">
 		select uid from user where username =
 		#{username}
+		and delflag = 0
+	</select>
+	
+	<select id="CheckEmployeeName" parameterType="String" resultType="String">
+		select uid from user where employeename =
+		#{employeename}
 		and delflag = 0
 	</select>
 
@@ -170,12 +193,13 @@
 	</select>
 
 
+
 	<select id="GetUserTreeList" statementType="PREPARED" parameterType="string" resultMap="userResultMap">
     	select 
 		<include refid="userTreeColumns" />
         from user a 
-        inner join userpost b on a.uid=b.useruid
-        inner join post c on c.uid=b.postuid	
+        inner join userpost b on a.uid=b.useruid   
+        inner join post c on c.uid=b.postuid    
         inner join usertype d on d.uid = a.usertype
         where a.delflag=0
 	</select>
@@ -189,6 +213,22 @@
         inner join usertype d on d.uid = a.usertype
         where a.delflag=0 and (FIND_IN_SET(c.uid,fun_GetUserTreeSet(#{employeename})) or FIND_IN_SET(a.uid,fun_GetUserTreeSet(#{employeename})))
 	</select>
+	
+	<select id="GetUserTreeListByCondition" parameterType="Map" resultType="User">
+    	select 
+		<include refid="userTreeSelectColumns" />
+        from user a 
+        inner join userpost b on a.uid=b.useruid  
+        inner join post c on b.postuid=c.uid            
+        inner join usertype d on d.uid = a.usertype      
+        inner join organization e on c.organizationuid=e.uid 
+        where a.delflag=0		
+		<if test="username!=null and username!=''">and a.username like "%"#{username}"%"</if>
+		<if test="employeename!=null and employeename!=''">and a.employeename like "%"#{employeename}"%"</if>		
+		<if test="postuid!=null and postuid!=''">and c.uid=#{postuid}</if>	
+		<if test="organizationuid!=null and organizationuid!=''">and e.organizationuid=#{organizationuid}</if>			
+	</select>
+
 	
 	<select id="GetOneUser" parameterType="string" resultType="User">
         select
@@ -208,5 +248,33 @@
         inner join post c on c.uid=b.postuid	
         inner join usertype d on d.uid = a.usertype
         where a.delflag = 0 and c.uid=#{parentuid}
+	</select>
+	
+	<select id="GetEmployee" parameterType="string" resultType="User">
+        select
+		a.*,d.name as usertypename
+        from user a        
+        inner join usertype d on d.uid = a.usertype
+        where a.delflag = 0 and a.username=#{username}
+	</select>
+	
+	<select id="GetSuperiors" parameterType="string" resultType="User">
+       SELECT
+		<include refid="userTreeColumns"/>
+		FROM user a
+		LEFT JOIN userpost b on a.uid=b.useruid
+		LEFT JOIN post c ON c.uid=b.postuid
+		inner join usertype d on d.uid = a.usertype
+		where a.delflag = 0 and FIND_IN_SET(c.uid,fun_GetUserParent(#{username}))
+	</select>
+	
+	<select id="GetSubordinates" parameterType="string" resultType="User">
+       SELECT
+		<include refid="userTreeColumns"/>
+		FROM user a
+		LEFT JOIN userpost b on a.uid=b.useruid
+		LEFT JOIN post c ON c.uid=b.postuid
+		inner join usertype d on d.uid = a.usertype
+		where a.delflag = 0 and FIND_IN_SET(c.uid,fun_GetUserChildren(#{username}))
 	</select>
 </mapper>

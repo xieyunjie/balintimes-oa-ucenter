@@ -12,6 +12,7 @@
 		<result property="createtime" column="createtime" />
 		<result property="editby" column="editby" />
 		<result property="edittime" column="edittime" />
+		<result property="postname" column="name" />
 	</resultMap>
 
 	<sql id="postColumns">
@@ -41,6 +42,23 @@
 		FROM post a
 		inner join organization b on a.organizationuid=b.uid
 		where b.delflag = 0 and a.uid=#{uid}
+	</select>
+	
+	<select id="GetPostByEmployee" parameterType="string" resultType="Post">
+        select
+		b.name,b.uid,b.organizationuid,c.name as organizationname,b.parentuid
+        from userpost a        
+        inner join post b on a.postuid = b.uid
+        inner join organization c on b.organizationuid=c.uid
+        where a.useruid=#{uid}
+	</select>
+	
+	<select id="GetPostParent" parameterType="Map"  resultType="Post">		
+		SELECT
+		<include refid="postColumns" />
+		FROM post a
+		inner join organization b on a.organizationuid=b.uid
+		where b.delflag = 0 and FIND_IN_SET(a.uid, fun_GetPostParent(#{uid},#{organizationuid}))>0
 	</select>
 
 	<insert id="CreatePost" parameterType="Post" statementType="PREPARED"

@@ -146,12 +146,17 @@
                                      alt="User Image"/>
 
                                 <p style="font-size: 14px;font-weight: bold;">
-                                    {{WebUser.employeeName}} - {{WebUser.postName}}
+                                    {{WebUser.employeeName}} - {{WebUser.username}}
                                 </p>
 
                                 <p>
                                     <small>最后近登录:{{WebUser.lastLogin}}</small>
                                 </p>
+                            </li>
+                            <li class="user-body">
+                                <div  class="col-md-10" ng-repeat="post in WebUser.postList">
+                                    {{post.organizationname}} -- {{post.postname}}
+                                </div>
                             </li>
                             <!-- Menu Body -->
                             <%--<li class="user-body">--%>

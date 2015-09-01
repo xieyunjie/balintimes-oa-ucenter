@@ -1,0 +1,61 @@
+<ol class="breadcrumb">
+	<li><a href="#">首页</a></li>
+	<li><a href="#">基础信息</a></li>
+	<li class="active">销售渠道管理</li>
+</ol>
+
+<div class="panel-body">
+
+	<div class="box">
+		<div class="box-header">
+			<div class="box-title">销售渠道</div>
+			<div class="box-tools">
+				<div class="input-group" style="width: 350px;">
+					<input type="text" name="table_search"
+						class="form-control input-sm pull-right" placeholder="Search"
+						ng-model="name">
+
+					<div class="input-group-btn">
+						<button class="btn btn-sm btn-default" ng-click="loadData()">
+							<i class="fa fa-search"></i> 查找
+						</button>
+						<button class="btn btn-sm btn-default"
+							ui-sref="base/customercategory/edit({uid:0})">
+							<i class="fa fa-plus-square"></i>新建
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="box-body box-body table-responsive no-padding">
+
+			<table class="table table-bordered table-striped table-hover">
+				<thead>
+					<tr>
+						<th>名称</th>
+						<th>编号</th>
+						<th style="width: 250px;">备注</th>
+						<th></th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr tr-mouseover-toggle="3"
+						ng-repeat="item in customercategoryList">
+						<td>{{item.name}}</td>
+						<td>{{item.code}}</td>
+						<td style="width: 250px;">{{item.comment}}</td>
+						<td class="text-center">
+							<div>
+								<a href="#" ui-sref="base/customercategory/edit({uid:item.uid})">修改</a>
+								<a href="#" ng-click="deleteFn(item.uid)">删除</a>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

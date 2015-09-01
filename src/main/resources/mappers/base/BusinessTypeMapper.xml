@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mappers.base.BusinessTypeMapper">
+
+	<resultMap type="BusinessType" id="businessTypeMap">
+		<id property="uid" column="uid" />
+		<result property="name" column="name" />
+		<result property="code" column="code" />
+		<result property="priority" column="priority" />
+		<result property="comment" column="comment" />
+	</resultMap>
+
+	<select id="GetBusinessTypeList" statementType="PREPARED"
+		resultType="BusinessType" parameterType="String">
+		select * from businesstype
+		where name like #{name} ;
+	</select>
+
+	<select id="GetBusinessType" statementType="PREPARED"
+		resultType="BusinessType" parameterType="String">
+		select * from businesstype
+		where uid =#{uid} ;
+	</select>
+
+	<insert id="CreateBusinessType" statementType="PREPARED"
+		parameterType="BusinessType">
+		insert into businesstype(uid,name,code,priority,comment)
+		values(uuid(),#{name},#{code},#{priority},#{comment})
+	</insert>
+
+	<update id="UpdateBusinessType" statementType="PREPARED"
+		parameterType="BusinessType">
+		update
+		businesstype
+		set
+		name=#{name},
+		code=#{code},
+		priority=#{priority},
+		comment=#{comment}
+		where
+		uid=#{uid}
+	</update>
+
+	<delete id="DeleteBusinessType" statementType="PREPARED"
+		parameterType="String">
+		delete from businesstype where uid=#{uid}
+	</delete>
+
+</mapper>

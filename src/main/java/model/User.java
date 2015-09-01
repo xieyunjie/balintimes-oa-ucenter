@@ -3,7 +3,7 @@ package model;
 import java.io.Serializable;
 import java.util.Date;
 
-public class User implements Serializable
+public class User implements Serializable,Comparable
 {
 	private static final long serialVersionUID = -8567418333741144420L;
 
@@ -36,6 +36,8 @@ public class User implements Serializable
 	private String parentuid;
 	private String parentname;
 	private String userpostuid;
+	private String organizationuid;
+	private String organizationname;
 	
 	public User()
 	{
@@ -308,8 +310,33 @@ public class User implements Serializable
 		return userpostuid;
 	}
 	
+	public void setOrganizationuid(String organizationuid) {
+		this.organizationuid = organizationuid;
+	}
+	
+	public String getOrganizationuid() {
+		return organizationuid;
+	}
+	
+	public void setOrganizationname(String organizationname) {
+		this.organizationname = organizationname;
+	}
+	
+	public String getOrganizationname() {
+		return organizationname;
+	}
+	
+	
+	
 	@Override
 	public String toString() {
 		return uid + " ## " + username;
+	}
+
+	@Override
+	public int compareTo(Object o) {
+		User user=(User)o;
+		String postUid= user.getPostuid();		
+		return this.postuid.compareTo(postUid);
 	}
 }

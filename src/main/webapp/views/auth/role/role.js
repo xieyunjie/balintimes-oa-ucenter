@@ -291,6 +291,8 @@ define([ 'angularAMD', 'balintimesConstant', 'ui-bootstrap',
 		
 		$scope.appuid="";
 		
+		$scope.openDiv=false;
+		
 		$scope.tree=[];
 		
 		
@@ -307,10 +309,14 @@ define([ 'angularAMD', 'balintimesConstant', 'ui-bootstrap',
 		};
 		
 		$scope.showDiv=function(appuid){
-			$scope.loadRoleResource(appuid);
+			$scope.openDiv=!$scope.openDiv;
+			if($scope.openDiv){
+				$scope.loadRoleResource(appuid);
+			}
 		};
 		
 		$scope.hideDiv=function(){
+			$scope.openDiv=false;
 			$scope.appuid="";
 		};
 		

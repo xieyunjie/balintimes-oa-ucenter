@@ -28,7 +28,6 @@ define(['angular', 'balintimesConstant', 'ui-bootstrap', 'angular-tree-control',
                     AlertMsg.exception(response.data.responseMsg);
                     //$location.path("error/401")
                 }
-                ;
                 return $q.reject(response);
             }
         };

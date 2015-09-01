@@ -77,10 +77,25 @@ public class PostDaoImpl implements PostDao {
 		return this.postMapper.GetPostSet(PostName);
 	}
 
-	@Override
+	
 	public Post GetOnePost(String uid) {
 		// TODO Auto-generated method stub
 		return this.postMapper.GetOnePost(uid);
+	}
+
+	
+	public List<Post> GetPostByEmployee(String useruid) {
+		return this.postMapper.GetPostByEmployee(useruid);		
+	}
+
+	
+	public List<Post> GetPostParent(String postuid, String organizationuid) {
+		Map<String,Object> params=new HashMap<String, Object>(4);
+		params.put("uid", postuid);
+		params.put("organizationuid", organizationuid);
+		
+		List<Post> posts=this.postMapper.GetPostParent(params);
+		return posts;
 	}
 
 }

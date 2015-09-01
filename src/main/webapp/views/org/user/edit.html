@@ -46,7 +46,11 @@
 					<button class="btn btn-default" type="button" ng-click="postDropDown=!postDropDown">
 						<i class="fa fa-angle-double-right"></i> 选择
 					</button>
+					<button class="btn btn-default" type="button" ng-click="go(user.postuid,user.postname)">
+						<i class="fa fa-angle-double-right"></i> 设置职位组
+					</button>
 				</span>
+				
 			</div>
 			<div class="dropdown-menu combo-dropdown-menu collapse" ng-class="{in: postDropDown}" ng-blur="postDropDown = false">
 				<treecontrol class="tree-light treecontrolfont" tree-model="post" expanded-nodes="expandedNodes" on-selection="SelectTreePost(node)"> {{node.name}} </treecontrol>

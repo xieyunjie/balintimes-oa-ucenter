@@ -1,0 +1,108 @@
+<ol class="breadcrumb">
+	<li><a href="#">首页</a></li>
+	<li><a href="#">基础信息</a></li>
+	<li class="active">添加组员</li>
+</ol>
+
+<form name="editForm" class="form-horizontal " role="form" novalidate>
+
+	<div class="form-group">
+		<label class="col-sm-1 control-label">角色</label>
+		<div class="col-sm-4 ">
+			<input type="hidden" ng-model="userGroup.uid" name="uid"> <input
+				type="text" class="form-control" name='name'
+				ng-model="userGroup.name" readonly>
+		</div>
+	</div>
+
+	<!-- 用户 -->
+	<div class="form-group">
+		<label class="col-sm-1 control-label">员工</label>
+
+		<div class="col-sm-4 dropdown combo-select">
+			<div class="input-group">
+				<input type="text" class="form-control" name='empNames'
+					ng-model="emps.names" readonly> <span
+					class="input-group-btn">
+					<button class="btn btn-default" type="button"
+						ng-click="orgDropDown=!orgDropDown">
+						<i class="fa fa-angle-double-right"></i> 选择
+					</button>
+					<button class="btn btn-default" type="button"
+						ng-click="cleanChange()">
+						<i class="fa fa-exclamation-triangle"></i> 清除
+					</button>
+				</span>
+			</div>
+			<div class="dropdown-menu combo-dropdown-menu collapse"
+				ng-class="{in: orgDropDown}" ng-blur="orgDropDown = false">
+				<input type="text" class="form-control" placeholder="输入姓名"
+					ng-model="empName" ng-change="getUser()">
+				<table class="table table-bordered table-striped table-hover">
+					<thead>
+						<tr>
+							<th style="width: 30px; text-align: center;"></th>
+							<th style="width: 150px;">姓名</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="item in users">
+							<td style="width: 30px; text-align: center;"><input
+								type="checkbox" ng-change="saveChange(item)"
+								ng-model="item.delflag"></td>
+							<td style="width: 150px;">{{item.employeename}}
+						</tr>
+
+					</tbody>
+				</table>
+				<!-- 
+				<button class="btn btn-primary" ng-click="saveChange()">
+					<i class="fa fa-check"></i>确认
+				</button> -->
+			</div>
+
+			<div ng-if="editForm.empNames.$dirty">
+				<div ng-messages="editForm.empNames.$error" class="errormsg"
+					role="alert">
+					<div
+						ng-messages-include='{{rootpath}}/views/tpls/messageerror/require.html' />
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label for="roleType" class="col-sm-1 control-label">类型:</label>
+
+		<div class="col-sm-4">
+			<select class="form-control" name="roleType" ng-model="roleType"
+				ng-options="item.id as item.name for item in roleTypeList">
+			</select>
+			<div ng-if="editForm.roleType.$dirty">
+				<div ng-messages="editForm.roleType.$error" class="errormsg"
+					role="alert">
+					<div
+						ng-messages-include='{{rootpath}}/views/tpls/messageerror/require.html' />
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="form-group">
+		<div class="col-sm-offset-1 col-sm-6">
+			<button class="btn btn-primary" ng-click="save()"
+				ng-disabled="editForm.$invalid">
+				<i class="fa fa-check"></i>保存
+			</button>
+			<button class="btn btn-info" ng-click="revert()">
+				<i class="fa fa-undo"></i> 重置
+			</button>
+			<a ui-sref="org/usergroup" class="btn btn-warning"> <i
+				class="fa fa-times"></i>取消并返回
+			</a>
+		</div>
+	</div>
+
+</form>

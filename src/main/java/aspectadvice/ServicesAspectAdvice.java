@@ -54,7 +54,7 @@ public class ServicesAspectAdvice {
         MDC.put("AppUid", "oaucenter");
         MDC.put("AppName", "oaucenter");
 
-        if (jp.toString().equalsIgnoreCase("execution(User service.impl.UserServiceImpl.InitWebUserByName(String))") == false) {
+        if (jp.toString().equalsIgnoreCase("execution(Employee service.impl.AuthorityServiceImpl.GetEmployee(String))") == false) {
             WebUser webUser = webUserUtil.CurrentUser();
             if (webUser != null) {
                 MDC.put("UserUid", webUser.getUid());

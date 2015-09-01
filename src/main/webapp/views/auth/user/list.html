@@ -105,7 +105,10 @@
 									ng-click="resetPassword(item.uid)" tooltip="重置密码"> <i
 									class="fa fa-key fa-fw"></i></a> <a href="#"
 									ng-click="deleteUser(item.uid)" tooltip="删除"><i
-									class="fa fa-trash-o fa-fw text-danger"></i></a>
+									class="fa fa-trash-o fa-fw text-danger"></i></a> <a href="#"
+									ng-click="go(item.uid)"
+									tooltip="设置用户组"> <i class="fa fa-trash-o fa-fw fa-group"></i>
+								</a>
 
 							</div> <!--<button class="btn btn-xs btn-dange" ng-click="resetPassword(item.uid)">重置密码</button>-->
 							<!--<button class="btn btn-xs btn-warning" ng-click="deleteUser(item.uid)">删除</button>-->

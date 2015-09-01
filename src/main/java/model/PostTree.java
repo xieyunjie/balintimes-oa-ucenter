@@ -1,10 +1,12 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PostTree extends Post {
+public class PostTree extends Post implements Serializable {
 	private List<PostTree> children;
+	private boolean checked;
 	
 	public PostTree(Post post)
 	{
@@ -29,5 +31,13 @@ public class PostTree extends Post {
 	
 	public List<PostTree> getChildren() {
 		return children;
+	}
+	
+	public void setChecked(boolean checked) {
+		this.checked = checked;
+	}
+	
+	public boolean getChecked() {
+		return this.checked;
 	}
 }

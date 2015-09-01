@@ -6,41 +6,53 @@ import java.util.Map;
 import model.User;
 
 public interface UserMapper {
-    User getUser(String uid);
+	User getUser(String uid);
 
-    void createUser(User user);
+	void createUser(User user);
 
-    List<User> GetUserList();
+	List<User> GetUserList();
 
-    List<String> CheckUserName(String username);
+	List<String> CheckUserName(String username);
 
-    void updateUser(User user);
+	List<String> CheckEmployeeName(String employeename);
 
-    void deleteUser(Map<String, Object> params);
+	void updateUser(User user);
 
-    String getUserPassword(String username);
+	void deleteUser(Map<String, Object> params);
 
-    User getUserByName(String username);
+	String getUserPassword(String username);
 
-    List<User> GetUserByPage(Map<String, Object> params);
+	User getUserByName(String username);
 
-    int GetUserTotalCount(Map<String, Object> params);
+	List<User> GetUserByPage(Map<String, Object> params);
 
-    void UpdatePassword(Map<String, Object> params);
+	int GetUserTotalCount(Map<String, Object> params);
 
-    void UpdateLastLogin(String username);
+	void UpdatePassword(Map<String, Object> params);
 
-    List<User> Pro_UserList(Map<String, Object> params);
+	void UpdateLastLogin(String username);
+
+	List<User> Pro_UserList(Map<String, Object> params);
+
+	List<User> GetUserTreeList();
+
+	List<User> GetUserTreeSet(String employeeName);
+
+	User GetOneUser(String uid);
+
+	User GetOneUserParent(String partentuid);
+
+	void updateUserPost(User user);
+
+	void createUserPost(User user);
+
+	User GetEmployee(String username);
+
+	List<User> GetSuperiors(String username);
+
+	List<User> GetSubordinates(String username);
+
+	List<User> GetUserByEmpName(String empName);
     
-    List<User> GetUserTreeList();
-    
-    List<User> GetUserTreeSet(String employeeName);
-    
-    User GetOneUser(String uid);
-    
-    User GetOneUserParent(String partentuid);
-    
-    void updateUserPost(User user);
-    
-    void createUserPost(User user);
+    List<User> GetUserTreeListByCondition(Map<String, Object> params);
 }

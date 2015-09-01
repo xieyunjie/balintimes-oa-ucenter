@@ -19,11 +19,13 @@
         <property name="locations">
             <list>
                 <value>classpath:jdbc.properties</value>
+                <value>classpath:redis.properties</value>
             </list>
         </property>
     </bean>
 
     <import resource="classpath:applicationContext-shiro.xml"/>
+    <import resource="classpath:applicationContext-redis.xml"/>
 
     <context:annotation-config/>
     <context:component-scan base-package="aspectadvice,dao.impl,dao,service.impl,service,util"/>
