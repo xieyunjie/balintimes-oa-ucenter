@@ -12,6 +12,7 @@ import util.RedisUserUtil;
 import util.WebUserUtil;
 
 import javax.annotation.Resource;
+import java.util.Set;
 
 /**
  * Created by AlexXie on 2015/8/19.
@@ -41,11 +42,12 @@ public class AuthorityController {
 
         if (inputpsw.equals(dbpsw)) {
             WebUser webUser = webUserUtil.InitUser(username);
+            Set<String> userPerssmissions = webUserUtil.GetUserAllPermissions(username);
             if (webUser == null) {
                 return JsonUtil.ResponseFailureMessage("init user failture!");
             }
 
-            String webUserKey = redisUserUtil.SetRedisWebUser(JsonUtil.ToJson(webUser));
+            String webUserKey = redisUserUtil.SetRedisWebUser(JsonUtil.ToJson(webUser),JsonUtil.ToJson(userPerssmissions));
 
             return JsonUtil.ResponseSuccessfulMessage(webUserKey);
         }

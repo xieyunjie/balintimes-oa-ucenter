@@ -149,7 +149,8 @@ public class PostController extends BaseController {
 	@RequestMapping(value = "getpostgroup", method = RequestMethod.POST)
 	@ResponseBody
 	public String GetPostGroupByTree(String postuid, String postname) {
-		List<Post> list = this.postService.GetPostSet(postname);
+//		List<Post> list = this.postService.GetPostSet(postname);
+		List<Post> list = this.postService.GetPostList();
 		List<PostTree> trees = this.InitPostTree(list);
 		return JsonUtil.ResponseSuccessfulMessage(trees);
 	}

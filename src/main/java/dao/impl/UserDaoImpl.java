@@ -21,6 +21,11 @@ public class UserDaoImpl implements UserDao {
 
 	public boolean createUser(User user) {
 		userMapper.createUser(user);
+//		userMapper.createUserPost(user);
+		return true;
+	}
+	
+	public boolean createUserPost(User user){
 		userMapper.createUserPost(user);
 		return true;
 	}
@@ -44,7 +49,8 @@ public class UserDaoImpl implements UserDao {
 
 	public void updateUser(User user) {
 		this.userMapper.updateUser(user);
-		this.userMapper.updateUserPost(user);
+		this.userMapper.deleteUserPost(user.getUid());
+		this.userMapper.createUserPost(user);
 	}
 
 	public void deleteUser(String uid, String employeename) {
@@ -210,5 +216,13 @@ public class UserDaoImpl implements UserDao {
 		empName = "%" + empName + "%";
 		return this.userMapper.GetUserByEmpName(empName);
 	}
+	
+	public void deleteUserPost(String useruid) {
+		// TODO Auto-generated method stub
+		this.userMapper.deleteUserPost(useruid);
+	}
+
+	
+	
 
 }

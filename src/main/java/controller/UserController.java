@@ -1,5 +1,6 @@
 package controller;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -7,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import model.Post;
 import model.User;
@@ -16,10 +18,13 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import service.PostService;
 import service.UserService;
@@ -224,19 +229,40 @@ public class UserController extends BaseController {
 		List<UserTree> trees = new ArrayList<UserTree>(1000);
 		List<User> listUsers = userService.GetUserTreeListByCondition(username, employeename, postuid, organizationuid);
 
-		if ((username == null || username.equalsIgnoreCase("")) && (employeename == null || employeename.equalsIgnoreCase("")) 
-				&& (postuid == null || postuid.equalsIgnoreCase("")) && (organizationuid == null || organizationuid.equalsIgnoreCase("")))
+		if ((username == null || username.equalsIgnoreCase("")) && (employeename == null || employeename.equalsIgnoreCase("")) && (postuid == null || postuid.equalsIgnoreCase("")) && (organizationuid == null || organizationuid.equalsIgnoreCase("")))
 			return this.GetUserTreeList();
-		
+
+		List<User> allUsers = userService.GetUserTreeList();
+		List<Post> posts = new ArrayList<Post>();
+		List<Post> tempPosts = new ArrayList<Post>();
+		boolean isFind = false;
 		if (listUsers.size() > 0) {
-			postuid = listUsers.get(0).getPostuid();
+			for (int k = 0; k < listUsers.size(); k++) {
+				postuid = listUsers.get(k).getPostuid();
+				if (organizationuid == null)
+					organizationuid = "";
 
-			if (organizationuid == null)
-				organizationuid = "";
+				tempPosts = postService.GetPostParent(postuid, organizationuid);
+				if (k == 0) {
+					posts = tempPosts;
+					continue;
+				}
 
-			List<Post> posts = postService.GetPostParent(postuid, organizationuid);
-
-			List<User> allUsers = userService.GetUserTreeList();
+				for (Post tmpPost : tempPosts) {
+					for (Post post : posts) {
+						if (tmpPost.getUid().equalsIgnoreCase(post.getUid())) {
+							isFind = true;
+							break;
+						}
+					}
+					if (isFind == true) {
+						isFind = false;
+						continue;
+					} else {
+						posts.add(tmpPost);
+					}
+				}
+			}
 
 			List<User> users = this.FillUserListWithVacantPost(allUsers, posts);
 			Collections.sort(users);
@@ -245,7 +271,7 @@ public class UserController extends BaseController {
 		} else {
 			return JsonUtil.ResponseSuccessfulMessage("");
 		}
-		
+
 		return JsonUtil.ResponseSuccessfulMessage(trees);
 	}
 
@@ -272,7 +298,7 @@ public class UserController extends BaseController {
 				continue;
 			} else {
 				User tempUser = new User();
-				tempUser.setUid(UUID.randomUUID().toString());
+				tempUser.setUid("0");
 				tempUser.setPostuid(post.getUid());
 				tempUser.setPostname(post.getName());
 				tempUser.setParentuid(post.getParentuid());
@@ -341,6 +367,38 @@ public class UserController extends BaseController {
 	public String GetOneUserParent(@PathVariable String parentuid) {
 		User oneUserParent = userService.GetOneUserParent(parentuid);
 		return JsonUtil.ResponseSuccessfulMessage(oneUserParent);
+	}
+
+	// @RequestMapping(value = "upload", method = RequestMethod.POST)
+	// @ResponseBody
+	// public String UploadFile(UserUpload userUpload){
+	//
+	// @SuppressWarnings("unused")
+	// UserUpload aUpload=userUpload;
+	// return JsonUtil.ResponseSuccessfulMessage("上传成功");
+	// }
+
+	@RequestMapping(value = "upload")
+	public String upload(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request, ModelMap model) {
+
+		System.out.println("开始");
+		String path = request.getSession().getServletContext().getRealPath("upload");
+		String fileName = file.getOriginalFilename();	
+		System.out.println(path);
+		File targetFile = new File(path, fileName);
+		if (!targetFile.exists()) {
+			targetFile.mkdirs();
+		}
+
+//		// 保存
+//		try {
+//			file.transferTo(targetFile);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		model.addAttribute("fileUrl", request.getContextPath() + "/upload/" + fileName);
+
+		return "result";
 	}
 
 	// @Resource

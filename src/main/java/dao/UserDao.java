@@ -10,12 +10,16 @@ public interface UserDao {
     User getUser(String uid);
 
     boolean createUser(User user);
+    
+    boolean createUserPost(User user);
 
     List<User> GetUserList();
 
     boolean ExistsUserName(String username);
 
     boolean ExistsUserName(String username, String useruid);
+    
+    void deleteUserPost(String useruid);
     
     boolean ExistsEmployeeName(String employeename);
 

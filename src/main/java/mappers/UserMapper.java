@@ -13,6 +13,8 @@ public interface UserMapper {
 	List<User> GetUserList();
 
 	List<String> CheckUserName(String username);
+	
+	void deleteUserPost(String useruid);
 
 	List<String> CheckEmployeeName(String employeename);
 

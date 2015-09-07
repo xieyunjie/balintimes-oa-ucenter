@@ -24,7 +24,23 @@ public class UserServiceImpl implements UserService {
 	@CustomerTransactional
 	public boolean create(User user) {
 		user.setPassword(passwordService.encryptPassword(user.getPassword()));
-		return userDao.createUser(user);
+		
+		String postUidAry[]=user.getPostuid().split(",");
+		String postNameAry[]=user.getPostname().split(",");
+		User tempUser=new User();
+		tempUser=user;
+		tempUser.setPostuid("");
+		tempUser.setPostname("");
+		boolean isCreateSuccess= userDao.createUser(tempUser);
+		
+		for(int k=0;k<postUidAry.length;k++){
+			User itemUser=new User();
+			itemUser=user;
+			itemUser.setPostuid(postUidAry[k]);
+			itemUser.setPostname(postNameAry[k]);
+			userDao.createUserPost(itemUser);			
+		}
+		return isCreateSuccess;
 	}
 
 	public User getUser(String uid) {
@@ -49,7 +65,17 @@ public class UserServiceImpl implements UserService {
 
 	@CustomerTransactional
 	public void updateUser(User user) {
-		this.userDao.updateUser(user);
+		String postUidAry[]=user.getPostuid().split(",");
+		String postNameAry[]=user.getPostname().split(",");
+		
+		for(int k=0;k<postUidAry.length;k++){
+			User itemUser=new User();
+			itemUser=user;
+			itemUser.setPostuid(postUidAry[k]);
+			itemUser.setPostname(postNameAry[k]);
+			this.userDao.updateUser(itemUser);			
+		}
+//		this.userDao.updateUser(user);
 	}
 
 	@CustomerTransactional

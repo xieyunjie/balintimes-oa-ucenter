@@ -15,7 +15,7 @@ define([ 'angularAMD', 'balintimesConstant', 'ui-bootstrap', 'angular-messages',
 
 	var editState = {
 		name : 'org/user/edit',
-		url : '/org/user/edit/:uid/:parentuid/:parentname',
+		url : '/org/user/edit/:uid/:parentuid/:parentname/:json',
 		templateUrl : balintimesConstant.rootpath + '/views/org/user/edit.html',
 		controller : 'userEditController',
 		resolve : {
@@ -51,7 +51,7 @@ define([ 'angularAMD', 'balintimesConstant', 'ui-bootstrap', 'angular-messages',
 
 	var editByPostState = {
 		name : 'org/post/editbypost',
-		url : '/org/post/editbypost/:uid/:name',
+		url : '/org/post/editbypost/:postuid/:postname/:uid/:parentuid/:parentname/:json',
 		templateUrl : balintimesConstant.rootpath + '/views/org/post/editbypost.html',
 		controller : 'PostEditGroupController',
 		resolve : {
@@ -71,8 +71,22 @@ define([ 'angularAMD', 'balintimesConstant', 'ui-bootstrap', 'angular-messages',
 		}
 	};
 
-	app.config([ '$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
-		$stateProvider.state(mainState).state(editState).state(editByPostState);
+	var uploadByUserState = {
+		name : 'org/user/uploadbyuser',
+		url : '/org/user/uploadbyuser',
+		templateUrl : balintimesConstant.rootpath + '/views/org/user/uploadbyuser.html',
+		controller : 'userUploadController',
+		resolve : {
+			userData : function(AjaxRequest, $stateParams) {
+
+			}
+		}
+	};
+
+	app.config([ '$stateProvider', '$urlRouterProvider','$httpProvider', function($stateProvider, $urlRouterProvider,$httpProvider) {
+		$httpProvider.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded';
+	    $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+		$stateProvider.state(mainState).state(editState).state(editByPostState).state(uploadByUserState);
 	} ]);
 
 	app.factory("userTypeData", function(AjaxRequest) {
@@ -173,11 +187,26 @@ define([ 'angularAMD', 'balintimesConstant', 'ui-bootstrap', 'angular-messages',
 		}
 		$scope.inituserTree();
 
-	}).controller("userEditController", function($scope, $state, $location, AjaxRequest, TreeSelectModal, DlgMsg, userData, userParentData, userTypeData) {
+	}).controller("userEditController", function($scope, $state, $location, AjaxRequest, TreeSelectModal, DlgMsg, userData, userParentData, userTypeData, $stateParams) {
 		$scope.go = function(uid, name) {
+			var userModel = {
+				uid : $stateParams.uid,
+				parentuid : $stateParams.parentuid,
+				parentname : $stateParams.parentname,
+				postuid : "",
+				postname : "",
+				employeename : $scope.user.employeename
+			}
+			if (userData.data != null && userData.data != undefined) {
+				userModel = userData.data;
+			}
 			$state.go("org/post/editbypost", {
-				uid : uid,
-				name : name
+				postuid : uid,
+				postname : name,
+				uid : $stateParams.uid,
+				parentuid : $stateParams.parentuid,
+				parentname : $stateParams.parentname,
+				json : JSON.stringify(userModel)
 			});
 		}
 
@@ -192,7 +221,14 @@ define([ 'angularAMD', 'balintimesConstant', 'ui-bootstrap', 'angular-messages',
 		var original = angular.copy($scope.user);
 		var originalPost = angular.copy($scope.post);
 		var originalUserParent = angular.copy($scope.userParent);
+
 		$scope.user = userData.data;
+		if ($stateParams.json != undefined && $stateParams.json != null && $stateParams.json != "") {
+			var t = JSON.parse($stateParams.json);
+			$scope.user.postuid = t.postuid;
+			$scope.user.postname = t.postname;
+		}
+
 		$scope.userDropDown = false;
 		$scope.treeData = [];
 		$scope.post = [];
@@ -215,7 +251,7 @@ define([ 'angularAMD', 'balintimesConstant', 'ui-bootstrap', 'angular-messages',
 				AjaxRequest.Post("/user/create", $scope.user).then(function(res) {
 					if (res.data == null) {
 						DlgMsg.alert("系统提示", res.responseMsg);
-						return;
+						$state.go("org/user");
 					} else
 						$state.go("org/user");
 				})
@@ -223,7 +259,7 @@ define([ 'angularAMD', 'balintimesConstant', 'ui-bootstrap', 'angular-messages',
 				AjaxRequest.Post("/user/update", $scope.user).then(function(res) {
 					if (res.data == null) {
 						DlgMsg.alert("系统提示", res.responseMsg);
-						return;
+						$state.go("org/user");
 					} else
 						$state.go("org/user");
 				})
@@ -254,11 +290,10 @@ define([ 'angularAMD', 'balintimesConstant', 'ui-bootstrap', 'angular-messages',
 	})
 
 	app.controller('PostEditGroupController', function($scope, $state, $stateParams, AjaxRequest, DlgMsg, AlertMsg, postGroupData) {
-
 		$scope.postCheckTree = postGroupData.data;
 		$scope.postTreeData = [];
 		var postname = "";
-		postname = $stateParams.name;
+		postname = $stateParams.postname;
 
 		$scope.loadData = function() {
 			var params = {};
@@ -289,56 +324,117 @@ define([ 'angularAMD', 'balintimesConstant', 'ui-bootstrap', 'angular-messages',
 		}
 
 		$scope.save = function() {
-			var ary = new Array();
+			var checkedChildren = new Array();
 			for (var i = 0; i < $scope.postTreeData.length; i++) {
 				var g = $scope.postTreeData[i];
 				var d = {
-					uid : new Array(),
-					name : new Array()
+					uid : "",
+					name : ""
 				};
 
-				for (var k = 0; k < g.children.length; k++) {
-					var c = g.children[k];
-					var test = getChildren(c);
-					if (c.checked) {
-						d.uid.push(c.uid);
-						d.name.push(c.name);
-					}
+				if (g.checked) {
+					d.uid = g.uid;
+					d.name = g.name;
+					checkedChildren.push(d);
 				}
-
-				ary.push(d);
+				getCheckedChildren(g, checkedChildren);
 			}
 
-			var url = "/post/savepostgroup";
-			var params = {
-				useruid : $scope.postTreeData.uid,
-				json : JSON.stringify(ary)
-			};
+			var postname = "";
+			var postuid = "";
+			for (var j = 0; j < checkedChildren.length; j++) {
+				postname = checkedChildren[j].name + "," + postname;
+				postuid = checkedChildren[j].uid + "," + postuid;
+			}
+
+			var tempUser = JSON.parse($stateParams.json);
+			if (tempUser == null || tempUser == undefined) {
+				tempUser = {
+					postname : "",
+					postuid : "",
+					uid : $stateParams.uid,
+					parentuid : $stateParams.parentuid,
+					parentname : $stateParams.parentname
+				};
+			}
+			tempUser.postname = postname;
+			tempUser.postuid = postuid;
+
+			var userJson = JSON.stringify(tempUser);
+			$state.go("org/user/edit", {
+				uid : $stateParams.uid,
+				parentuid : $stateParams.parentuid,
+				parentname : $stateParams.parentname,
+				json : userJson
+			});
 
 		};
 
-		var getChildren = function(root) {
-			var ary = new Array();
-
-			var d = {
-				uid : root.uid,
-				name : root.name
-			};
+		var getCheckedChildren = function(root, ary) {
 			for (var k = 0; k < root.children.length; k++) {
 				var c = root.children[k];
-				console.log(c);
+				var d = {
+					uid : "",
+					name : ""
+				};
 				if (c.checked) {
 					d.uid = c.uid;
-					d.name = d.name;
+					d.name = c.name;
+					ary.push(d);
 				}
-				getChildren(root.children[k]);
+				getCheckedChildren(c, ary);
 			}
-			ary.push(d);
-			return ary;
 		}
 
 		$scope.loadData();
 	});
+
+	app.controller("userUploadController", function($scope, $state, $location, $stateParams, AjaxRequest, TreeSelectModal, DlgMsg, userData, $http, $q, $parse, $element) {
+
+		var getModelAsFormData = function(data) {
+			var dataAsFormData = new FormData();
+			angular.forEach(data, function(value, key) {
+				dataAsFormData.append(key, value);
+			});
+			return dataAsFormData;
+		};
+
+		$scope.saveTutorial = function(tutorial) {
+			var data = tutorial;
+			console.log(data);
+
+			var deferred = $q.defer();
+			$http({
+				url :  balintimesConstant.rootpath +"/user/upload",
+				method : "POST",
+				data : data,				
+				transformRequest : angular.identity,
+				headers : {
+					'Content-Type' : 'application/x-www-form-urlencoded'
+				}
+			}).success(function(result) {
+				deferred.resolve(result);
+			}).error(function(result, status) {
+				deferred.reject(status);
+			});
+			// return deferred.promise;
+
+		};
+
+	}).directive("akFileModel", [ "$parse", function($parse) {
+		return {
+			restrict : "A",
+			link : function(scope, element, attrs) {
+				var model = $parse(attrs.akFileModel);
+				var modelSetter = model.assign;
+				element.bind("change", function() {
+					scope.$apply(function() {
+						modelSetter(scope, element[0].files[0]);
+					});
+				});
+			}
+		};
+	} ]);
 
 	return {
 		mainState : mainState,

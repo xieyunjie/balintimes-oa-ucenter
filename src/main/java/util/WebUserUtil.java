@@ -1,5 +1,6 @@
 package util;
 
+import model.Application;
 import model.Role;
 import model.authority.Employee;
 import model.authority.Menu;
@@ -112,19 +113,34 @@ public class WebUserUtil {
         return list;
     }
 
+    public Set<String> GetUserAllPermissions(String username){
+        List<Application> applications = authorityService.GetUserApplications(username);
+
+        Set<String> userPermissions = new HashSet<String>();
+
+        for (Application application : applications) {
+            Set<String> p = this.GetUserPermissions(username,application.getUid());
+            userPermissions.addAll(p);
+        }
+        return  userPermissions;
+    }
+
+    public Set<String> GetUserPermissions(String username,String appUID){
+
+        List<model.Resource> resourceList = this.authorityService.GetUserPermissions(username, appUID);
+        Set<String> permission = new HashSet<String>(resourceList.size());
+        for (model.Resource resource : resourceList) {
+            permission.add(resource.getAuthorityCode());
+        }
+        return permission;
+    }
+
     public Set<String> GetUserPermissions() {
         Subject subject = SecurityUtils.getSubject();
         if (subject.isRemembered() == false && subject.isAuthenticated() == false) {
             return null;
         }
-
-        List<model.Resource> resourceList = this.authorityService.GetUserPermissions(SecurityUtils.getSubject().getPrincipal().toString(), APPUID);
-        Set<String> permission = new HashSet<String>(resourceList.size());
-        for (model.Resource resource : resourceList) {
-            permission.add(resource.getAuthorityCode());
-        }
-
-        return permission;
+        return GetUserPermissions(SecurityUtils.getSubject().getPrincipal().toString(),APPUID);
     }
 
     public Set<String> GetUserRoles() {

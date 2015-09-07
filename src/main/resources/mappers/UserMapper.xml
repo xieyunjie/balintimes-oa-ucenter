@@ -107,7 +107,7 @@
 
 	<select id="GetUserByEmpName" statementType="PREPARED" resultType="User" parameterType="String">
 		select
-			<include refid="userColumns"/>
+		<include refid="userColumns"/>
 		from user a
         	inner join usertype b on a.usertype = b.uid
         where 
@@ -277,4 +277,8 @@
 		inner join usertype d on d.uid = a.usertype
 		where a.delflag = 0 and FIND_IN_SET(c.uid,fun_GetUserChildren(#{username}))
 	</select>
+	
+	<delete id="deleteUserPost" parameterType="string">
+       delete from userpost where useruid = #{uid} 		
+	</delete>
 </mapper>

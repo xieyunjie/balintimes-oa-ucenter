@@ -52,6 +52,18 @@ public class AuthorityServiceTest {
     }
 
     @Test
+    public void GetUserPermissions() {
+        String username = "admin";
+        String applicationuid = "05bd7806-3026-11e5-8396-c86000a05d5f";
+        //List<Resource> list= this.resourceDao.GetUserMenu(username, applicationuid);
+        List<Resource> list = authorityService.GetUserPermissions(username,null);
+        for (Resource item : list) {
+            System.out.println(item.getName());
+        }
+    }
+
+
+    @Test
     public void GetEmployee() {
 
         Employee employee = this.authorityService.GetEmployee("qq");
